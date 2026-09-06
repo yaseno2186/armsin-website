@@ -11,6 +11,14 @@
 <link rel="stylesheet" href="style.css">
 <link rel="icon" type="image/png" href="assets/logo/armsin-icon.png">
 <link rel="apple-touch-icon" href="assets/logo/armsin-icon.png">
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.184.0/build/three.module.js",
+    "three/addons/loaders/GLTFLoader.js": "https://unpkg.com/three@0.184.0/examples/jsm/loaders/GLTFLoader.js"
+  }
+}
+</script>
 </head>
 <body>
 
@@ -42,7 +50,8 @@
          .hero-visual) so the text column reads as wrapped around it rather
          than stacked above or below it. -->
     <div class="hero-visual">
-      <div class="hero-visual-frame pc-scene" id="pc-scene" role="img" aria-label="Illustration eines Retro-Computers mit cremefarbenem Gehäuse, einem großen grün leuchtenden Röhrenbildschirm mit Java-Code und zwei schwebenden Code-Fenstern">
+      <div class="hero-visual-frame pc-scene" id="pc-scene" role="img" aria-label="3D-Modell einer Retro-Workstation, umgeben von zwei schwebenden Code-Fenstern">
+        <div class="hero-model" id="hero-model" aria-hidden="true"></div>
         <div class="pc-scene-inner" id="pc-scene-inner">
 
           <div class="code-float code-float-a" aria-hidden="true">
@@ -53,31 +62,6 @@
             <span class="code-line code-line-accent" style="--w:42%"></span>
             <span class="code-line" style="--w:88%"></span>
             <span class="code-line code-line-amber" style="--w:58%"></span>
-          </div>
-
-          <div class="retro-pc" aria-hidden="true">
-            <div class="retro-pc-back"></div>
-            <div class="retro-pc-case">
-              <div class="retro-pc-vents"><span></span><span></span><span></span><span></span></div>
-              <div class="retro-pc-bezel">
-                <div class="retro-pc-screen">
-                  <div class="retro-pc-filter"></div>
-                  <ol class="pc-code-lines" id="pc-code-lines">
-                    <li class="pc-code-line" style="--indent:0"><span class="tok-kw">public class</span> Armsin {</li>
-                    <li class="pc-code-line" style="--indent:1"><span class="tok-kw">public static void</span> main(<span class="tok-kw">String</span>[] args) {</li>
-                    <li class="pc-code-line" style="--indent:2">System.out.println(<span class="tok-str">&quot;Hallo Welt!&quot;</span>);</li>
-                    <li class="pc-code-line" style="--indent:2"><span class="tok-kw">int</span> status = deploy();</li>
-                    <li class="pc-code-line" style="--indent:2"><span class="tok-kw">while</span> (status == 0) {</li>
-                    <li class="pc-code-line" style="--indent:3">build();</li>
-                    <li class="pc-code-line" style="--indent:3">test();<span class="retro-pc-cursor"></span></li>
-                  </ol>
-                  <div class="retro-pc-scanline"></div>
-                </div>
-              </div>
-              <span class="retro-pc-led"></span>
-            </div>
-            <div class="retro-pc-neck"></div>
-            <div class="retro-pc-base"></div>
           </div>
 
           <div class="code-float code-float-b" aria-hidden="true">
@@ -299,6 +283,7 @@
   </div>
 </footer>
 
+<script type="module" src="assets/js/hero-model.js"></script>
 <script src="assets/js/site.js"></script>
 
 </body>

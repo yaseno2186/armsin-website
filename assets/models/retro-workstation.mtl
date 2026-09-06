@@ -1,0 +1,91 @@
+# Exported by three-d-stage
+newmtl shell_cream
+Kd 0.8388 0.7835 0.6867
+Ks 0.2000 0.2000 0.2000
+Ns 90
+d 1.0000
+
+newmtl vent_groove
+Kd 0.4508 0.3968 0.3050
+Ks 0.2000 0.2000 0.2000
+Ns 30
+d 1.0000
+
+newmtl shell_shadow
+Kd 0.6724 0.6105 0.4969
+Ks 0.2000 0.2000 0.2000
+Ns 70
+d 1.0000
+
+newmtl accent_red
+Kd 0.7605 0.0595 0.0423
+Ks 0.2000 0.2000 0.2000
+Ns 120
+d 1.0000
+
+newmtl phosphor
+Kd 0.0437 1.0000 0.0595
+Ks 0.2000 0.2000 0.2000
+Ns 120
+d 1.0000
+
+newmtl screen_phosphor
+Kd 0.0030 0.0116 0.0052
+Ks 0.2000 0.2000 0.2000
+Ns 50
+d 1.0000
+
+newmtl screen_code
+Kd 1.0000 1.0000 1.0000
+Ks 0.2000 0.2000 0.2000
+Ns 100
+d 1.0000
+
+newmtl keycap_cream
+Kd 0.8796 0.8308 0.7305
+Ks 0.2000 0.2000 0.2000
+Ns 80
+d 1.0000
+
+newmtl legend_ink
+Kd 0.1470 0.1274 0.0999
+Ks 0.2000 0.2000 0.2000
+Ns 60
+d 1.0000
+
+newmtl stripe_1
+Kd 0.7529 0.0704 0.0423
+Ks 0.2000 0.2000 0.2000
+Ns 100
+d 1.0000
+
+newmtl stripe_2
+Kd 0.8632 0.2747 0.0369
+Ks 0.2000 0.2000 0.2000
+Ns 100
+d 1.0000
+
+newmtl stripe_3
+Kd 0.8879 0.6240 0.0595
+Ks 0.2000 0.2000 0.2000
+Ns 100
+d 1.0000
+
+newmtl stripe_4
+Kd 0.0704 0.4793 0.0782
+Ks 0.2000 0.2000 0.2000
+Ns 100
+d 1.0000
+
+newmtl stripe_5
+Kd 0.0467 0.2122 0.6376
+Ks 0.2000 0.2000 0.2000
+Ns 100
+d 1.0000
+
+newmtl stripe_6
+Kd 0.2664 0.1046 0.5395
+Ks 0.2000 0.2000 0.2000
+Ns 100
+d 1.0000
+

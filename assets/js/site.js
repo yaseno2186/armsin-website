@@ -129,74 +129,6 @@ function initHeroParallax() {
   });
 }
 
-// Types out a small Java class line by line into the retro monitor's screen,
-// like someone actually writing code — each finished line gets its
-// highlighting (keyword/string) applied, then a new line starts below it;
-// once the visible window fills up, the oldest line is dropped so the code
-// keeps "moving down" instead of growing the page. Loops the same short
-// class forever. Reduced-motion / no element: leave the server-rendered
-// static lines in style.css/index.html exactly as they are — no JS needed
-// for those to look correct.
-function initCodeTypewriter() {
-  var screen = document.getElementById('pc-code-lines');
-  if (!screen) return;
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  var lines = [
-    { indent: 0, plain: 'public class Armsin {', html: '<span class="tok-kw">public class</span> Armsin {' },
-    { indent: 1, plain: 'public static void main(String[] args) {', html: '<span class="tok-kw">public static void</span> main(<span class="tok-kw">String</span>[] args) {' },
-    { indent: 2, plain: 'System.out.println("Hallo Welt!");', html: 'System.out.println(<span class="tok-str">&quot;Hallo Welt!&quot;</span>);' },
-    { indent: 2, plain: 'int status = deploy();', html: '<span class="tok-kw">int</span> status = deploy();' },
-    { indent: 2, plain: 'while (status == 0) {', html: '<span class="tok-kw">while</span> (status == 0) {' },
-    { indent: 3, plain: 'build();', html: 'build();' },
-    { indent: 3, plain: 'test();', html: 'test();' },
-    { indent: 2, plain: '}', html: '}' },
-    { indent: 1, plain: '}', html: '}' },
-    { indent: 0, plain: '}', html: '}' }
-  ];
-
-  var MAX_VISIBLE = 7;
-  var CHAR_DELAY = 32;
-  var LINE_PAUSE = 260;
-  var lineIndex = 0;
-
-  screen.innerHTML = '';
-
-  var typeNextLine = function () {
-    var def = lines[lineIndex % lines.length];
-    lineIndex++;
-
-    var li = document.createElement('li');
-    li.className = 'pc-code-line';
-    li.style.setProperty('--indent', def.indent);
-    var textNode = document.createTextNode('');
-    li.appendChild(textNode);
-    var cursor = document.createElement('span');
-    cursor.className = 'retro-pc-cursor';
-    li.appendChild(cursor);
-    screen.appendChild(li);
-
-    if (screen.children.length > MAX_VISIBLE) {
-      screen.removeChild(screen.firstElementChild);
-    }
-
-    var charIndex = 0;
-    var typeChar = function () {
-      charIndex++;
-      textNode.textContent = def.plain.slice(0, charIndex);
-      if (charIndex < def.plain.length) {
-        setTimeout(typeChar, CHAR_DELAY);
-      } else {
-        li.innerHTML = def.html;
-        setTimeout(typeNextLine, LINE_PAUSE);
-      }
-    };
-    typeChar();
-  };
-
-  typeNextLine();
-}
-
 function initContactForm() {
   var contactForm = document.getElementById('contact-form');
   if (!contactForm) return;
@@ -223,5 +155,4 @@ initNavIndicator();
 initScrollReveal();
 initBookingFade();
 initHeroParallax();
-initCodeTypewriter();
 initContactForm();

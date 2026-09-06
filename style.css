@@ -643,16 +643,13 @@ img { max-width: 100%; display: block; }
 }
 
 /* ---------- Retro PC hero centerpiece ----------
-   Pure CSS/HTML — no WebGL/3D library (CLAUDE.md rules out heavy JS and
-   requires code a non-technical person can still edit). A cream/vanilla
-   "old plastic" CRT monitor plus two floating code-window panels: the three
-   objects the hero composition is built from. .pc-scene holds the CSS
-   perspective for the pointer-tilt effect (see initHeroParallax in
-   assets/js/site.js); .pc-scene-inner is the tilted, preserve-3d layer so
-   the monitor and the two floaters read as sitting at different depths
-   instead of one flat sprite. All sizes are in em off a single clamp()'d
-   font-size below, so the whole scene scales as one unit with no extra
-   breakpoints. */
+   The 3D retro-workstation (see .hero-model below) plus two floating
+   code-window panels: the objects the hero composition is built from.
+   .pc-scene holds the CSS perspective for the code-floats' pointer-tilt
+   effect (see initHeroParallax in assets/js/site.js); .pc-scene-inner is
+   the tilted, preserve-3d layer so the floaters read as sitting at their
+   own depth. All sizes are in em off a single clamp()'d font-size below,
+   so the whole scene scales as one unit with no extra breakpoints. */
 .pc-scene {
   position: relative;
   aspect-ratio: 1 / 1;
@@ -675,229 +672,64 @@ img { max-width: 100%; display: block; }
   .pc-scene-inner { font-size: clamp(13px, 2.6vw, 24px); }
 }
 
-/* -- the monitor -- */
-.retro-pc {
-  position: relative;
-  /* Bigger housing + a visible back panel (below) so the screen reads as
-     the scene's dominant "big backface" CRT, not a small illustrative prop. */
-  width: 19.5em;
-  transform: translateZ(0.6em);
-  transform-style: preserve-3d; /* Allows the front and back to physically separate in Z-space */
-}
-
-/* The bulging tube back peeking out from behind the front bezel — cheap,
-   authentic CRT-depth trick: a darker, slightly larger panel sitting behind
-   the case, offset so its edge shows at the top/sides. Static (no separate
-   translateZ layer) so it doesn't fight the existing pointer-tilt on
-   .pc-scene-inner; the perspective already on that ancestor is what sells
-   the depth. */
-.retro-pc-back {
+/* -- the 3D retro-workstation model (assets/models/retro-workstation.glb,
+   rendered by assets/js/hero-model.js via three.js) -- sits centered in
+   .pc-scene, a sibling of .pc-scene-inner rather than inside its tilted
+   layer: the canvas gets its own pointer-driven rotation in JS (real 3D),
+   so stacking it under a CSS 3D transform too would double the effect and
+   skew the WebGL output. The two code-float panels keep the original CSS
+   tilt on .pc-scene-inner. */
+.hero-model {
+  /* Real box sizing, not a CSS transform: scale() — the canvas is sized off
+     this element's clientWidth/clientHeight (see fit() in hero-model.js), so
+     stretching it bigger with `transform` would render at the old small
+     resolution and blow the raster up (fuzzy). Growing the actual box means
+     three.js renders natively at the bigger size. */
   position: absolute;
-  inset: -2% -6% -12% -6%; /* expanded slightly to remain visible when pushed back */
-  border-radius: 1.2em;
-  background: linear-gradient(165deg, #d9cba9 0%, #a69874 100%);
-  box-shadow: 0 1em 2em rgba(0, 0, 0, 0.5);
-  z-index: 0;
-  transform: translateZ(-1.8em); /* physically pushed backwards in 3D space */
-}
-
-.retro-pc-case {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  aspect-ratio: 5 / 4;
-  border-radius: 0.55em;
-  transform: translateZ(1.2em); /* physically pushed forwards in 3D space */
-  background:
-    radial-gradient(circle at 18% 16%, rgba(255, 255, 255, 0.65), transparent 40%),
-    radial-gradient(circle at 78% 82%, rgba(150, 120, 60, 0.14), transparent 45%),
-    linear-gradient(165deg, #f2e9d2 0%, #e8ddc4 45%, #d9cba9 100%);
-  box-shadow:
-    inset 0 4px 6px rgba(255, 255, 255, 0.7),
-    inset 0 -0.8em 1.2em rgba(120, 100, 55, 0.25),
-    0 0.8em 0 #bbaa88, /* much thicker bottom plastic edge */
-    0 1.2em 2em rgba(0, 0, 0, 0.35),
-    /* Outer green glow — the whole monitor housing reads as lit from
-       within, not just the screen rectangle. */
-    0 0 2.2em var(--accent-glow-strong);
-}
-
-.retro-pc-vents {
-  position: absolute;
-  top: 0.5em;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  width: 60%;
-  display: flex;
-  flex-direction: column;
-  gap: 0.16em;
+  width: 225%;
+  height: 225%;
+  z-index: 0;
+  opacity: 0; /* faded in by hero-model.js (adds .is-loaded) once the GLB has loaded */
+  transform: translate(-50%, -50%) scale(0.94);
+  transition: opacity 400ms cubic-bezier(0.23, 1, 0.32, 1), transform 400ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-.retro-pc-vents span {
-  display: block;
-  height: 0.05em;
-  border-radius: 999px;
-  background: #c9b98f;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+.hero-model.is-loaded {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
 }
 
-.retro-pc-bezel {
-  position: absolute;
-  /* Thinner frame than before (was 1.3em/0.7em/0.55em) so the screen — now
-     the scene's "big backface" — dominates the case instead of a small
-     inset rectangle. */
-  inset: 0.75em 0.4em 0.4em;
-  border-radius: 0.3em;
-  background: #14201a;
-  box-shadow: inset 0 0 0 0.09em #efe4c8, inset 0 0.15em 0.4em rgba(0, 0, 0, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.retro-pc-screen {
-  position: relative;
-  width: calc(100% - 0.4em);
-  height: calc(100% - 0.3em);
-  background: #06120b;
-  border-radius: 0.12em;
-  overflow: hidden;
-  padding: 0.5em 0.6em;
-  /* Stronger, doubled-up green glow (was a single 0.22-alpha shadow) — the
-     monitor should read as visibly lit/glowing, not just faintly backlit. */
-  box-shadow:
-    0 0 1.8em var(--accent-glow-strong),
-    0 0 0.7em var(--accent-shadow),
-    inset 0 0 0.8em rgba(57, 217, 122, 0.14);
-}
-
-/* Old-CRT idle life: a slow, uneven brightness flicker on the whole screen
-   (never fully dark — a dead screen reads as "broken," not "vintage") plus
-   a scanline sweeping top to bottom on its own loop. */
-.retro-pc-screen::after {
+/* Soft CRT-style glow sitting behind the model, on its own layer so only
+   `opacity` animates — the canvas above it (renderer alpha:true) stays
+   untouched by the breathing loop. */
+.hero-model::before {
   content: '';
   position: absolute;
-  inset: 0;
-  background: rgba(57, 217, 122, 0.05);
-  animation: crt-flicker 5.5s ease-in-out infinite;
+  inset: -20%;
+  z-index: 0;
+  background: radial-gradient(circle at 50% 46%, var(--accent-glow-strong) 0%, transparent 62%);
+  opacity: 0.55;
+  animation: hero-model-glow-breathe 4.5s ease-in-out infinite;
   pointer-events: none;
 }
 
-/* The "retro green filter" over the tube — a persistent phosphor-green
-   tint across everything on screen (mix-blend so the orange string tokens
-   still read as orange-through-green-glass rather than being wiped out),
-   plus a soft vignette so the corners fall away like real curved CRT glass. */
-.retro-pc-filter {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  background:
-    radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.45) 100%),
-    rgba(57, 217, 122, 0.16);
-  mix-blend-mode: overlay;
-  pointer-events: none;
+@keyframes hero-model-glow-breathe {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.75; }
 }
 
-.retro-pc-scanline {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 22%;
-  z-index: 3;
-  background: linear-gradient(rgba(214, 232, 221, 0), rgba(214, 232, 221, 0.09), rgba(214, 232, 221, 0));
-  animation: crt-scan 4.5s linear infinite;
-  pointer-events: none;
-}
-
-@keyframes crt-flicker {
-  0%, 100% { opacity: 0.7; }
-  40% { opacity: 1; }
-  52% { opacity: 0.55; }
-  60% { opacity: 0.95; }
-}
-
-@keyframes crt-scan {
-  0% { top: -22%; }
-  100% { top: 100%; }
-}
-
-/* The Java "terminal" content — real typed text (see initCodeTypewriter in
-   assets/js/site.js), not decorative bars. list-style/margin reset since
-   it's a semantic <ol> under the hood (aria-hidden — the parent .pc-scene
-   already carries the illustration's one accessible label). */
-.pc-code-lines {
-  position: relative;
-  z-index: 1;
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.hero-model canvas {
+  display: block;
   width: 100%;
   height: 100%;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  gap: 0.18em;
-  font-family: var(--font-head);
-  font-size: 0.62em;
-  line-height: 1.35;
-  color: var(--text);
-  white-space: nowrap;
+  position: relative;
+  z-index: 1;
 }
 
-.pc-code-line {
-  padding-left: calc(var(--indent, 0) * 0.9em);
-}
-
-.tok-kw { color: var(--accent); }
-.tok-str { color: var(--amber); }
-
-.retro-pc-cursor {
-  display: inline-block;
-  width: 0.5em;
-  height: 0.85em;
-  background: var(--accent);
-  vertical-align: -0.15em;
-  margin-left: 0.15em;
-  animation: pc-cursor-blink 1.1s step-end infinite;
-}
-
-@keyframes pc-cursor-blink {
-  0%, 45% { opacity: 1; }
-  50%, 100% { opacity: 0; }
-}
-
-.retro-pc-led {
-  position: absolute;
-  right: 0.9em;
-  bottom: 0.35em;
-  width: 0.24em;
-  height: 0.24em;
-  border-radius: 50%;
-  background: var(--amber);
-  box-shadow: 0 0 0.35em var(--amber);
-  animation: pc-led-breathe 2.4s ease-in-out infinite;
-}
-
-@keyframes pc-led-breathe {
-  0%, 100% { opacity: 0.45; }
-  50% { opacity: 1; }
-}
-
-.retro-pc-neck {
-  width: 2.2em;
-  height: 1.1em;
-  margin: 0 auto;
-  background: linear-gradient(180deg, #d9cba9, #c9b98f);
-  box-shadow: inset 0 0.1em 0.2em rgba(120, 100, 55, 0.25);
-}
-
-.retro-pc-base {
-  width: 6.5em;
-  height: 0.6em;
-  margin: 0 auto;
-  border-radius: 999px;
-  background: linear-gradient(180deg, #d9cba9, #c2b38c);
-  box-shadow: 0 0.3em 0.6em rgba(0, 0, 0, 0.3);
+@media (max-width: 600px) {
+  .hero-model { width: 135%; height: 135%; }
 }
 
 /* -- the two floating code-window panels -- */
@@ -971,15 +803,15 @@ img { max-width: 100%; display: block; }
    each other and with the monitor's own hero-float bob) so the three
    objects in the scene read as independently alive, not one rigid group. */
 .code-float-a {
-  top: 4%;
-  left: -6%;
+  top: 14%;
+  left: 10%;
   transform: translateZ(1.1em) rotate(-4deg);
   animation: code-float-drift-a 7s ease-in-out infinite;
 }
 
 .code-float-b {
-  bottom: 6%;
-  right: -8%;
+  bottom: 16%;
+  right: 8%;
   width: 7.6em;
   transform: translateZ(1.6em) rotate(3deg);
   animation: code-float-drift-b 8.5s ease-in-out infinite -3.2s;
@@ -996,8 +828,8 @@ img { max-width: 100%; display: block; }
 }
 
 @media (max-width: 600px) {
-  .code-float-a { left: -3%; }
-  .code-float-b { right: -4%; }
+  .code-float-a { left: 2%; }
+  .code-float-b { right: 2%; }
 }
 
 @media (min-width: 640px) {
@@ -1086,19 +918,19 @@ img { max-width: 100%; display: block; }
     transition: none;
     transform: none;
   }
-  .retro-pc-screen::after,
-  .retro-pc-scanline,
-  .retro-pc-cursor,
-  .retro-pc-led,
+  .hero-model {
+    transition: opacity 400ms ease;
+  }
+  .hero-model::before {
+    animation: none;
+    opacity: 0.55;
+  }
   .code-float-a,
   .code-float-b,
   .code-line,
   .timeline-cursor {
     animation: none;
   }
-  .retro-pc-screen::after { opacity: 0.85; }
-  .retro-pc-cursor,
-  .retro-pc-led,
   .timeline-cursor { opacity: 1; }
   .timeline-node {
     transition: none;
