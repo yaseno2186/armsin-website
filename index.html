@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Armsin Digital Media: Digitale Lösungen aus Deutschland</title>
+<meta name="description" content="Websites, Apps, Fotografie und Systeme/Automatisierung für lokale Geschäfte, Restaurants und kleine Betriebe – deutschlandweit, mit Kunden weltweit möglich. Schnell, unkompliziert, fair kalkuliert.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/png" href="assets/logo/armsin-icon.png">
+<link rel="apple-touch-icon" href="assets/logo/armsin-icon.png">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="floating-nav" id="floating-nav" aria-label="Hauptnavigation">
+    <a href="index.html" class="nav-logo" aria-label="Armsin Digital Media – zur Startseite">
+      <img src="assets/logo/armsin-icon.png" alt="" width="34" height="34">
+    </a>
+    <div class="nav-menu" id="nav-panel">
+      <div class="nav-links">
+        <span class="nav-indicator" aria-hidden="true"></span>
+        <a href="ablauf.html">Ablauf</a>
+        <a href="#termin">Termin buchen</a>
+        <a href="studio.html">Studio</a>
+      </div>
+      <a href="#contact" class="nav-cta">Kostenlosen Check anfragen</a>
+    </div>
+    <button type="button" class="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-panel">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <!-- Sits behind the copy as a full-hero-sized, centered overlay (see
+         .hero-visual) so the text column reads as wrapped around it rather
+         than stacked above or below it. -->
+    <div class="hero-visual">
+      <div class="hero-visual-frame pc-scene" id="pc-scene" role="img" aria-label="Illustration eines Retro-Computers mit cremefarbenem Gehäuse, einem großen grün leuchtenden Röhrenbildschirm mit Java-Code und zwei schwebenden Code-Fenstern">
+        <div class="pc-scene-inner" id="pc-scene-inner">
+
+          <div class="code-float code-float-a" aria-hidden="true">
+            <div class="code-float-bar">
+              <span class="code-float-dot"></span><span class="code-float-dot"></span><span class="code-float-dot"></span>
+            </div>
+            <span class="code-line" style="--w:75%"></span>
+            <span class="code-line code-line-accent" style="--w:42%"></span>
+            <span class="code-line" style="--w:88%"></span>
+            <span class="code-line code-line-amber" style="--w:58%"></span>
+          </div>
+
+          <div class="retro-pc" aria-hidden="true">
+            <div class="retro-pc-back"></div>
+            <div class="retro-pc-case">
+              <div class="retro-pc-vents"><span></span><span></span><span></span><span></span></div>
+              <div class="retro-pc-bezel">
+                <div class="retro-pc-screen">
+                  <div class="retro-pc-filter"></div>
+                  <ol class="pc-code-lines" id="pc-code-lines">
+                    <li class="pc-code-line" style="--indent:0"><span class="tok-kw">public class</span> Armsin {</li>
+                    <li class="pc-code-line" style="--indent:1"><span class="tok-kw">public static void</span> main(<span class="tok-kw">String</span>[] args) {</li>
+                    <li class="pc-code-line" style="--indent:2">System.out.println(<span class="tok-str">&quot;Hallo Welt!&quot;</span>);</li>
+                    <li class="pc-code-line" style="--indent:2"><span class="tok-kw">int</span> status = deploy();</li>
+                    <li class="pc-code-line" style="--indent:2"><span class="tok-kw">while</span> (status == 0) {</li>
+                    <li class="pc-code-line" style="--indent:3">build();</li>
+                    <li class="pc-code-line" style="--indent:3">test();<span class="retro-pc-cursor"></span></li>
+                  </ol>
+                  <div class="retro-pc-scanline"></div>
+                </div>
+              </div>
+              <span class="retro-pc-led"></span>
+            </div>
+            <div class="retro-pc-neck"></div>
+            <div class="retro-pc-base"></div>
+          </div>
+
+          <div class="code-float code-float-b" aria-hidden="true">
+            <div class="code-float-bar">
+              <span class="code-float-dot"></span><span class="code-float-dot"></span><span class="code-float-dot"></span>
+            </div>
+            <span class="code-line" style="--w:48%"></span>
+            <span class="code-line code-line-accent" style="--w:82%"></span>
+            <span class="code-line" style="--w:36%"></span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="hero-copy">
+        <div class="hero-top">
+          <span class="hero-tag" data-reveal>Digitale Lösungen aus Deutschland</span>
+          <h1 data-reveal>Endlich digitale Lösungen, die für Sie arbeiten.</h1>
+          <p class="lead" data-reveal>
+            Websites, Apps, Fotografie und Systeme/Automatisierung für lokale
+            Geschäfte, Restaurants und kleine Betriebe. Schnell, unkompliziert,
+            ohne Fachchinesisch.
+          </p>
+        </div>
+        <div class="hero-actions" data-reveal>
+          <a href="#contact" class="btn btn-primary">Kostenlosen Check anfragen</a>
+          <a href="#services" class="btn btn-ghost">Leistungen ansehen</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SERVICES ================= -->
+  <section class="services" id="services">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <h2>Meine Leistungen</h2>
+        <p>Von der Idee bis zur laufenden Betreuung, alles aus einer Hand.</p>
+      </div>
+
+      <div class="services-grid services-grid-4">
+        <article class="service-card" data-reveal>
+          <span class="service-icon-badge"><img class="service-icon" src="assets/icons/icon-build.svg" alt="" width="28" height="28"></span>
+          <h3>Websites</h3>
+          <p>Neue oder überarbeitete Websites, abgestimmt auf Ihren Betrieb und Ihre Kunden.</p>
+        </article>
+
+        <article class="service-card" data-reveal>
+          <span class="service-icon-badge"><img class="service-icon" src="assets/icons/icon-app.svg" alt="" width="28" height="28"></span>
+          <h3>Apps</h3>
+          <p>Einfache Apps für Bestellungen, Buchungen oder interne Abläufe in Ihrem Betrieb.</p>
+        </article>
+
+        <article class="service-card" data-reveal>
+          <span class="service-icon-badge"><img class="service-icon" src="assets/icons/icon-photo.svg" alt="" width="28" height="28"></span>
+          <h3>Fotografie</h3>
+          <p>Produkt- und Betriebsfotos für Website, Speisekarte und Social Media.</p>
+        </article>
+
+        <article class="service-card" data-reveal>
+          <span class="service-icon-badge"><img class="service-icon" src="assets/icons/icon-automation.svg" alt="" width="28" height="28"></span>
+          <h3>Systeme &amp; Automatisierung</h3>
+          <p>Wiederkehrende Aufgaben wie Terminplanung, Bestellungen oder E-Mails automatisch erledigen lassen.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= WHY US ================= -->
+  <section class="trust">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <h2>Warum Armsin</h2>
+        <p>Klein, direkt, ohne Umwege.</p>
+      </div>
+
+      <div class="trust-grid">
+        <div class="trust-item" data-reveal>
+          <h3>Schnell</h3>
+          <p>Kurze Wege statt endloser Meetings. Sie bekommen zeitnah eine Antwort und sehen früh erste Ergebnisse.</p>
+        </div>
+
+        <div class="trust-item" data-reveal>
+          <h3>Unkompliziert</h3>
+          <p>Klare Sprache statt Fachchinesisch. Sie verstehen jederzeit, was gerade passiert und warum.</p>
+        </div>
+
+        <div class="trust-item" data-reveal>
+          <h3>Fair kalkuliert</h3>
+          <p>Ein Preis von Anfang an, keine versteckten Kosten und keine Überraschungen später.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PROCESS ================= -->
+  <section class="process" id="ablauf">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <h2>So arbeite ich</h2>
+        <p>Vier Schritte, ohne Umwege.</p>
+      </div>
+
+      <ol class="process-steps">
+        <li class="process-step" data-reveal>
+          <span class="process-num">01</span>
+          <span class="process-icon"><img src="assets/icons/icon-talk.svg" alt="" width="30" height="30"></span>
+          <h3>Kurzes Gespräch</h3>
+          <p>Ich telefoniere mit Ihnen oder wir treffen uns kurz. Sie erzählen von Ihrem Betrieb, ich höre zu und stelle Fragen.</p>
+        </li>
+
+        <li class="process-step" data-reveal>
+          <span class="process-num">02</span>
+          <span class="process-icon"><img src="assets/icons/icon-offer.svg" alt="" width="30" height="30"></span>
+          <h3>Klares Angebot</h3>
+          <p>Sie bekommen einen Festpreis und eine realistische Timeline, schriftlich, ohne versteckte Kosten.</p>
+        </li>
+
+        <li class="process-step" data-reveal>
+          <span class="process-num">03</span>
+          <span class="process-icon"><img src="assets/icons/icon-work.svg" alt="" width="30" height="30"></span>
+          <h3>Umsetzung mit Abstimmung</h3>
+          <p>Ich setze das Projekt um und zeige Ihnen Zwischenstände, statt Sie erst am Ende zu überraschen.</p>
+        </li>
+
+        <li class="process-step" data-reveal>
+          <span class="process-num">04</span>
+          <span class="process-icon"><img src="assets/icons/icon-handover.svg" alt="" width="30" height="30"></span>
+          <h3>Übergabe &amp; Betreuung</h3>
+          <p>Sie erhalten Zugang zu allem. Auf Wunsch kümmere ich mich danach weiter um Updates und Pflege.</p>
+        </li>
+      </ol>
+
+      <div class="process-more" data-reveal>
+        <a href="ablauf.html" class="btn btn-ghost">Ablauf im Detail ansehen</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= BOOKING ================= -->
+  <section class="booking" id="termin">
+    <div class="container">
+      <div class="booking-head" data-reveal>
+        <h2>Direkt einen Termin sichern</h2>
+        <p>Wählen Sie einfach einen freien Slot für ein kurzes, unverbindliches Gespräch mit Yass Almardoud, ganz ohne Hin- und Her-Mailen.</p>
+      </div>
+
+      <div class="booking-frame" data-reveal>
+        <iframe
+          src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ0z2sVofG_ZRL5PCgz8xYi4X7cFosmvX-hSKWRhDQ979RvrN8o2GPs4iogDPSccZjP2WfF02oxe?hl=de"
+          title="Terminkalender von Yass Almardoud &ndash; Termin online buchen"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+
+      <p class="booking-fallback" data-reveal>
+        Kalender lädt bei Ihnen nicht?
+        <a href="https://calendar.app.google/qEM8PS4X5D53nkha9" target="_blank" rel="noopener">Buchungsseite in neuem Tab öffnen</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= CONTACT ================= -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <div class="contact-grid">
+
+        <div class="contact-info" data-reveal>
+          <h2>Bereit für eine digitale Lösung, die sich auszahlt?</h2>
+          <p class="lead">
+            Schreiben Sie mir kurz, worum es geht. Sie bekommen eine ehrliche,
+            unverbindliche Einschätzung.
+          </p>
+
+          <ul class="contact-details">
+            <li>
+              <span class="contact-label">Standort</span>
+              <span>Deutschland – Kunden weltweit willkommen</span>
+            </li>
+          </ul>
+        </div>
+
+        <form class="contact-form" id="contact-form" data-reveal>
+          <div class="form-row">
+            <label for="cf-name">Name</label>
+            <input type="text" id="cf-name" name="name" required autocomplete="name">
+          </div>
+
+          <div class="form-row">
+            <label for="cf-email">E-Mail</label>
+            <input type="email" id="cf-email" name="email" required autocomplete="email">
+          </div>
+
+          <div class="form-row">
+            <label for="cf-message">Nachricht</label>
+            <textarea id="cf-message" name="message" rows="5" required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Nachricht senden</button>
+          <p class="form-note">Öffnet Ihr E-Mail-Programm mit einer vorausgefüllten Nachricht an mich.</p>
+        </form>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <span class="footer-brand">Armsin Digital Media</span>
+    <nav class="footer-links">
+      <a href="studio.html">Studio</a>
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="assets/js/site.js"></script>
+
+</body>
+</html>

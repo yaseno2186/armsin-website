@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studio: Armsin Digital Media</title>
+<meta name="description" content="Das Studio hinter Armsin Digital Media: über mich, laufende Projekte und wie man mitarbeiten kann.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/png" href="assets/logo/armsin-icon.png">
+<link rel="apple-touch-icon" href="assets/logo/armsin-icon.png">
+</head>
+<body>
+
+<header class="site-header">
+  <nav class="floating-nav" id="floating-nav" aria-label="Hauptnavigation">
+    <a href="index.html" class="nav-logo" aria-label="Armsin Digital Media – zur Startseite">
+      <img src="assets/logo/armsin-icon.png" alt="" width="34" height="34">
+    </a>
+    <div class="nav-menu" id="nav-panel">
+      <div class="nav-links">
+        <span class="nav-indicator" aria-hidden="true"></span>
+        <a href="ablauf.html">Ablauf</a>
+        <a href="ablauf.html#termin">Termin buchen</a>
+        <a href="studio.html" class="is-active">Studio</a>
+      </div>
+      <a href="index.html#contact" class="nav-cta">Kostenlosen Check anfragen</a>
+    </div>
+    <button type="button" class="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-panel">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ================= STUDIO HERO ================= -->
+  <section class="studio-hero">
+    <div class="container studio-hero-inner" data-reveal-group>
+      <h1 data-reveal>Alles rund um Armsin Digital Media</h1>
+      <p class="lead" data-reveal>Wer dahintersteckt, woran gerade gearbeitet wird und wie man mitmachen kann.</p>
+    </div>
+  </section>
+
+  <!-- ================= STUDIO LINKS ================= -->
+  <section class="services" id="studio-links">
+    <div class="container">
+      <div class="services-grid">
+        <a href="about.html" class="service-card" data-reveal>
+          <span class="service-icon-badge"><img class="service-icon" src="assets/icons/icon-talk.svg" alt="" width="28" height="28"></span>
+          <h3>Über mich</h3>
+          <p>Wer Armsin Digital Media gegründet hat und warum.</p>
+          <span class="service-arrow">Mehr erfahren &rarr;</span>
+        </a>
+
+        <a href="projects.html" class="service-card" data-reveal>
+          <span class="service-icon-badge"><img class="service-icon" src="assets/icons/icon-build.svg" alt="" width="28" height="28"></span>
+          <h3>Projekte</h3>
+          <p>Woran gerade gearbeitet wird.</p>
+          <span class="service-arrow">Mehr erfahren &rarr;</span>
+        </a>
+
+        <a href="careers.html" class="service-card" data-reveal>
+          <span class="service-icon-badge"><img class="service-icon" src="assets/icons/icon-handover.svg" alt="" width="28" height="28"></span>
+          <h3>Karriere</h3>
+          <p>Wie man in Zukunft mit Armsin zusammenarbeiten kann.</p>
+          <span class="service-arrow">Mehr erfahren &rarr;</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <span class="footer-brand">Armsin Digital Media</span>
+    <nav class="footer-links">
+      <a href="studio.html">Studio</a>
+      <a href="impressum.html">Impressum</a>
+      <a href="datenschutz.html">Datenschutz</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="assets/js/site.js"></script>
+
+</body>
+</html>

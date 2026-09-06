@@ -1,0 +1,12 @@
+<svg viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Zwei sich überlappende Sprechblasen als Symbol für ein Gespräch">
+  <rect x="18" y="34" width="150" height="98" rx="18" fill="#1D3B2C"/>
+  <path d="M40 132 L40 158 L70 132 Z" fill="#1D3B2C"/>
+  <circle cx="58" cy="83" r="7" fill="#D6E8DD"/>
+  <circle cx="93" cy="83" r="7" fill="#D6E8DD"/>
+  <circle cx="128" cy="83" r="7" fill="#D6E8DD"/>
+
+  <rect x="88" y="14" width="134" height="84" rx="16" fill="#39D97A"/>
+  <path d="M186 98 L186 120 L212 98 Z" fill="#39D97A"/>
+  <rect x="108" y="42" width="80" height="8" rx="4" fill="#D6E8DD" opacity="0.9"/>
+  <rect x="108" y="60" width="54" height="8" rx="4" fill="#D6E8DD" opacity="0.7"/>
+</svg>

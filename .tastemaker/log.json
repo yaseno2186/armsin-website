@@ -1,0 +1,30 @@
+{
+  "builds": [
+    {
+      "date": "2026-09-04",
+      "scope": "Hero + Services (review checkpoint)",
+      "macrostructure": "Simplified Feature Stack",
+      "archetypes": {
+        "nav": "minimal-sticky, wordmark + single CTA",
+        "hero": "centered-text + custom SVG illustration",
+        "services": "3-column icon-top card grid"
+      },
+      "palette_source": "given by client brief (.claude/CLAUDE.md), not generated",
+      "notes": "Python unavailable this session — contrast hand-calculated, icons/illustration hand-authored SVG instead of fetched."
+    },
+    {
+      "date": "2026-09-05",
+      "scope": "Anti-slop audit fix pass — all pages",
+      "macrostructure": "Simplified Feature Stack (unchanged)",
+      "archetypes": {
+        "nav": "minimal-sticky, wordmark + single CTA (unchanged, now consistent across all subpages)",
+        "hero": "centered-text + SVG illustration, blob background removed, WebGL removed",
+        "services": "3/4-column icon-top card grid (unchanged)",
+        "process": "changed from boxed tilted-card grid to flat numbered rail — deliberately differs from services' card archetype now",
+        "subpage-story": "new: icon-badge + pull-quote two-column archetype (story-grid), replacing plain single-paragraph text block"
+      },
+      "palette_source": "given by client brief (.claude/CLAUDE.md), not generated",
+      "notes": "Removed a real dependency (Three.js via CDN) that violated the brief's no-heavy-libraries rule. No new photography/illustration fetched this pass — reused existing icon assets only."
+    }
+  ]
+}

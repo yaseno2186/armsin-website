@@ -1,0 +1,15 @@
+<svg viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Browserfenster mit Code-Zeilen als Symbol für die Umsetzung">
+  <rect x="20" y="24" width="200" height="144" rx="14" fill="#0F1A14"/>
+  <rect x="20" y="24" width="200" height="28" rx="14" fill="#1D2C27"/>
+  <circle cx="38" cy="38" r="5" fill="#39D97A"/>
+  <circle cx="56" cy="38" r="5" fill="#D6E8DD" opacity="0.5"/>
+  <circle cx="74" cy="38" r="5" fill="#D6E8DD" opacity="0.5"/>
+
+  <rect x="40" y="72" width="90" height="9" rx="4.5" fill="#D6E8DD" opacity="0.85"/>
+  <rect x="58" y="90" width="120" height="9" rx="4.5" fill="#39D97A"/>
+  <rect x="58" y="108" width="70" height="9" rx="4.5" fill="#D6E8DD" opacity="0.55"/>
+  <rect x="40" y="126" width="100" height="9" rx="4.5" fill="#D6E8DD" opacity="0.55"/>
+
+  <rect x="150" y="120" width="52" height="8" rx="4" fill="#1D3B2C"/>
+  <rect x="150" y="120" width="30" height="8" rx="4" fill="#39D97A"/>
+</svg>

@@ -1,0 +1,12 @@
+<svg viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Schlüssel und Kreislauf-Symbol für Übergabe und laufende Betreuung">
+  <circle cx="76" cy="100" r="34" fill="none" stroke="#1D3B2C" stroke-width="14"/>
+  <rect x="102" y="93" width="80" height="14" fill="#1D3B2C"/>
+  <rect x="150" y="86" width="14" height="28" fill="#1D3B2C"/>
+  <rect x="172" y="86" width="14" height="28" fill="#1D3B2C"/>
+
+  <path d="M120 34 A 56 56 0 1 1 64 46" fill="none" stroke="#39D97A" stroke-width="9" stroke-linecap="round"/>
+  <polygon points="118,18 134,32 112,40" fill="#39D97A"/>
+
+  <path d="M180 168 A 40 40 0 1 1 190 130" fill="none" stroke="#0F1A14" stroke-width="9" stroke-linecap="round" opacity="0.85"/>
+  <polygon points="196,146 190,128 210,132" fill="#0F1A14" opacity="0.85"/>
+</svg>

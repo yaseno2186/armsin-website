@@ -1,0 +1,13 @@
+<svg viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Dokument mit Preis und Häkchen als Symbol für ein klares Angebot">
+  <rect x="60" y="18" width="120" height="164" rx="14" fill="#0F1A14"/>
+  <rect x="78" y="46" width="84" height="9" rx="4.5" fill="#D6E8DD" opacity="0.85"/>
+  <rect x="78" y="68" width="84" height="9" rx="4.5" fill="#D6E8DD" opacity="0.55"/>
+  <rect x="78" y="90" width="56" height="9" rx="4.5" fill="#D6E8DD" opacity="0.55"/>
+
+  <rect x="78" y="118" width="84" height="1.5" fill="#D6E8DD" opacity="0.25"/>
+  <rect x="78" y="134" width="40" height="10" rx="5" fill="#D6E8DD" opacity="0.85"/>
+  <rect x="128" y="130" width="34" height="18" rx="9" fill="#39D97A"/>
+
+  <circle cx="176" cy="170" r="34" fill="#39D97A"/>
+  <path d="M160 170 L172 182 L194 156" fill="none" stroke="#D6E8DD" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
