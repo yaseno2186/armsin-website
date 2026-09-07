@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Über mich: Armsin Digital Media</title>
-<meta name="description" content="Yass Almardoud, Gründer von Armsin Digital Media: warum die Agentur entstanden ist und welche Erfahrung dahintersteckt.">
+<title data-i18n="about.meta.title">Über mich: Armsin Digital Media</title>
+<meta name="description" content="Yass Almardoud, Gründer von Armsin Digital Media: warum die Agentur entstanden ist und welche Erfahrung dahintersteckt." data-i18n="about.meta.description">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -15,20 +15,20 @@
 <body>
 
 <header class="site-header">
-  <nav class="floating-nav" id="floating-nav" aria-label="Hauptnavigation">
-    <a href="index.html" class="nav-logo" aria-label="Armsin Digital Media – zur Startseite">
+  <nav class="floating-nav" id="floating-nav" aria-label="Hauptnavigation" data-i18n-aria="nav.aria.main">
+    <a href="index.html" class="nav-logo" aria-label="Armsin Digital Media – zur Startseite" data-i18n-aria="nav.aria.home">
       <img src="assets/logo/armsin-icon.png" alt="" width="34" height="34">
     </a>
     <div class="nav-menu" id="nav-panel">
       <div class="nav-links">
         <span class="nav-indicator" aria-hidden="true"></span>
-        <a href="ablauf.html">Ablauf</a>
-        <a href="ablauf.html#termin">Termin buchen</a>
-        <a href="studio.html" class="is-active">Studio</a>
+        <a href="ablauf.html" data-i18n="nav.ablauf">Ablauf</a>
+        <a href="ablauf.html#termin" data-i18n="nav.termin">Termin buchen</a>
+        <a href="studio.html" class="is-active" data-i18n="nav.studio">Studio</a>
       </div>
-      <a href="index.html#contact" class="nav-cta">Kostenlosen Check anfragen</a>
+      <a href="index.html#contact" class="nav-cta" data-i18n="nav.cta">Kostenlosen Check anfragen</a>
     </div>
-    <button type="button" class="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-panel">
+    <button type="button" class="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-panel" data-i18n-aria="nav.aria.toggle">
       <span></span><span></span><span></span>
     </button>
   </nav>
@@ -57,7 +57,7 @@
       </div>
       <div class="about-hero-copy" data-reveal-group>
         <h1 data-reveal>Yass Almardoud</h1>
-        <p class="lead" data-reveal>Gründer von Armsin Digital Media. Websites, Apps, Fotografie und Automatisierung für lokale Betriebe in Deutschland.</p>
+        <p class="lead" data-reveal data-i18n="about.hero.lead">Gründer von Armsin Digital Media. Websites, Apps, Fotografie und Automatisierung für lokale Betriebe in Deutschland.</p>
       </div>
     </div>
   </section>
@@ -68,11 +68,11 @@
       <div class="about-story-inner story-grid" data-reveal>
         <div class="story-visual">
           <span class="service-icon-badge story-icon-badge"><img class="service-icon" src="assets/icons/icon-talk.svg" alt="" width="32" height="32"></span>
-          <blockquote class="story-pull">Diese Lücke wollte ich schließen.</blockquote>
+          <blockquote class="story-pull" data-i18n="about.story.pull">Diese Lücke wollte ich schließen.</blockquote>
         </div>
         <div class="story-copy">
-          <h2>Meine Geschichte</h2>
-          <p>
+          <h2 data-i18n="about.story.h2">Meine Geschichte</h2>
+          <p data-i18n="about.story.p">
             Viele lokale Geschäfte in Deutschland haben keine eigene Website oder
             eine, die seit Jahren nicht mehr aktualisiert wurde. Gleichzeitig
             suchen immer mehr Kunden online nach genau diesen Geschäften, bevor
@@ -90,8 +90,8 @@
   <section class="about-timeline" id="werdegang">
     <div class="container">
       <div class="section-head" data-reveal>
-        <h2>Werdegang</h2>
-        <p>Vom ersten Reparatur-Job bis zur eigenen Firma.</p>
+        <h2 data-i18n="about.timeline.h2">Werdegang</h2>
+        <p data-i18n="about.timeline.lead">Vom ersten Reparatur-Job bis zur eigenen Firma.</p>
       </div>
 
       <ol class="timeline-rail" data-reveal-group>
@@ -99,32 +99,32 @@
           <span class="timeline-node"></span>
           <span class="timeline-year">2019–2020</span>
           <div class="timeline-body">
-            <h3>PC-Repair-Manager</h3>
-            <p>An der eigenen Schule den Computer-Reparaturbetrieb geleitet.</p>
+            <h3 data-i18n="about.timeline.item1.h3">PC-Repair-Manager</h3>
+            <p data-i18n="about.timeline.item1.p">An der eigenen Schule den Computer-Reparaturbetrieb geleitet.</p>
           </div>
         </li>
         <li class="timeline-item" data-reveal>
           <span class="timeline-node"></span>
           <span class="timeline-year">2024</span>
           <div class="timeline-body">
-            <h3>Backend-Entwickler bei BUSCHMEIS</h3>
-            <p>Mit mehrsprachigen Modellen und großen Datenbanken gearbeitet.</p>
+            <h3 data-i18n="about.timeline.item2.h3">Backend-Entwickler bei BUSCHMEIS</h3>
+            <p data-i18n="about.timeline.item2.p">Mit mehrsprachigen Modellen und großen Datenbanken gearbeitet.</p>
           </div>
         </li>
         <li class="timeline-item" data-reveal>
           <span class="timeline-node"></span>
           <span class="timeline-year">2025</span>
           <div class="timeline-body">
-            <h3>Stipendium &amp; Abschlüsse</h3>
-            <p>Ein Stipendium erhalten und mehrere Abschlüsse im Bereich Programmierung gemacht.</p>
+            <h3 data-i18n="about.timeline.item3.h3">Stipendium &amp; Abschlüsse</h3>
+            <p data-i18n="about.timeline.item3.p">Ein Stipendium erhalten und mehrere Abschlüsse im Bereich Programmierung gemacht.</p>
           </div>
         </li>
         <li class="timeline-item" data-reveal>
           <span class="timeline-node"></span>
           <span class="timeline-year">2026<span class="timeline-cursor" aria-hidden="true"></span></span>
           <div class="timeline-body">
-            <h3>Gründung von Armsin</h3>
-            <p>Die eigene Firma, Armsin Digital Media, gegründet.</p>
+            <h3 data-i18n="about.timeline.item4.h3">Gründung von Armsin</h3>
+            <p data-i18n="about.timeline.item4.p">Die eigene Firma, Armsin Digital Media, gegründet.</p>
           </div>
         </li>
       </ol>
@@ -135,24 +135,24 @@
   <section class="services" id="skills">
     <div class="container">
       <div class="section-head" data-reveal>
-        <h2>Fähigkeiten &amp; Erfahrung</h2>
-        <p>Solides technisches Fundament, eingesetzt für einfache, saubere digitale Lösungen.</p>
+        <h2 data-i18n="about.skills.h2">Fähigkeiten &amp; Erfahrung</h2>
+        <p data-i18n="about.skills.lead">Solides technisches Fundament, eingesetzt für einfache, saubere digitale Lösungen.</p>
       </div>
 
       <div class="services-grid">
         <article class="service-card" data-reveal>
-          <h3>Frontend-Entwicklung</h3>
-          <p>Seit 1–2 Jahren aktiv mit HTML, CSS und JavaScript im Einsatz.</p>
+          <h3 data-i18n="about.skills.frontend.h3">Frontend-Entwicklung</h3>
+          <p data-i18n="about.skills.frontend.p">Seit 1–2 Jahren aktiv mit HTML, CSS und JavaScript im Einsatz.</p>
         </article>
 
         <article class="service-card" data-reveal>
-          <h3>Praxiserfahrung</h3>
-          <p>Praktika bei größeren Unternehmen absolviert, unter anderem bei der Buschmeis GmbH.</p>
+          <h3 data-i18n="about.skills.practical.h3">Praxiserfahrung</h3>
+          <p data-i18n="about.skills.practical.p">Praktika bei größeren Unternehmen absolviert, unter anderem bei der Buschmeis GmbH.</p>
         </article>
 
         <article class="service-card" data-reveal>
-          <h3>Daten &amp; Modelle</h3>
-          <p>Dort mit mehrsprachigen Modellen und großen Datenbanken gearbeitet.</p>
+          <h3 data-i18n="about.skills.data.h3">Daten &amp; Modelle</h3>
+          <p data-i18n="about.skills.data.p">Dort mit mehrsprachigen Modellen und großen Datenbanken gearbeitet.</p>
         </article>
       </div>
     </div>
@@ -161,8 +161,8 @@
   <!-- ================= CTA ================= -->
   <section class="about-cta">
     <div class="container about-cta-inner" data-reveal>
-      <h2>Lust auf eine ehrliche Einschätzung?</h2>
-      <a href="index.html#contact" class="btn btn-primary">Kostenlosen Check anfragen</a>
+      <h2 data-i18n="about.cta.h2">Lust auf eine ehrliche Einschätzung?</h2>
+      <a href="index.html#contact" class="btn btn-primary" data-i18n="about.cta.btn">Kostenlosen Check anfragen</a>
     </div>
   </section>
 
@@ -170,15 +170,20 @@
 
 <footer class="site-footer">
   <div class="container footer-inner">
-    <span class="footer-brand">Armsin Digital Media</span>
+    <span class="footer-brand"><img src="assets/logo/armsin-icon-transparent.png" alt="" width="24" height="24">Armsin Digital Media</span>
     <nav class="footer-links">
-      <a href="studio.html">Studio</a>
-      <a href="impressum.html">Impressum</a>
-      <a href="datenschutz.html">Datenschutz</a>
+      <a href="studio.html" data-i18n="nav.studio">Studio</a>
+      <a href="impressum.html" data-i18n="footer.impressum">Impressum</a>
+      <a href="datenschutz.html" data-i18n="footer.datenschutz">Datenschutz</a>
     </nav>
+    <div class="lang-switch" role="group" aria-label="Sprache wählen / Choose language">
+      <button type="button" class="lang-btn is-active" data-lang="de">DE</button>
+      <button type="button" class="lang-btn" data-lang="en">EN</button>
+    </div>
   </div>
 </footer>
 
+<script src="assets/js/i18n.js"></script>
 <script src="assets/js/site.js"></script>
 
 </body>

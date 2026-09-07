@@ -25,8 +25,9 @@ Plain **HTML / CSS / JS**. No npm, no bundler, no framework.
 - HTML — one file per page (flat structure, no routing)
 - `style.css` — single global stylesheet (retro-terminal / CRT dark theme)
 - `assets/js/site.js` — shared vanilla JS (nav, small interactions)
-- `3d Object/` — an isolated Three.js-style module for a 3D visual on the
-  homepage/ablauf page (self-contained, not part of the main JS bundle)
+- `assets/js/i18n.js` — DE/EN language switch (see [Language](#language))
+- `assets/js/hero-model.js` — Three.js module rendering the homepage hero's
+  3D retro-workstation (`assets/models/retro-workstation.glb`)
 
 ## Site map
 
@@ -82,16 +83,16 @@ Armsin Website/
 ├── impressum.html           # Legal notice (required, DE law)
 ├── datenschutz.html         # Privacy policy
 ├── style.css                # Global stylesheet (single source of truth)
-├── assets/
-│   ├── js/site.js           # Shared vanilla JS (nav, interactions)
-│   ├── icons/                # Inline-ready SVG icons (services, process)
-│   ├── images/                # Process-step SVG illustrations
-│   ├── logo/                  # Armsin wordmark + icon (light/dark)
-│   └── about/                 # Founder photo
-└── 3d Object/                # Standalone 3D visual module (Three.js-style)
-    ├── programming-module.html
-    ├── programming-module.js
-    └── three-d-stage.js
+└── assets/
+    ├── js/
+    │   ├── site.js           # Shared vanilla JS (nav, interactions)
+    │   ├── i18n.js            # DE/EN language switch
+    │   └── hero-model.js      # 3D hero model (Three.js)
+    ├── models/                # GLB model for the homepage hero
+    ├── icons/                 # Inline-ready SVG icons (services, process)
+    ├── images/                # Process-step SVG illustrations
+    ├── logo/                  # Armsin wordmark + icon (light/dark/transparent)
+    └── about/                 # Founder photo
 ```
 
 ## Design system
@@ -119,8 +120,20 @@ Full rationale and contrast math: `.tastemaker/style-lock.md` and
 
 ## Language
 
-All visible copy is in **German** (target audience: German local business
-owners). Code comments may be in English.
+German is the default and the source of truth for all copy (target
+audience: German local business owners). Code comments may be in English.
+
+A DE/EN toggle in the footer (`assets/js/i18n.js`) lets visitors switch the
+UI and marketing copy to English; the choice persists via `localStorage`.
+English strings live in one dictionary in `i18n.js`, keyed by the
+`data-i18n` / `data-i18n-aria` / `data-i18n-title` attribute on each
+element — add a new translatable string by adding the attribute in the HTML
+and the matching key in `i18n.js`.
+
+**`impressum.html` and `datenschutz.html` are excluded from translation.**
+Their legal body text carries no `data-i18n` attributes and stays German
+regardless of the toggle — only the shared nav/footer chrome around it
+translates. Do not add `data-i18n` to the legal content itself.
 
 ## Editing guide (non-technical)
 

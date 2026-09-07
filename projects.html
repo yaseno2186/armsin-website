@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Projekte: Armsin Digital Media</title>
-<meta name="description" content="Woran Armsin Digital Media gerade arbeitet. Noch keine abgeschlossenen Kundenprojekte, dafür ehrlich darüber.">
+<title data-i18n="projects.meta.title">Projekte: Armsin Digital Media</title>
+<meta name="description" content="Woran Armsin Digital Media gerade arbeitet. Noch keine abgeschlossenen Kundenprojekte, dafür ehrlich darüber." data-i18n="projects.meta.description">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -15,20 +15,20 @@
 <body>
 
 <header class="site-header">
-  <nav class="floating-nav" id="floating-nav" aria-label="Hauptnavigation">
-    <a href="index.html" class="nav-logo" aria-label="Armsin Digital Media – zur Startseite">
+  <nav class="floating-nav" id="floating-nav" aria-label="Hauptnavigation" data-i18n-aria="nav.aria.main">
+    <a href="index.html" class="nav-logo" aria-label="Armsin Digital Media – zur Startseite" data-i18n-aria="nav.aria.home">
       <img src="assets/logo/armsin-icon.png" alt="" width="34" height="34">
     </a>
     <div class="nav-menu" id="nav-panel">
       <div class="nav-links">
         <span class="nav-indicator" aria-hidden="true"></span>
-        <a href="ablauf.html">Ablauf</a>
-        <a href="ablauf.html#termin">Termin buchen</a>
-        <a href="studio.html" class="is-active">Studio</a>
+        <a href="ablauf.html" data-i18n="nav.ablauf">Ablauf</a>
+        <a href="ablauf.html#termin" data-i18n="nav.termin">Termin buchen</a>
+        <a href="studio.html" class="is-active" data-i18n="nav.studio">Studio</a>
       </div>
-      <a href="index.html#contact" class="nav-cta">Kostenlosen Check anfragen</a>
+      <a href="index.html#contact" class="nav-cta" data-i18n="nav.cta">Kostenlosen Check anfragen</a>
     </div>
-    <button type="button" class="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-panel">
+    <button type="button" class="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-panel" data-i18n-aria="nav.aria.toggle">
       <span></span><span></span><span></span>
     </button>
   </nav>
@@ -39,8 +39,8 @@
   <!-- ================= PROJECTS HERO ================= -->
   <section class="page-hero">
     <div class="container" data-reveal-group>
-      <h1 data-reveal>Noch am Anfang</h1>
-      <p class="lead" data-reveal>
+      <h1 data-reveal data-i18n="projects.hero.h1">Noch am Anfang</h1>
+      <p class="lead" data-reveal data-i18n="projects.hero.lead">
         Armsin Digital Media ist ein junges Studio. Aktuell gibt es noch
         keine abgeschlossenen Kundenprojekte, die ich hier zeigen könnte,
         und ich erfinde keine.
@@ -54,11 +54,11 @@
       <div class="about-story-inner story-grid" data-reveal>
         <div class="story-visual">
           <span class="service-icon-badge story-icon-badge"><img class="service-icon" src="assets/icons/icon-build.svg" alt="" width="32" height="32"></span>
-          <blockquote class="story-pull">Echtes Vorher-Nachher statt Stockfotos.</blockquote>
+          <blockquote class="story-pull" data-i18n="projects.story.pull">Echtes Vorher-Nachher statt Stockfotos.</blockquote>
         </div>
         <div class="story-copy">
-          <h2>Nächster Schritt</h2>
-          <p>
+          <h2 data-i18n="projects.story.h2">Nächster Schritt</h2>
+          <p data-i18n="projects.story.p">
             Sobald die ersten Projekte für lokale Betriebe in Deutschland
             abgeschlossen sind, zeige ich sie hier, mit echtem Vorher-Nachher
             statt Stockfotos. Bis dahin zählt das persönliche Gespräch mehr
@@ -72,8 +72,8 @@
   <!-- ================= CTA ================= -->
   <section class="about-cta">
     <div class="container about-cta-inner" data-reveal>
-      <h2>Eines der ersten Projekte werden?</h2>
-      <a href="index.html#contact" class="btn btn-primary">Kostenlosen Check anfragen</a>
+      <h2 data-i18n="projects.cta.h2">Eines der ersten Projekte werden?</h2>
+      <a href="index.html#contact" class="btn btn-primary" data-i18n="projects.cta.btn">Kostenlosen Check anfragen</a>
     </div>
   </section>
 
@@ -81,15 +81,20 @@
 
 <footer class="site-footer">
   <div class="container footer-inner">
-    <span class="footer-brand">Armsin Digital Media</span>
+    <span class="footer-brand"><img src="assets/logo/armsin-icon-transparent.png" alt="" width="24" height="24">Armsin Digital Media</span>
     <nav class="footer-links">
-      <a href="studio.html">Studio</a>
-      <a href="impressum.html">Impressum</a>
-      <a href="datenschutz.html">Datenschutz</a>
+      <a href="studio.html" data-i18n="nav.studio">Studio</a>
+      <a href="impressum.html" data-i18n="footer.impressum">Impressum</a>
+      <a href="datenschutz.html" data-i18n="footer.datenschutz">Datenschutz</a>
     </nav>
+    <div class="lang-switch" role="group" aria-label="Sprache wählen / Choose language">
+      <button type="button" class="lang-btn is-active" data-lang="de">DE</button>
+      <button type="button" class="lang-btn" data-lang="en">EN</button>
+    </div>
   </div>
 </footer>
 
+<script src="assets/js/i18n.js"></script>
 <script src="assets/js/site.js"></script>
 
 </body>

@@ -15,20 +15,20 @@
 <body>
 
 <header class="site-header">
-  <nav class="floating-nav" id="floating-nav" aria-label="Hauptnavigation">
-    <a href="index.html" class="nav-logo" aria-label="Armsin Digital Media – zur Startseite">
+  <nav class="floating-nav" id="floating-nav" aria-label="Hauptnavigation" data-i18n-aria="nav.aria.main">
+    <a href="index.html" class="nav-logo" aria-label="Armsin Digital Media – zur Startseite" data-i18n-aria="nav.aria.home">
       <img src="assets/logo/armsin-icon.png" alt="" width="34" height="34">
     </a>
     <div class="nav-menu" id="nav-panel">
       <div class="nav-links">
         <span class="nav-indicator" aria-hidden="true"></span>
-        <a href="ablauf.html">Ablauf</a>
-        <a href="ablauf.html#termin">Termin buchen</a>
-        <a href="studio.html">Studio</a>
+        <a href="ablauf.html" data-i18n="nav.ablauf">Ablauf</a>
+        <a href="ablauf.html#termin" data-i18n="nav.termin">Termin buchen</a>
+        <a href="studio.html" data-i18n="nav.studio">Studio</a>
       </div>
-      <a href="index.html#contact" class="nav-cta">Kostenlosen Check anfragen</a>
+      <a href="index.html#contact" class="nav-cta" data-i18n="nav.cta">Kostenlosen Check anfragen</a>
     </div>
-    <button type="button" class="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-panel">
+    <button type="button" class="nav-toggle" aria-label="Menü öffnen" aria-expanded="false" aria-controls="nav-panel" data-i18n-aria="nav.aria.toggle">
       <span></span><span></span><span></span>
     </button>
   </nav>
@@ -38,27 +38,58 @@
   <section class="legal-page">
     <div class="container">
       <h1>Impressum</h1>
-      <p class="legal-pending">
-        Diese Seite ist noch nicht fertig. Das Impressum ist gesetzlich
-        vorgeschrieben (Angaben nach §5 TMG) und wird ergänzt, sobald die
-        vollständigen Unternehmensangaben vorliegen. Bitte keine Platzhalter
-        veröffentlichen.
-      </p>
+      <div class="legal-content">
+        <h2>Angaben gemäß § 5 TMG</h2>
+        <p>
+          Yass Almardoud<br>
+          Armsin Digital Media<br>
+          Karl-Kegel-Str. 45<br>
+          09599 Freiberg
+        </p>
+
+        <h2>Kontakt</h2>
+        <p>E-Mail: yaseno2186ss@gmail.com</p>
+
+        <h2>Umsatzsteuer</h2>
+        <p>
+          Gemäß § 19 Abs. 1 UStG wird keine Umsatzsteuer erhoben
+          (Kleinunternehmerregelung). Es liegt keine
+          Umsatzsteuer-Identifikationsnummer vor.
+        </p>
+
+        <h2>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV</h2>
+        <p>Yass Almardoud, Anschrift wie oben</p>
+
+        <h2>EU-Streitschlichtung</h2>
+        <p>
+          Die Europäische Kommission stellt eine Plattform zur
+          Online-Streitbeilegung (OS) bereit:
+          <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noopener">https://ec.europa.eu/consumers/odr/</a><br>
+          Ich bin nicht verpflichtet und nicht bereit, an einem
+          Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle
+          teilzunehmen.
+        </p>
+      </div>
     </div>
   </section>
 </main>
 
 <footer class="site-footer">
   <div class="container footer-inner">
-    <span class="footer-brand">Armsin Digital Media</span>
+    <span class="footer-brand"><img src="assets/logo/armsin-icon-transparent.png" alt="" width="24" height="24">Armsin Digital Media</span>
     <nav class="footer-links">
-      <a href="studio.html">Studio</a>
-      <a href="impressum.html">Impressum</a>
-      <a href="datenschutz.html">Datenschutz</a>
+      <a href="studio.html" data-i18n="nav.studio">Studio</a>
+      <a href="impressum.html" data-i18n="footer.impressum">Impressum</a>
+      <a href="datenschutz.html" data-i18n="footer.datenschutz">Datenschutz</a>
     </nav>
+    <div class="lang-switch" role="group" aria-label="Sprache wählen / Choose language">
+      <button type="button" class="lang-btn is-active" data-lang="de">DE</button>
+      <button type="button" class="lang-btn" data-lang="en">EN</button>
+    </div>
   </div>
 </footer>
 
+<script src="assets/js/i18n.js"></script>
 <script src="assets/js/site.js"></script>
 
 </body>

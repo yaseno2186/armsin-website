@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Retro Workstation — 3D</title>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.184.0/build/three.module.js",
+    "three/addons/controls/OrbitControls.js": "https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js",
+    "three/addons/exporters/OBJExporter.js": "https://unpkg.com/three@0.184.0/examples/jsm/exporters/OBJExporter.js",
+    "three/addons/exporters/GLTFExporter.js": "https://unpkg.com/three@0.184.0/examples/jsm/exporters/GLTFExporter.js"
+  },
+  "integrity": {
+    "https://unpkg.com/three@0.184.0/build/three.module.js": "sha384-8FCZ1eVO6it4+pbec2aDtnTrwjWXZLJRC+MAGCIPDgsYnUrl/E0A2YlF8ioMKI/J",
+    "https://unpkg.com/three@0.184.0/build/three.core.js": "sha384-dw2ooPewaEIrAgl6oFDBmmBWCE9oW9LxRGcfwZ0hLvEprzo202wXl7vCYHRlSnOT",
+    "https://unpkg.com/three@0.184.0/examples/jsm/controls/OrbitControls.js": "sha384-4rziNxOBZKQ69i+w+f89KJ55TCYquwchVbByQwmaOeIOXdOU2PLDn3kOfXHwIJC9",
+    "https://unpkg.com/three@0.184.0/examples/jsm/exporters/OBJExporter.js": "sha384-nbwtoZENJD3Vq+ACK0CuGQdPMuDWHkamC2KJD70EV5nfg6jQjfppKOea07YJN+N3",
+    "https://unpkg.com/three@0.184.0/examples/jsm/exporters/GLTFExporter.js": "sha384-VofkvpG6HERhFCYbsUOHeNXBCqID2nfqkQqnVzE1jc/oPcz+qJ13ADdXH08hE+cQ"
+  }
+}
+</script>
+<style>
+  html, body { margin: 0; height: 100%; background: #000000; }
+  three-d-stage:not(:defined) { visibility: hidden; }
+  three-d-stage { display: block; width: 100vw; height: 100vh; }
+</style>
+</head>
+<body>
+<three-d-stage name="retro-workstation" background="#000000" autorotate></three-d-stage>
+<script src="./three-d-stage.js"></script>
+<script type="module">
+const stage = document.querySelector('three-d-stage');
+const { THREE } = await stage.ready;
+
+const M = {
+  shell:      new THREE.MeshStandardMaterial({ name: 'shell_cream',   color: 0xece5d8, roughness: 0.55, metalness: 0.02 }),
+  shellDeep:  new THREE.MeshStandardMaterial({ name: 'shell_shadow',  color: 0xd6cdbb, roughness: 0.65, metalness: 0.02 }),
+  screen:     new THREE.MeshStandardMaterial({ name: 'screen_glass',  color: 0x2b3230, roughness: 0.25, metalness: 0.1 }),
+  phosphor:   new THREE.MeshStandardMaterial({ name: 'phosphor',      color: 0x3bff45, emissive: 0x2bff35, emissiveIntensity: 1.4, roughness: 0.4 }),
+  accent:     new THREE.MeshStandardMaterial({ name: 'accent_red',    color: 0xe2453a, roughness: 0.4 }),
+  leaf:       new THREE.MeshStandardMaterial({ name: 'leaf_green',    color: 0x49c23a, roughness: 0.5 }),
+  pot:        new THREE.MeshStandardMaterial({ name: 'pot_ceramic',   color: 0xfaf8f4, roughness: 0.35 }),
+  vent:       new THREE.MeshStandardMaterial({ name: 'vent_groove',   color: 0xb3a996, roughness: 0.85, metalness: 0.02 }),
+  key:        new THREE.MeshStandardMaterial({ name: 'keycap_cream',  color: 0xf1ebde, roughness: 0.6, metalness: 0.02 }),
+  legend:     new THREE.MeshStandardMaterial({ name: 'legend_ink',     color: 0x6b6459, roughness: 0.7 }),
+  screenGlow: new THREE.MeshStandardMaterial({ name: 'screen_phosphor', color: 0x0a1c10, emissive: 0x1a5c2a, emissiveIntensity: 0.55, roughness: 0.75 }),
+  glow:       new THREE.MeshBasicMaterial({ name: 'screen_glow', color: 0x62ff6b, transparent: true, opacity: 0.022, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.FrontSide }),
+};
+const RAINBOW = [0xe14b3a, 0xef8f36, 0xf2cf45, 0x4bb84f, 0x3d7fd1, 0x8d5bc2].map((c, i) =>
+  new THREE.MeshStandardMaterial({ name: `stripe_${i + 1}`, color: c, roughness: 0.5 }));
+
+function roundRect(w, h, r) {
+  const s = new THREE.Shape();
+  const x = -w / 2, y = -h / 2;
+  s.moveTo(x + r, y);
+  s.lineTo(x + w - r, y);      s.absarc(x + w - r, y + r, r, -Math.PI / 2, 0);
+  s.lineTo(x + w, y + h - r);  s.absarc(x + w - r, y + h - r, r, 0, Math.PI / 2);
+  s.lineTo(x + r, y + h);      s.absarc(x + r, y + h - r, r, Math.PI / 2, Math.PI);
+  s.lineTo(x, y + r);          s.absarc(x + r, y + r, r, Math.PI, Math.PI * 1.5);
+  return s;
+}
+
+function roundedBox(w, h, d, r, mat, name) {
+  const b = Math.min(r * 0.8, d / 2 - 0.002);
+  const geo = new THREE.ExtrudeGeometry(roundRect(w, h, r), {
+    depth: d - 2 * b, bevelEnabled: true, bevelThickness: b, bevelSize: b, bevelSegments: 5, curveSegments: 12,
+  });
+  geo.translate(0, 0, -(d / 2 - b));
+  geo.computeVertexNormals();
+  const m = new THREE.Mesh(geo, mat);
+  m.name = name;
+  return m;
+}
+
+const model = new THREE.Group();
+model.name = 'retro_workstation';
+
+/* ---------- system unit ---------- */
+const unit = new THREE.Group();
+unit.name = 'system_unit';
+const BW = 0.46, BH = 0.115, BD = 0.34;
+unit.add(roundedBox(BW, BH, BD, 0.028, M.shell, 'unit_case'));
+
+// vent slots (left cheek of the front face)
+for (let i = 0; i < 3; i++) {
+  const v = roundedBox(0.014, 0.055, 0.012, 0.006, M.vent, `vent_${i + 1}`);
+  v.position.set(-BW / 2 + 0.048 + i * 0.026, 0, BD / 2 - 0.004);
+  unit.add(v);
+}
+// floppy drive
+const bay = roundedBox(0.13, 0.032, 0.014, 0.006, M.shellDeep, 'drive_bay');
+bay.position.set(0.105, -0.004, BD / 2 - 0.004);
+unit.add(bay);
+const eject = roundedBox(0.016, 0.02, 0.014, 0.005, M.accent, 'eject_button');
+eject.position.set(0.158, -0.004, BD / 2 - 0.001);
+unit.add(eject);
+// power LED
+const led = new THREE.Mesh(new THREE.SphereGeometry(0.007, 24, 16), M.phosphor);
+led.name = 'power_led';
+led.position.set(-0.06, -0.032, BD / 2 - 0.002);
+unit.add(led);
+const seam = roundedBox(BW - 0.006, 0.0016, BD - 0.006, 0.001, M.shellDeep, 'case_seam');
+seam.position.set(0, BH / 2 - 0.030, 0);
+unit.add(seam);
+[[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sz], i) => {
+  const f = new THREE.Mesh(new THREE.CylinderGeometry(0.010, 0.010, 0.006, 20), M.shellDeep);
+  f.name = `unit_foot_${i + 1}`;
+  f.position.set(sx * (BW / 2 - 0.035), -BH / 2 - 0.001, sz * (BD / 2 - 0.035));
+  unit.add(f);
+});
+unit.position.y = BH / 2;
+model.add(unit);
+
+/* ---------- monitor ---------- */
+const mon = new THREE.Group();
+mon.name = 'monitor';
+
+const foot = roundedBox(0.20, 0.026, 0.19, 0.012, M.shell, 'monitor_foot');
+foot.position.y = 0.013;
+mon.add(foot);
+
+const head = new THREE.Group();
+head.name = 'crt_head';
+const CW = 0.30, CH = 0.265, CD = 0.27;
+head.add(roundedBox(CW, CH, CD, 0.05, M.shell, 'crt_case'));
+
+const bezelDepth = CD / 2;
+
+/* --- live code screen: canvas texture typing Java, scrolling up --- */
+const SC_W = 728, SC_H = 556;
+const scr = document.createElement('canvas');
+scr.width = SC_W; scr.height = SC_H;
+const cx = scr.getContext('2d');
+const buf = document.createElement('canvas');
+buf.width = SC_W; buf.height = SC_H;
+const bx = buf.getContext('2d');
+const scrTex = new THREE.CanvasTexture(scr);
+scrTex.name = 'screen_code_texture';
+scrTex.colorSpace = THREE.SRGBColorSpace;
+scrTex.anisotropy = 4;
+
+const HEADER = [
+  '// Armsin \u2014 portfolio pipeline',
+  '// author: Yass',
+  'package com.armsin.portfolio;',
+  '',
+  'public class ArmsinPortfolio {',
+  '  final String company = "Armsin";',
+  '  final String dev = "Yass";',
+  '  final List<Project> work = list();',
+  '  final List<String> roadmap = list();',
+  '  void add(String t) {',
+  '    work.add(new Project(t));',
+  '  }',
+  '  void goal(String g) {',
+  '    roadmap.add(g);',
+  '  }',
+  '',
+  '  public static void main(String[] a) {',
+  '    new ArmsinPortfolio().publish();',
+  '  }',
+  '',
+  '  void publish() {',
+];
+// each cycle: header, 10 projects, then 10 company goals, then start over
+const P1 = ['Atlas', 'Orbit', 'Harbor', 'Nimbus', 'Vertex', 'Lumen', 'Quartz', 'Beacon', 'Cinder',
+  'Delta', 'Ember', 'Falcon', 'Grid', 'Helix', 'Ion', 'Junction', 'Kilo', 'Lattice', 'Meridian'];
+const P2 = ['Ledger', 'Console', 'Router', 'Pipeline', 'Studio', 'Gateway', 'Engine', 'Vault',
+  'Dashboard', 'Scheduler', 'Registry', 'Compiler', 'Monitor', 'Kernel', 'Bridge'];
+const GOALS = [
+  'More reach for our clients',
+  'Faster shipment, every time',
+  'More efficient delivery',
+  'Improve with every release',
+  'Cleaner code, fewer bugs',
+  'Answer clients the same day',
+  'Automate the boring parts',
+  'Ship weekly, not yearly',
+  'Raise the quality bar',
+  'Grow the Armsin team',
+];
+let cycle = 0;
+function buildCycle() {
+  const lines = HEADER.slice();
+  for (let i = 0; i < 10; i++) {                 // ten projects
+    const k = cycle * 10 + i;
+    lines.push(`    add("${P1[k % P1.length]} ${P2[(k * 5 + 2) % P2.length]}");`);
+  }
+  lines.push('  }', '', '  void goals() {');
+  GOALS.forEach((g) => lines.push(`    goal("${g}");`));   // ten goals
+  lines.push('  }', '}', '');
+  cycle++;
+  return lines;
+}
+let queue = buildCycle(), qi = 0;
+function nextLine() { return qi < queue.length ? queue[qi++] : ''; }
+
+const APERTURE = 0.78;   // fraction of the dome the bezel actually leaves visible
+const LINE_H = 46, PAD_X = 40, PAD_Y = 34, MAX_LINES = Math.floor((SC_H - PAD_Y * 2) / LINE_H);
+let done = [];          // fully typed lines on screen
+let cur = nextLine(), ci = 0, wait = 0, scrollOff = 0;
+
+const KW_RE = /\b(public|private|class|static|void|new|final|String|List|return|import)\b/g;
+function tint(seg) {
+  if (/^\s*\/\//.test(seg)) return '#4f9d57';
+  return null;
+}
+function drawLine(text, y) {
+  // keyword / string / punctuation colouring, monospace so widths are uniform
+  const chw = bx.measureText('M').width;
+  let x = PAD_X;
+  const tokens = text.split(/(\b|(?=[.,;(){}<>:]))/);
+  let inStr = false;
+  for (const t of tokens) {
+    if (!t) continue;
+    let col = '#7dff89';
+    if (t.includes('"')) inStr = !inStr;
+    if (inStr || t.includes('"')) col = '#e6ffa0';
+    else if (/^(public|private|class|static|void|new|final|import|return)$/.test(t)) col = '#d3ffdb';
+    else if (/^(String|List|ArrayList|ArmsinPortfolio|Project|System|Armsin|Yass)$/.test(t)) col = '#8fe3ff';
+    else if (/^[.,;(){}<>:]+$/.test(t)) col = '#57c463';
+    bx.fillStyle = col;
+    bx.shadowColor = 'rgba(90,255,110,0.55)';
+    bx.shadowBlur = 9;
+    bx.fillText(t, x, y);
+    bx.shadowBlur = 0;
+    x += t.length * chw;
+  }
+}
+function paintScreen() {
+  bx.fillStyle = '#08170c';
+  bx.fillRect(0, 0, SC_W, SC_H);
+  bx.font = '33px "SFMono-Regular", "Menlo", "Consolas", monospace';
+  bx.textBaseline = 'top';
+  bx.save();
+  bx.translate(SC_W / 2, SC_H / 2);
+  bx.scale(APERTURE, APERTURE);
+  bx.translate(-SC_W / 2, -SC_H / 2);
+
+  const visible = done.slice(scrollOff);
+  visible.forEach((t, i) => drawLine(t, PAD_Y + i * LINE_H));
+
+  // the line currently being typed, with a block cursor
+  {
+    const y = PAD_Y + visible.length * LINE_H;
+    const partial = cur.slice(0, ci);
+    drawLine(partial, y);
+    const chw = bx.measureText('M').width;
+    bx.fillStyle = '#9dffa6';
+    bx.fillRect(PAD_X + partial.length * chw, y + 3, chw * 0.85, LINE_H - 12);
+  }
+  bx.restore();
+}
+
+const CORNER = 26;
+function roundPath(c, x, y, w, hh, r) {
+  c.beginPath();
+  c.moveTo(x + r, y);
+  c.arcTo(x + w, y, x + w, y + hh, r);
+  c.arcTo(x + w, y + hh, x, y + hh, r);
+  c.arcTo(x, y + hh, x, y, r);
+  c.arcTo(x, y, x + w, y, r);
+  c.closePath();
+}
+
+// composite: horizontal wave warp + rolling bright band + scanlines + vignette,
+// then clip to the CRT's rounded corners so the texture ends exactly at the glass edge
+function composite(t) {
+  cx.clearRect(0, 0, SC_W, SC_H);
+  cx.fillStyle = '#08170c';
+  cx.fillRect(0, 0, SC_W, SC_H);
+
+  const STRIP = 4;
+  for (let y = 0; y < SC_H; y += STRIP) {
+    const p = y / SC_H;
+    const dx = Math.sin(t * 0.0016 + p * 7.2) * 3.4 + Math.sin(t * 0.0041 + p * 19) * 1.3;
+    const sy = 1 + Math.sin(t * 0.0013 + p * 5.0) * 0.012;   // slight vertical breathing
+    cx.drawImage(buf, 0, y, SC_W, STRIP, dx, y, SC_W, STRIP * sy);
+  }
+
+  // rolling phosphor band travelling down the screen
+  const rollY = ((t * 0.055) % (SC_H + 260)) - 130;
+  const rg = cx.createLinearGradient(0, rollY - 90, 0, rollY + 90);
+  rg.addColorStop(0, 'rgba(90,255,110,0)');
+  rg.addColorStop(0.5, 'rgba(120,255,140,0.13)');
+  rg.addColorStop(1, 'rgba(90,255,110,0)');
+  cx.fillStyle = rg;
+  cx.fillRect(0, rollY - 90, SC_W, 180);
+
+  cx.globalAlpha = 0.10;
+  cx.fillStyle = '#000';
+  for (let y = 0; y < SC_H; y += 6) cx.fillRect(0, y, SC_W, 3);
+  cx.globalAlpha = 1;
+
+  // phosphor bleed: light spreading past the drawn glyphs into the glass
+  cx.globalCompositeOperation = 'lighter';
+  const bg = cx.createRadialGradient(SC_W / 2, SC_H / 2, 0, SC_W / 2, SC_H / 2, SC_H * 0.72);
+  bg.addColorStop(0, 'rgba(58,255,96,0.10)');
+  bg.addColorStop(0.55, 'rgba(46,220,80,0.045)');
+  bg.addColorStop(1, 'rgba(30,160,60,0)');
+  cx.fillStyle = bg;
+  cx.fillRect(0, 0, SC_W, SC_H);
+  cx.globalCompositeOperation = 'source-over';
+
+  const vg = cx.createRadialGradient(SC_W / 2, SC_H / 2, SC_H * 0.22, SC_W / 2, SC_H / 2, SC_H * 0.80);
+  vg.addColorStop(0, 'rgba(0,0,0,0)');
+  vg.addColorStop(1, 'rgba(0,0,0,0.32)');
+  cx.fillStyle = vg;
+  cx.fillRect(0, 0, SC_W, SC_H);
+
+  cx.globalCompositeOperation = 'destination-in';
+  roundPath(cx, 2, 2, SC_W - 4, SC_H - 4, CORNER);
+  cx.fillStyle = '#fff';
+  cx.fill();
+  cx.globalCompositeOperation = 'source-over';
+
+  scrTex.needsUpdate = true;
+}
+let last = 0;
+function typeTick(t) {
+  if (t - last < 42) return;
+  last = t;
+  if (wait > 0) { wait--; paintScreen(); return; }
+  if (ci < cur.length) {
+    ci += 1 + (Math.random() < 0.35 ? 1 : 0);
+    if (ci > cur.length) ci = cur.length;
+  } else {
+    done.push(cur);
+    wait = cur === '' ? 0 : 3;
+    if (qi >= queue.length) {          // cycle finished: clear and type it all again
+      wait = 30; done = []; scrollOff = 0; queue = buildCycle(); qi = 0;
+      cur = nextLine(); ci = 0;
+      paintScreen(); return;
+    }
+    cur = nextLine(); ci = 0;
+    if (done.length - scrollOff > MAX_LINES - 1) scrollOff++;   // scroll as the file grows
+  }
+  paintScreen();
+}
+paintScreen();
+
+// one clock drives both the typing buffer and the CRT composite
+let lastErr = false, clock = 0;
+function frame(t) {
+  clock = t;
+  typeTick(t);
+  try { composite(t); } catch (e) { if (!lastErr) { lastErr = true; console.error('composite failed', e); } }
+}
+setInterval(() => frame(clock + 40), 40);   // steady clock even when rAF is throttled
+frame(0);
+window.__crt = { frame };
+
+const codeMat = new THREE.MeshBasicMaterial({
+  name: 'screen_code', map: scrTex, toneMapped: false, transparent: true, depthWrite: false,
+});
+const faceGeo = new THREE.PlaneGeometry(0.272, 0.208, 48, 38);
+{ // bulge the surface so it bends with the CRT glass
+  const pos = faceGeo.attributes.position, HW = 0.136, HH = 0.104, BULGE = 0.032;
+  for (let i = 0; i < pos.count; i++) {
+    const u = pos.getX(i) / HW, v = pos.getY(i) / HH;
+    pos.setZ(i, BULGE * Math.pow(Math.max(0, (1 - u * u * 0.94) * (1 - v * v * 0.94)), 0.55));
+  }
+  faceGeo.computeVertexNormals();
+}
+const codeFace = new THREE.Mesh(faceGeo, codeMat);
+codeFace.name = 'screen_code_face';
+
+const glass = roundedBox(0.271, 0.207, 0.024, 0.035, M.screenGlow, 'screen_glass');
+glass.position.set(0, 0.016, bezelDepth - 0.026);
+head.add(glass);
+codeFace.position.set(0, 0.016, bezelDepth - 0.012);
+head.add(codeFace);
+// no glow geometry: the phosphor light is felt, never seen as a shape.
+// a wide area light throws the screen's colour onto the bezel and desk,
+// and a short-range point light gives the falloff a soft near-field core.
+// soft additive halo: a radial-gradient sprite, so the light has no visible edge
+const haloCv = document.createElement('canvas');
+haloCv.width = haloCv.height = 256;
+{
+  const h = haloCv.getContext('2d');
+  const g = h.createRadialGradient(128, 128, 0, 128, 128, 128);
+  g.addColorStop(0, 'rgba(70,220,95,0.10)');
+  g.addColorStop(0.22, 'rgba(80,235,100,0.16)');
+  g.addColorStop(0.42, 'rgba(60,215,85,0.14)');
+  g.addColorStop(0.72, 'rgba(40,170,65,0.05)');
+  g.addColorStop(1, 'rgba(30,140,55,0)');
+  h.fillStyle = g;
+  h.fillRect(0, 0, 256, 256);
+}
+const haloTex = new THREE.CanvasTexture(haloCv);
+haloTex.name = 'screen_halo_texture';
+haloTex.colorSpace = THREE.SRGBColorSpace;
+const haloMat = new THREE.SpriteMaterial({
+  name: 'screen_halo', map: haloTex, color: 0x8dff98, transparent: true,
+  blending: THREE.AdditiveBlending, depthWrite: false, opacity: 0.55, toneMapped: false,
+});
+const washes = [];
+[[0.66, 0.52, 0.85], [1.15, 0.92, 0.45]].forEach((s, i) => {
+  const halo = new THREE.Sprite(haloMat.clone());
+  halo.name = `screen_halo_${i + 1}`;
+  halo.material.opacity = s[2];
+  halo.scale.set(s[0], s[1], 1);
+  halo.position.set(0, 0.016, bezelDepth + 0.006);
+  washes.push(halo);
+});
+const spill = new THREE.RectAreaLight(0x6bff74, 2.6, 0.30, 0.23);
+spill.name = 'screen_light';
+spill.position.set(0, 0.016, bezelDepth - 0.004);
+head.add(spill);
+const spillCore = new THREE.PointLight(0x7bff86, 0.55, 0.55, 2.0);
+spillCore.name = 'screen_light_core';
+spillCore.position.set(0, 0.016, bezelDepth + 0.05);
+head.add(spillCore);
+
+// --- case body details ---
+// top vent grille
+for (let i = 0; i < 7; i++) {
+  const s = roundedBox(0.10, 0.006, 0.010, 0.003, M.vent, `top_vent_${i + 1}`);
+  s.position.set(0, CH / 2 + 0.002, -0.058 + i * 0.0145);
+  s.rotation.x = Math.PI / 2;
+  head.add(s);
+}
+// side vent slots, both cheeks
+[-1, 1].forEach((sx) => {
+  for (let i = 0; i < 5; i++) {
+    const s = roundedBox(0.0075, 0.052, 0.010, 0.003, M.vent, `side_vent_${sx < 0 ? 'l' : 'r'}${i + 1}`);
+    s.position.set(sx * (CW / 2 + 0.002), 0.014, -0.05 + i * 0.017);
+    s.rotation.y = Math.PI / 2;
+    head.add(s);
+  }
+});
+// tube housing tapering out the back
+const hump = new THREE.Mesh(new THREE.CylinderGeometry(0.115, 0.048, 0.085, 4, 1), M.shellDeep);
+hump.name = 'tube_housing';
+hump.rotation.set(Math.PI / 2, Math.PI / 4, 0);
+hump.position.set(0, 0.006, -CD / 2 - 0.030);
+head.add(hump);
+const humpCap = roundedBox(0.062, 0.062, 0.020, 0.016, M.shellDeep, 'tube_cap');
+humpCap.position.set(0, 0.006, -CD / 2 - 0.078);
+head.add(humpCap);
+// seam around the shell, and a bezel step framing the screen
+const caseSeam = roundedBox(CW - 0.004, CH - 0.004, 0.0018, 0.048, M.shellDeep, 'monitor_case_seam');
+caseSeam.position.set(0, 0.006, -CD / 2 + 0.004);
+head.add(caseSeam);
+const bezelStep = roundedBox(0.282, 0.216, 0.005, 0.040, M.shellDeep, 'bezel_step');
+bezelStep.position.set(0, 0.016, bezelDepth - 0.024);
+head.add(bezelStep);
+// power switch with indicator
+const sw = roundedBox(0.022, 0.011, 0.008, 0.004, M.shellDeep, 'power_switch');
+sw.position.set(-0.126, -CH / 2 + 0.030, bezelDepth - 0.012);
+head.add(sw);
+const swLed = new THREE.Mesh(new THREE.SphereGeometry(0.0045, 18, 14), M.accent);
+swLed.name = 'power_switch_led';
+swLed.position.set(-0.100, -CH / 2 + 0.030, bezelDepth - 0.010);
+head.add(swLed);
+
+head.position.set(0, 0.026 + CH / 2 - 0.004, 0);
+head.rotation.x = -0.20;
+mon.add(head);
+
+// brand plate + two control knobs under the screen
+const plate = roundedBox(0.062, 0.010, 0.006, 0.003, M.shellDeep, 'brand_plate');
+plate.position.set(-0.088, -CH / 2 + 0.030, bezelDepth - 0.004);
+head.add(plate);
+[[0.072, 'brightness'], [0.104, 'contrast']].forEach(([x, n]) => {
+  const knob = new THREE.Mesh(new THREE.CylinderGeometry(0.011, 0.012, 0.010, 24), M.shellDeep);
+  knob.name = `knob_${n}`;
+  knob.rotation.x = Math.PI / 2;
+  knob.position.set(x, -CH / 2 + 0.032, bezelDepth - 0.003);
+  head.add(knob);
+  const nub = roundedBox(0.0022, 0.008, 0.004, 0.001, M.shell, `knob_${n}_mark`);
+  nub.position.set(x, -CH / 2 + 0.036, bezelDepth + 0.002);
+  head.add(nub);
+});
+// neck between foot and head
+const neck = roundedBox(0.085, 0.030, 0.075, 0.012, M.shellDeep, 'monitor_neck');
+neck.position.set(0, 0.034, -0.01);
+mon.add(neck);
+
+mon.position.set(-0.03, BH, -0.015);
+model.add(mon);
+
+/* ---------- mouse ---------- */
+const mouse = new THREE.Group();
+mouse.name = 'mouse';
+const body = roundedBox(0.075, 0.03, 0.115, 0.026, M.shell, 'mouse_body');
+body.position.y = 0.015;
+mouse.add(body);
+const split = roundedBox(0.003, 0.014, 0.046, 0.0015, M.shellDeep, 'mouse_button_split');
+split.position.set(0, 0.026, 0.03);
+mouse.add(split);
+mouse.position.set(0.36, 0, 0.19);
+mouse.rotation.y = -0.55;
+model.add(mouse);
+
+const cable = new THREE.CatmullRomCurve3([
+  new THREE.Vector3(BW / 2 - 0.01, 0.045, BD / 2 - 0.06),
+  new THREE.Vector3(0.30, 0.04, 0.10),
+  new THREE.Vector3(0.42, 0.03, 0.12),
+  new THREE.Vector3(0.40, 0.026, 0.21),
+  new THREE.Vector3(0.365, 0.024, 0.245),
+]);
+const cordMesh = new THREE.Mesh(new THREE.TubeGeometry(cable, 64, 0.0055, 12, false), M.shell);
+cordMesh.name = 'mouse_cord';
+model.add(cordMesh);
+
+/* ---------- keyboard ---------- */
+const kb = new THREE.Group();
+kb.name = 'keyboard';
+const KW = 0.34, KD = 0.175, KH = 0.024;
+const tray = roundedBox(KW, KH, KD, 0.009, M.shell, 'keyboard_tray');
+tray.position.y = KH / 2;
+kb.add(tray);
+
+const capGeo = new THREE.CylinderGeometry(0.70 / Math.SQRT2, 1 / Math.SQRT2, 1, 4, 1);
+capGeo.rotateY(Math.PI / 4);
+capGeo.translate(0, 0.5, 0);
+function keycap(x, z, w, d, name) {
+  const m = new THREE.Mesh(capGeo, M.key);
+  m.name = name;
+  m.scale.set(w, 0.019, d);
+  m.position.set(x, KH - 0.002, z);
+  kb.add(m);
+  return m;
+}
+const U = 0.042, KEY = 0.037;
+// row 1: Esc O P [
+['esc', 'o', 'p', 'bracket'].forEach((n, i) => keycap(-0.132 + i * U, -0.052, KEY, KEY, `key_${n}`));
+keycap(0.062, -0.052, 0.062, KEY, 'key_blank_r1');
+// row 2: Caps Lock L : Enter
+keycap(-0.118, -0.006, 0.066, KEY, 'key_caps_lock');
+keycap(-0.056, -0.006, KEY, KEY, 'key_l');
+keycap(-0.014, -0.006, KEY, KEY, 'key_semicolon');
+keycap(0.052, -0.006, 0.082, KEY, 'key_enter');
+// row 3: space bar
+keycap(-0.008, 0.048, 0.264, 0.040, 'key_space').scale.set(0.264, 0.021, 0.040);
+
+// legend plates (dark inks read as the printed characters)
+[[-0.132, -0.052, 0.018], [-0.09, -0.052, 0.008], [-0.048, -0.052, 0.008], [-0.006, -0.052, 0.007],
+ [-0.118, -0.006, 0.038], [-0.056, -0.006, 0.007], [-0.014, -0.006, 0.005],
+ [0.052, -0.006, 0.026], [-0.008, 0.048, 0.06]].forEach((p, i) => {
+  const g = new THREE.Mesh(new THREE.BoxGeometry(p[2], 0.0012, 0.005), M.legend);
+  g.name = `legend_${i + 1}`;
+  g.position.set(p[0], KH + 0.0185, p[1] - 0.001);
+  kb.add(g);
+});
+
+// rainbow stripe along the right edge
+RAINBOW.forEach((mat, i) => {
+  const s = new THREE.Mesh(new THREE.BoxGeometry(0.026, 0.0016, 0.0105), mat);
+  s.name = `rainbow_${i + 1}`;
+  s.position.set(KW / 2 - 0.031, KH + 0.0009, -0.075 + i * 0.0115);
+  kb.add(s);
+});
+
+[[-1, 'left'], [1, 'right']].forEach(([sx, n]) => {
+  const f = new THREE.Mesh(new THREE.CylinderGeometry(0.007, 0.007, 0.005, 18), M.shellDeep);
+  f.name = `keyboard_foot_${n}`;
+  f.position.set(sx * (KW / 2 - 0.024), -0.0024, -KD / 2 + 0.02);
+  kb.add(f);
+});
+[0, 1].forEach((i) => {
+  const l = new THREE.Mesh(new THREE.SphereGeometry(0.0035, 16, 12), M.phosphor);
+  l.name = `keyboard_led_${i + 1}`;
+  l.position.set(0.108 + i * 0.013, KH - 0.001, -KD / 2 + 0.012);
+  kb.add(l);
+});
+
+kb.position.set(0.075, 0, 0.335);
+kb.rotation.y = -0.06;
+model.add(kb);
+
+/* ---------- center on origin, base at y=0 ---------- */
+const box = new THREE.Box3().setFromObject(model);
+const c = box.getCenter(new THREE.Vector3());
+model.position.set(-c.x, -box.min.y, -c.z);
+
+// frame on the solids only: sprites are detached so they never inflate the bbox
+function frameModel() {
+  washes.forEach((w) => head.remove(w));
+  stage.setObject(model);
+  washes.forEach((w) => head.add(w));
+  const cam = stage._camera, ctr = stage._controls;   // fill more of the frame
+  if (cam && ctr) { cam.position.lerpVectors(ctr.target, cam.position, 0.62); ctr.update(); }
+}
+frameModel();
+
+// the stage can boot before the host has a real box, leaving a 1x1 drawing buffer:
+// force a size resync (and re-frame) until layout has settled
+function syncSize() {
+  const w = stage.clientWidth, hgt = stage.clientHeight;
+  const r = stage._renderer, cam = stage._camera;
+  if (!r || !cam || !w || !hgt) return false;
+  const cw = r.domElement.clientWidth || r.domElement.width;
+  if (r.domElement.width <= 2 || Math.abs(cw - w) > 1) {
+    r.setSize(w, hgt, true);
+    cam.aspect = w / hgt;
+    cam.updateProjectionMatrix();
+    frameModel();
+    return true;
+  }
+  return false;
+}
+new ResizeObserver(syncSize).observe(stage);
+window.addEventListener('resize', syncSize);
+document.addEventListener('visibilitychange', syncSize);
+new IntersectionObserver(syncSize).observe(stage);
+// preview panes can boot this page hidden, where rAF and ResizeObserver are both
+// throttled: a plain timer keeps sizing and rendering alive regardless
+setInterval(() => {
+  try {
+    syncSize();
+    const r = stage._renderer;
+    if (r && stage._scene && stage._camera) {
+      if (stage._controls) stage._controls.update();
+      r.render(stage._scene, stage._camera);
+    }
+  } catch (e) { console.error('stage sync failed', e); }
+}, 200);
+setTimeout(syncSize, 60);   // framing/dolly is handled inside frameModel()
+requestAnimationFrame(frameModel);
+syncSize();
+</script>
+</body>
+</html>

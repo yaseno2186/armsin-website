@@ -1603,10 +1603,18 @@ img { max-width: 100%; display: block; }
 }
 
 .footer-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
   font-family: var(--font-head);
   font-size: 1rem;
   font-weight: 600;
   color: var(--text);
+}
+
+.footer-brand img {
+  width: 40px;
+  height: 40px;
 }
 
 .footer-links {
@@ -1623,6 +1631,37 @@ img { max-width: 100%; display: block; }
 
 .footer-links a:hover {
   color: var(--text);
+}
+
+.lang-switch {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid rgba(214, 232, 221, 0.16);
+  border-radius: 999px;
+}
+
+.lang-btn {
+  font-family: var(--font-head);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--text-dim);
+  background: none;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color var(--duration-base) ease, background var(--duration-base) ease;
+}
+
+.lang-btn:hover {
+  color: var(--text);
+}
+
+.lang-btn.is-active {
+  color: var(--on-accent);
+  background: var(--accent);
 }
 
 /* ---------- Legal stub pages ---------- */
@@ -1643,6 +1682,32 @@ img { max-width: 100%; display: block; }
   color: var(--text-dim);
   max-width: 560px;
   font-size: 1.05rem;
+}
+
+.legal-content {
+  max-width: 640px;
+}
+
+.legal-content h2 {
+  font-family: var(--font-head);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: var(--space-6) 0 var(--space-2);
+}
+
+.legal-content h2:first-child {
+  margin-top: 0;
+}
+
+.legal-content p {
+  color: var(--text-dim);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.legal-content a {
+  color: var(--accent);
 }
 
 /* ---------- Page hero (light, reusable for secondary pages) ---------- */
