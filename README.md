@@ -1,10 +1,9 @@
 # Armsin Digital Media — Portfolio Site
 
-Client-facing portfolio/landing site for **Armsin Digital Media**, a digital
-products studio based in Germany. The site is the first touchpoint for local
-shops, restaurants, and small businesses (reach: Germany-wide, open to
-clients globally) looking for websites, apps, photography, or systems &
-automation work.
+Client-facing portfolio site for **Armsin Digital Media**, a German digital
+products studio. It's the first thing a prospective client sees: local
+shops, restaurants, and small businesses across Germany (clients elsewhere
+welcome) looking for websites, apps, photography, or systems/automation.
 
 ## Goal
 
@@ -15,12 +14,10 @@ Give a potential client, in under a minute, three things:
 3. **How to get in touch** — a direct, frictionless path to a first
    conversation (contact form / mailto / phone).
 
-No backend, no build step, no frameworks — a static site that a
-non-technical person can still safely edit later.
-
 ## Tech stack
 
-Plain **HTML / CSS / JS**. No npm, no bundler, no framework.
+Plain **HTML / CSS / JS**. No backend, no build step, no npm, no bundler,
+no framework — a static site the non-technical owner can safely edit later.
 
 - HTML — one file per page (flat structure, no routing)
 - `style.css` — single global stylesheet (retro-terminal / CRT dark theme)
@@ -85,14 +82,14 @@ Armsin Website/
 ├── style.css                # Global stylesheet (single source of truth)
 └── assets/
     ├── js/
-    │   ├── site.js           # Shared vanilla JS (nav, interactions)
-    │   ├── i18n.js            # DE/EN language switch
-    │   └── hero-model.js      # 3D hero model (Three.js)
-    ├── models/                # GLB model for the homepage hero
-    ├── icons/                 # Inline-ready SVG icons (services, process)
-    ├── images/                # Process-step SVG illustrations
-    ├── logo/                  # Armsin wordmark + icon (light/dark/transparent)
-    └── about/                 # Founder photo
+    │   ├── site.js          # Shared vanilla JS (nav, interactions)
+    │   ├── i18n.js           # DE/EN language switch
+    │   └── hero-model.js     # 3D hero model (Three.js)
+    ├── models/               # GLB model for the homepage hero
+    ├── icons/                # Inline-ready SVG icons (services, process)
+    ├── images/               # Process-step SVG illustrations
+    ├── logo/                 # Armsin wordmark + icon (light/dark/transparent)
+    └── about/                # Founder photo
 ```
 
 ## Design system
@@ -101,16 +98,16 @@ Repainted 2026-09-05 into a **retro-terminal / CRT dark theme** (from an
 original light "paper" palette — kept for reference in the CSS history and
 `.tastemaker/` notes).
 
-| Token          | Value                        | Use                                   |
-|----------------|-------------------------------|----------------------------------------|
-| Background     | `#0A0E0C`                    | Page background, nav/footer chrome     |
-| Surface        | `#131E17`                    | Cards, forms, elevated panels          |
-| Secondary bg   | `#0F1A14`                    | Alternate section backgrounds          |
-| Text           | `#D6E8DD`                    | Primary text                           |
-| Text (dim)     | `rgba(214,232,221,0.68)`      | Secondary/muted text                   |
-| Accent         | `#39D97A`                    | CTAs, links, highlights (sparingly)    |
-| On-accent      | `#06120B`                    | Text on accent fill                    |
-| Amber          | `#E0A458`                    | Rare CRT-amber highlight               |
+| Token        | Value                     | Use                                 |
+|--------------|---------------------------|--------------------------------------|
+| Background   | `#0A0E0C`                 | Page background, nav/footer chrome  |
+| Surface      | `#131E17`                 | Cards, forms, elevated panels       |
+| Secondary bg | `#0F1A14`                 | Alternate section backgrounds       |
+| Text         | `#D6E8DD`                 | Primary text                        |
+| Text (dim)   | `rgba(214,232,221,0.68)`  | Secondary/muted text                |
+| Accent       | `#39D97A`                 | CTAs, links, highlights (sparingly) |
+| On-accent    | `#06120B`                 | Text on accent fill                 |
+| Amber        | `#E0A458`                 | Rare CRT-amber highlight            |
 
 - Headline font: **JetBrains Mono** (Google Fonts)
 - Body font: **Inter** (Google Fonts)
@@ -120,15 +117,15 @@ Full rationale and contrast math: `.tastemaker/style-lock.md` and
 
 ## Language
 
-German is the default and the source of truth for all copy (target
-audience: German local business owners). Code comments may be in English.
+German is the source of truth for all copy (the audience is German local
+business owners). Code comments may be in English.
 
-A DE/EN toggle in the footer (`assets/js/i18n.js`) lets visitors switch the
-UI and marketing copy to English; the choice persists via `localStorage`.
-English strings live in one dictionary in `i18n.js`, keyed by the
-`data-i18n` / `data-i18n-aria` / `data-i18n-title` attribute on each
-element — add a new translatable string by adding the attribute in the HTML
-and the matching key in `i18n.js`.
+A DE/EN toggle in the footer (`assets/js/i18n.js`) switches the UI and
+marketing copy to English and remembers the choice via `localStorage`.
+English strings live in one dictionary in `i18n.js`, keyed by each
+element's `data-i18n` / `data-i18n-aria` / `data-i18n-title` attribute. To
+add a translatable string: tag the element in the HTML, add the matching
+key in `i18n.js`.
 
 **`impressum.html` and `datenschutz.html` are excluded from translation.**
 Their legal body text carries no `data-i18n` attributes and stays German
