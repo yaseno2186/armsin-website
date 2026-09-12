@@ -1,12 +1,10 @@
 <svg viewBox="0 0 240 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Schlüssel und Kreislauf-Symbol für Übergabe und laufende Betreuung">
-  <circle cx="76" cy="100" r="34" fill="none" stroke="#1D3B2C" stroke-width="14"/>
-  <rect x="102" y="93" width="80" height="14" fill="#1D3B2C"/>
-  <rect x="150" y="86" width="14" height="28" fill="#1D3B2C"/>
-  <rect x="172" y="86" width="14" height="28" fill="#1D3B2C"/>
+  <circle cx="90" cy="86" r="32" fill="none" stroke="#1D3B2C" stroke-width="16"/>
+  <rect x="118" y="78" width="80" height="16" fill="#1D3B2C"/>
+  <rect x="166" y="78" width="14" height="30" fill="#1D3B2C"/>
+  <rect x="188" y="78" width="14" height="22" fill="#1D3B2C"/>
 
-  <path d="M120 34 A 56 56 0 1 1 64 46" fill="none" stroke="#39D97A" stroke-width="9" stroke-linecap="round"/>
-  <polygon points="118,18 134,32 112,40" fill="#39D97A"/>
-
-  <path d="M180 168 A 40 40 0 1 1 190 130" fill="none" stroke="#0F1A14" stroke-width="9" stroke-linecap="round" opacity="0.85"/>
-  <polygon points="196,146 190,128 210,132" fill="#0F1A14" opacity="0.85"/>
+  <circle cx="176" cy="150" r="34" fill="#39D97A"/>
+  <path d="M188 134 A20 20 0 1 1 164 136" fill="none" stroke="#06120B" stroke-width="7" stroke-linecap="round"/>
+  <polygon points="162,120 180,124 168,138" fill="#06120B"/>
 </svg>

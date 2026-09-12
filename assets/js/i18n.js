@@ -17,10 +17,8 @@ var I18N_EN = {
 
   'index.meta.title': 'Armsin Digital Media: Digital Solutions Made in Germany',
   'index.meta.description': 'Websites, apps, photography, and systems/automation for local shops, restaurants, and small businesses – nationwide in Germany, with clients worldwide welcome. Fast, straightforward, fairly priced.',
+  'index.hero.eyebrow': 'Digital Solutions Made in Germany',
   'index.hero.visualAria': '3D model of a retro workstation, surrounded by two floating code windows',
-  'index.hero.tag': 'Digital Solutions Made in Germany',
-  'index.hero.h1': 'Finally, digital solutions that work for you.',
-  'index.hero.lead': 'Websites, apps, photography, and systems/automation for local shops, restaurants, and small businesses. Fast, straightforward, no jargon.',
   'index.hero.ctaPrimary': 'Request a free check',
   'index.hero.ctaGhost': 'See services',
   'index.services.h2': 'What I offer',

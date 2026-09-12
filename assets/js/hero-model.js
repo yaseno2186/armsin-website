@@ -6,6 +6,14 @@
 //   - Entrance: the model is invisible (`.hero-model { opacity: 0 }` in
 //     style.css) until the GLB decodes, then fades in over 400ms — bridges
 //     the async load instead of popping in.
+//   - Cinematic intro (one-time, on load): camera starts elevated, angled
+//     down over the whole workstation (a top-angle establishing shot),
+//     then slowly, gently eases forward and down to a close framing on
+//     just the monitor — and stays there (one-way, no pull-back). The CSS
+//     canvas box is sized ~1:1 to its container for this framing (see the
+//     ≥900px rules in style.css) rather than the old wide-shot's 225%
+//     oversize — the camera alone does the framing now, so the two can't
+//     fight each other the way they did in an earlier version of this.
 //   - Idle: the monitor screen (mesh "screen_code_face") runs a live
 //     CanvasTexture loop — code typing itself out with a CRT scanline/glow
 //     composite, ported from the Claude Design source. This runs regardless
@@ -73,16 +81,45 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
   var clock = new THREE.Clock();
 
+  // Cinematic push-in, set up once the GLB's framing and screen mesh are
+  // known (in the loader callback below). `phase` null = nothing to run
+  // (reduced motion lands straight on the close-up; no screen mesh found).
+  var intro = { phase: null };
+  // Pointer-tilt/idle-sway rotate modelGroup around the whole PC's center —
+  // fine at the old wide shot, but the camera now pins on the screen mesh,
+  // which sits well off that center, so any rotation swings the screen
+  // wildly out of the tight close-up crop. Set true once a close-up is in
+  // play (see the loader callback) to suppress that rotation entirely.
+  var hasCloseUp = false;
+  var EASE_GENTLE = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }; // ease-in-out-cubic
+  var INTRO_MS = 8500;
+  var introCamPos = new THREE.Vector3();
+  var introLookAt = new THREE.Vector3();
+
   renderer.setAnimationLoop(function () {
     var dt = clock.getDelta();
+
+    if (intro.phase === 'in') {
+      var introT = Math.min((clock.elapsedTime - intro.startTime) * 1000 / INTRO_MS, 1);
+      introCamPos.lerpVectors(intro.wideStartPos, intro.closeUpPos, EASE_GENTLE(introT));
+      introLookAt.lerpVectors(intro.wideStartLookAt, intro.closeUpLookAt, EASE_GENTLE(introT));
+      camera.position.copy(introCamPos);
+      camera.lookAt(introLookAt);
+      if (introT >= 1) { intro.phase = null; } // holds at closeUpPos/closeUpLookAt, nothing resets it after
+    }
+
     if (!reduceMotion) {
       var lerp = 1 - Math.pow(0.001, dt); // frame-rate-independent ease toward target
       if (canHover) {
         // Direct pointer-follow tilt: same sign as cursor movement on both
-        // axes, so the model leans the way the cursor actually moved.
-        modelGroup.rotation.y += (targetX * 0.35 - modelGroup.rotation.y) * lerp;
-        modelGroup.rotation.x += (targetY * 0.18 - modelGroup.rotation.x) * lerp;
-      } else {
+        // axes, so the model leans the way the cursor actually moved. Once
+        // the close-up shot is framed on the screen mesh, the same tilt
+        // applies at a much smaller amplitude so it still reads as reacting
+        // to the cursor without swinging the tight crop off the screen.
+        var tiltScale = hasCloseUp ? 0.12 : 1;
+        modelGroup.rotation.y += (targetX * 0.35 * tiltScale - modelGroup.rotation.y) * lerp;
+        modelGroup.rotation.x += (targetY * 0.18 * tiltScale - modelGroup.rotation.x) * lerp;
+      } else if (!hasCloseUp) {
         // No pointer to react to (touch/coarse input) — a slow, gentle
         // idle sway (Float, per animation-vocabulary) so the model reads as
         // alive instead of frozen, matching the CSS hero-float/code-float
@@ -340,13 +377,25 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
       if (box.isEmpty()) box.setFromObject(object);
       var sphere = box.getBoundingSphere(new THREE.Sphere());
       object.position.sub(sphere.center);
+      // Changing .position only marks the local matrix dirty — it isn't
+      // rebuilt until the next render pass walks the tree. The screen-mesh
+      // framing below reads world positions via Box3.setFromObject() before
+      // any render has happened, which only refreshes matrices downward
+      // from `object` and would otherwise pick up its pre-recentering
+      // transform — offsetting the whole close-up by `sphere.center` and
+      // landing the shot near the top of the case instead of the monitor.
+      object.updateMatrixWorld(true);
 
-      // 1.6x padding (not just enough to touch the frame edges) — this
-      // model's bounding sphere is dominated by the compact monitor, so a
-      // tight fit crops the keyboard/base below the visible fold.
-      var dist = sphere.radius / Math.tan((camera.fov * Math.PI) / 360) * 1.6;
-      camera.position.set(0, sphere.radius * 0.15, dist);
-      camera.lookAt(0, 0, 0);
+      // Top-angle establishing shot: elevated and pulled back (1.8x padding,
+      // more room than a front-on fit needs, since an angled view foreshortens
+      // the model) so the whole workstation reads clearly before the push-in.
+      var halfFovRad = (camera.fov * Math.PI) / 360;
+      var wideDist = sphere.radius / Math.tan(halfFovRad) * 1.8;
+      var elevation = 42 * Math.PI / 180; // degrees over the horizon
+      var wideStartPos = new THREE.Vector3(0, wideDist * Math.sin(elevation), wideDist * Math.cos(elevation));
+      var wideStartLookAt = new THREE.Vector3(0, 0, 0);
+      camera.position.copy(wideStartPos);
+      camera.lookAt(wideStartLookAt);
       // Entrance fade+scale and the resting size (--model-scale) live in
       // style.css (.hero-model.is-loaded) so the mobile override and the
       // reduced-motion variant stay in one place instead of forking here.
@@ -354,6 +403,55 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
       var screenFace = object.getObjectByName('screen_code_face');
       if (screenFace) startScreenAnimation(screenFace);
+
+      if (screenFace) {
+        // Close framing on the screen mesh alone: centered on its own
+        // bounding box, pulled back along its facing side far enough that
+        // the screen fills ~62% of the frame height — leaves the physical
+        // monitor bezel/case visible around it instead of cropping tight
+        // to the glowing screen (which read as a borderless block of green).
+        var screenBox = new THREE.Box3().setFromObject(screenFace);
+        var screenCenter = screenBox.getCenter(new THREE.Vector3());
+        var screenSize = screenBox.getSize(new THREE.Vector3());
+        var fillFraction = 0.5;
+        var closeUpDist = screenSize.y / (2 * Math.tan(halfFovRad) * fillFraction);
+        // Final elevation is a gentle, fixed downward angle onto the screen
+        // itself (scaled off closeUpDist, not off the wide shot's height).
+        // Two things this avoids, both tried and rejected before:
+        //   - Pinning Y to wideStartPos.y (the wide establishing shot's
+        //     elevation) keeps that height constant while Z collapses to
+        //     closeUpDist, so the downward angle onto the screen keeps
+        //     getting steeper as the shot closes in — by the end the camera
+        //     is nearly overhead, looking almost straight down, and the
+        //     screen (which faces forward, not up) reads as a sliver or
+        //     goes fully unseen behind the case's top bezel.
+        //   - Copying screenCenter.y verbatim (dead-level, 0° elevation)
+        //     put the camera low enough that the keyboard/case in front of
+        //     the monitor entered the frame, reading as the shot "sinking"
+        //     below the monitor into the desk instead of resting on it.
+        // A small fixed angle keeps the monitor centered and unobstructed
+        // regardless of the wide shot's geometry or the model's proportions.
+        var closeUpElevation = 9 * Math.PI / 180;
+        var closeUpPos = new THREE.Vector3(
+          screenCenter.x,
+          screenCenter.y + closeUpDist * Math.tan(closeUpElevation),
+          screenCenter.z + closeUpDist
+        );
+        hasCloseUp = true;
+        if (reduceMotion) {
+          // Same final framing, no animated push — fewer/gentler, not
+          // zero, matching the pointer-tilt's reduced-motion behavior.
+          camera.position.copy(closeUpPos);
+          camera.lookAt(screenCenter);
+        } else {
+          intro.wideStartPos = wideStartPos;
+          intro.wideStartLookAt = wideStartLookAt;
+          intro.closeUpPos = closeUpPos;
+          intro.closeUpLookAt = screenCenter.clone();
+          intro.phase = 'in';
+          intro.startTime = clock.elapsedTime;
+        }
+      }
     },
     undefined,
     function (err) {

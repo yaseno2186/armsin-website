@@ -105,6 +105,48 @@ body::before {
   body::before { opacity: 0.025; }
 }
 
+/* One retro CRT scanline field + phosphor sweep for every secondary page
+   (scoped to body.crt-page — every page except the homepage, which keeps
+   its own existing Trust/Process treatment) — fixed to the viewport so
+   the whole page shares one continuous beat instead of each section
+   running its own separate copy. */
+body.crt-page::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 998;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      var(--wash) 0,
+      var(--wash) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    linear-gradient(
+      to bottom,
+      transparent,
+      var(--accent-glow-strong) 45%,
+      var(--accent-glow-strong) 55%,
+      transparent
+    );
+  background-repeat: repeat, no-repeat;
+  background-size: 100% 100%, 100% 45vh;
+  background-position: 0 0, 0 -45vh;
+  animation: crt-page-sweep 14s linear infinite;
+}
+
+@keyframes crt-page-sweep {
+  0%   { background-position: 0 0, 0 -45vh; }
+  100% { background-position: 0 0, 0 100vh; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.crt-page::after { animation: none; background-position: 0 0, 0 30vh; }
+}
+
+
 /* Every heading uses the display face at a size well above body text, so
    it needs its own tighter rhythm — inheriting body's 1.6 line-height (a
    value tuned for long-form German paragraphs) read visibly loose on
@@ -511,24 +553,28 @@ img { max-width: 100%; display: block; }
   height: 100%;
 }
 
-.hero-tag {
+/* Small kicker tag above the 3D object, styled like the floating code
+   panels behind it (dark box, hairline border, same glow shadow) so it
+   reads as part of the same terminal-window vocabulary. */
+.hero-eyebrow {
+  position: relative;
+  z-index: 2;
   display: inline-block;
-  font-size: 0.85rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: var(--text);
-  background: var(--wash);
+  justify-self: center;
+  margin: 0 auto var(--space-2);
+  padding: 0.5em 0.9em;
+  background: #06120b;
   border: 1px solid var(--border-subtle);
-  border-radius: 999px;
-  padding: 6px 16px;
-  margin-bottom: var(--space-3);
+  border-radius: 0.5em;
+  box-shadow: 0 0.8em 1.6em rgba(0, 0, 0, 0.45), 0 0 1.4em rgba(57, 217, 122, 0.06);
+  font-family: var(--font-head);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
 }
 
-/* The copy sits on top of the (bigger, centered) 3D object rather than
-   above or below it, so it needs its own soft dark halo to stay legible
-   over the screen glow and floating panels behind it — a blurred radial
-   wash, not a hard card, so the object still reads as showing through
-   around the text edges. */
 .hero-copy {
   position: relative;
   z-index: 1;
@@ -548,25 +594,6 @@ img { max-width: 100%; display: block; }
   background: radial-gradient(closest-side, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0) 72%);
   filter: blur(6px);
   pointer-events: none;
-}
-
-.hero h1 {
-  font-family: var(--font-head);
-  font-size: clamp(2.1rem, 5vw, 3.1rem);
-  line-height: 1.15;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  color: var(--text);
-  margin-bottom: var(--space-3);
-  text-wrap: pretty;
-}
-
-.hero p.lead {
-  font-size: 1.15rem;
-  color: var(--text-dim);
-  max-width: 520px;
-  margin: 0 0 var(--space-4) 0;
-  text-wrap: pretty;
 }
 
 .hero-actions {
@@ -593,10 +620,6 @@ img { max-width: 100%; display: block; }
 @media (max-width: 600px) {
   .hero { padding: calc(10px + 84px) 0 10px; }
 
-  .hero p.lead {
-    margin: 0 0 var(--space-4);
-  }
-
   .hero-actions {
     justify-content: flex-start;
     flex-direction: column;
@@ -619,7 +642,11 @@ img { max-width: 100%; display: block; }
   right: 0;
   left: auto;
   transform: translateY(-50%);
-  width: min(72vw, 82vh, 1080px);
+  /* Full section width, but backed off by calc() so the box (1:1 here)
+     never grows taller than the viewport has room for — plain width:100%
+     let it overflow past the fold on short viewports instead of just
+     filling the width the section actually has spare. */
+  width: min(100%, calc(100vh - 220px));
   z-index: 1;
   pointer-events: none;
   animation: hero-visual-enter 1.2s var(--ease-out) both;
@@ -688,8 +715,14 @@ img { max-width: 100%; display: block; }
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 225%;
-  height: 225%;
+  /* 225% oversized the canvas to compensate for the old wide establishing
+     shot, where the PC only filled a modest part of the camera's view (see
+     the ≥900px override below, which already dropped this for the same
+     reason). The close-up camera now does that framing itself end to end,
+     so the box should match its container ~1:1 here too — the leftover
+     225% on mobile was zooming in and clipping the screen mesh's edges. */
+  width: 106%;
+  height: 106%;
   z-index: 0;
   opacity: 0; /* faded in by hero-model.js (adds .is-loaded) once the GLB has loaded */
   transform: translate(-50%, -50%) scale(0.94);
@@ -707,17 +740,17 @@ img { max-width: 100%; display: block; }
 .hero-model::before {
   content: '';
   position: absolute;
-  inset: -20%;
+  inset: -34%;
   z-index: 0;
-  background: radial-gradient(circle at 50% 46%, var(--accent-glow-strong) 0%, transparent 62%);
-  opacity: 0.55;
+  background: radial-gradient(circle at 50% 46%, var(--accent-glow-strong) 0%, var(--accent-glow) 45%, transparent 72%);
+  opacity: 0.75;
   animation: hero-model-glow-breathe 4.5s ease-in-out infinite;
   pointer-events: none;
 }
 
 @keyframes hero-model-glow-breathe {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.75; }
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
 }
 
 .hero-model canvas {
@@ -726,10 +759,6 @@ img { max-width: 100%; display: block; }
   height: 100%;
   position: relative;
   z-index: 1;
-}
-
-@media (max-width: 600px) {
-  .hero-model { width: 135%; height: 135%; }
 }
 
 /* -- the two floating code-window panels -- */
@@ -744,6 +773,8 @@ img { max-width: 100%; display: block; }
   display: flex;
   flex-direction: column;
   gap: 0.3em;
+  /* Secondary to the monitor screen, not competing with it for focus. */
+  opacity: 0.7;
 }
 
 .code-float-bar {
@@ -817,6 +848,35 @@ img { max-width: 100%; display: block; }
   animation: code-float-drift-b 8.5s ease-in-out infinite -3.2s;
 }
 
+/* Desktop-only: ease the two floaters outward, away from the monitor, over
+   the same span and curve as the camera's cinematic push-in (INTRO_MS/
+   EASE_GENTLE in hero-model.js — 8.5s, easeInOutCubic) so all three elements
+   read as one deliberate shot settling into place together. Left/top and
+   right/bottom (not `transform`) carry the move so it composes with the
+   drift keyframes above instead of fighting them for the same property.
+   `.hero-model.is-loaded` lands the instant the GLB decodes, which is also
+   when the JS intro starts — see `container.classList.add('is-loaded')`
+   right before `intro.phase = 'in'` in hero-model.js. Phone/tablet keep the
+   floaters static; only worth the motion where the wider 4:3 close-up (see
+   the ≥900px .pc-scene rule) gives them room to travel. */
+@media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
+  .code-float-a,
+  .code-float-b {
+    transition: left 8.5s cubic-bezier(0.65, 0, 0.35, 1), top 8.5s cubic-bezier(0.65, 0, 0.35, 1),
+      right 8.5s cubic-bezier(0.65, 0, 0.35, 1), bottom 8.5s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  .hero-model.is-loaded ~ .pc-scene-inner .code-float-a {
+    top: 4%;
+    left: -8%;
+  }
+
+  .hero-model.is-loaded ~ .pc-scene-inner .code-float-b {
+    bottom: 8%;
+    right: -8%;
+  }
+}
+
 @keyframes code-float-drift-a {
   0%, 100% { transform: translateZ(1.1em) translateY(0) rotate(-4deg); }
   50% { transform: translateZ(1.1em) translateY(-0.7em) rotate(-2deg); }
@@ -828,39 +888,120 @@ img { max-width: 100%; display: block; }
 }
 
 @media (max-width: 600px) {
-  .code-float-a { left: 2%; }
-  .code-float-b { right: 2%; }
+  /* Small screens: less side clearance around the model overall, so the
+     floaters shrink and pin to the actual corners (0% insets, not the
+     desktop's 14%/16%) instead of overlapping its screen. */
+  .code-float-a { top: 0; left: 0; width: 6.2em; }
+  .code-float-b { bottom: 0; right: 0; width: 5.6em; }
 }
 
-@media (min-width: 640px) {
-  .hero-visual { width: min(74vw, 84vh, 1220px); }
+/* Below the desktop breakpoint the overlay layout (visual centered full-hero,
+   copy vertically centered on top of it) makes the CTA buttons land mid-image
+   instead of below it. Fall back to plain stacked flow here — visual first,
+   then buttons underneath — same idea as the ≥900px block below, just left-
+   aligned instead of centered. */
+@media (max-width: 899px) {
+  .hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: 0;
+  }
+
+  .hero-visual {
+    position: relative;
+    top: auto;
+    right: auto;
+    transform: none;
+    /* var(--space-5) doesn't exist in the spacing scale (1,2,3,4,6,8 —
+       see :root) — that made this whole margin shorthand invalid, so the
+       browser dropped it entirely and left zero space here, letting the
+       desk plate/glow sit right on top of the CTA button below it. */
+    margin: 0 auto var(--space-6);
+    animation-name: hero-visual-enter-centered;
+  }
+
+  .hero .container {
+    height: auto;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .hero-copy {
+    height: auto;
+    padding: 0;
+  }
+
+  .hero-copy::before {
+    display: none;
+  }
+
+  /* Stacked layout puts the buttons under the (centered) visual, not beside
+     it — left-aligned here read as off-center under a centered monitor. */
+  .hero-actions {
+    justify-content: center;
+  }
 }
 
 @media (min-width: 900px) {
   .hero { padding: calc(10px + 84px) 0 10px; }
 
-  .hero-tag { margin-bottom: var(--space-3); }
+  /* Full section width when there's room, but backed off through the box's
+     own aspect ratio (4/3 here, see .pc-scene below) by the height the
+     viewport actually has spare — plain width:100% let a 4:3 box grow
+     taller than the viewport on typical laptop heights, pushing the CTA
+     row off-screen below the fold. The camera's own framing (fillFraction
+     in hero-model.js) still controls how close the shot is, independent of
+     this box's size. */
+  .hero-visual { width: min(100%, calc((100vh - 260px) * 4 / 3)); }
 
-  .hero-visual { width: min(68vw, 86vh, 1360px); }
-}
+  /* Desktop close-up widens from the base 1:1 (see .pc-scene) to 4:3 — the
+     square box left the desk plate's corners sitting right at the frame's
+     left/right edges with no breathing room. Widening the frame (not the
+     camera's zoom on the monitor) gives that geometry room either side
+     instead of nudging the whole close-up out further to compensate. */
+  .pc-scene { aspect-ratio: 4 / 3; }
 
-/* On narrow phones the text column takes the section's full width, so the
-   3D visual has nowhere to sit without visually cluttering behind the copy
-   (caught via screenshot review: the lead paragraph became hard to read
-   with the monitor/code-window graphic behind it). Fading it back keeps
-   the illustration as ambient texture instead of a legibility fight. Placed
-   after the base .hero-visual rule (not grouped with the other max-width:600px
-   blocks earlier in the file) so it actually wins the cascade instead of
-   being overridden by the unconditional rule that follows it. */
-@media (max-width: 600px) {
-  .hero-visual {
-    /* animation: none overrides the entrance keyframe's forwards-fill,
-       which would otherwise settle back to opacity: 1 and undo this. */
-    animation: none;
-    opacity: 0.28;
-    width: min(78vw, 60vh, 420px);
+  /* Big screens: object centered, buttons stacked under it (DOM order
+     already puts .hero-visual before .container, so switching both out
+     of the absolute-overlay layout into a centered flex column is enough). */
+  .hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: left;
+    gap: var(--space-2);
   }
 
+  .hero-visual {
+    position: relative;
+    top: auto;
+    right: auto;
+    transform: none;
+    animation-name: hero-visual-enter-centered;
+  }
+
+  .hero .container,
+  .hero-copy {
+    height: auto;
+    align-items: center;
+    text-align: center;
+    padding: 0;
+  }
+
+  .hero-copy::before { display: none; }
+
+  .hero-actions { justify-content: center; }
+}
+
+@keyframes hero-visual-enter-centered {
+  from { opacity: 0; transform: scale(0.82) rotate(-3deg); }
+  to   { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+/* Hero copy is now just the CTA buttons (no headline/lead), so the visual
+   no longer has legibility to fight for on phones — let it stay full size. */
+@media (max-width: 600px) {
   .hero-copy::before {
     inset: -15% -15% -15% -15%;
   }
@@ -882,10 +1023,6 @@ img { max-width: 100%; display: block; }
   opacity: 1;
   transform: translateY(0);
 }
-
-.hero-top > [data-reveal]:nth-child(2) { transition-delay: var(--stagger-step); }
-.hero-top > [data-reveal]:nth-child(3) { transition-delay: calc(var(--stagger-step) * 2); }
-.hero-copy > .hero-actions[data-reveal] { transition-delay: calc(var(--stagger-step) * 3); }
 
 /* Reusable version of the same cascade for any other group of direct
    [data-reveal] siblings (page-hero tag/h1/lead, studio/about hero copy)
@@ -1763,23 +1900,6 @@ img { max-width: 100%; display: block; }
   gap: var(--space-12);
 }
 
-/* The same dashed "pinned index card" thread as the homepage teaser,
-   running down the middle between alternating columns. */
-.ablauf-steps::before {
-  content: '';
-  position: absolute;
-  top: 8px;
-  bottom: 8px;
-  left: 50%;
-  width: 0;
-  border-left: 2px dashed var(--border-default);
-  z-index: 0;
-}
-
-@media (max-width: 800px) {
-  .ablauf-steps::before { display: none; }
-}
-
 .ablauf-step {
   position: relative;
   z-index: 1;
@@ -1847,8 +1967,6 @@ img { max-width: 100%; display: block; }
 }
 
 .ablauf-body { flex: 1 1 380px; }
-
-.ablauf-icon-badge { margin-bottom: var(--space-2); }
 
 .ablauf-body h2 {
   font-family: var(--font-head);
@@ -2397,4 +2515,3 @@ a.service-card .service-arrow {
   display: inline-flex;
   transition: transform var(--duration-base) var(--ease-out);
 }
-
