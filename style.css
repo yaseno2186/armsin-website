@@ -1239,17 +1239,6 @@ img { max-width: 100%; display: block; }
   display: none;
 }
 
-.portfolio-card-tag {
-  display: block;
-  font-family: var(--font-head);
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: var(--space-2);
-}
-
 /* Real project card: a .service-card underneath, so it gets the same
    tilt/hover-lift/box-shadow treatment as Services and Studio cards. */
 .portfolio-thumb {
@@ -1270,18 +1259,11 @@ img { max-width: 100%; display: block; }
   object-fit: cover;
 }
 
-.portfolio-card h3 {
-  font-family: var(--font-head);
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: var(--space-2);
-}
-
-.portfolio-card p {
-  color: var(--text-dim);
-  font-size: 0.95rem;
-  margin-bottom: var(--space-3);
+/* Minimal card variant: just the image and the arrow link, no title/copy
+   below it — the screenshot does the talking. */
+.portfolio-card-minimal .portfolio-thumb {
+  height: 180px;
+  margin-bottom: var(--space-4);
 }
 
 .portfolio-empty {
