@@ -1253,23 +1253,21 @@ img { max-width: 100%; display: block; }
 /* Real project card: a .service-card underneath, so it gets the same
    tilt/hover-lift/box-shadow treatment as Services and Studio cards. */
 .portfolio-thumb {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
+  overflow: hidden;
   width: 100%;
   height: 96px;
   border-radius: calc(var(--radius) - 4px);
   margin-bottom: var(--space-3);
-  font-family: var(--font-head);
-  font-weight: 700;
-  font-size: 1.1rem;
-  letter-spacing: 0.06em;
-  color: var(--text);
-}
-
-.portfolio-thumb-youroma {
   background: linear-gradient(135deg, var(--surface-2), var(--secondary));
   border: 1px solid var(--border-subtle);
+}
+
+.portfolio-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .portfolio-card h3 {
@@ -1331,7 +1329,6 @@ img { max-width: 100%; display: block; }
 
 .project-story-thumb {
   height: 280px;
-  font-size: 1.5rem;
   margin-bottom: 0;
 }
 
