@@ -150,9 +150,35 @@ function initContactForm() {
   });
 }
 
+// Category filter for the portfolio grid (projects.html): shows/hides
+// project cards by their data-category, no page reload or routing needed.
+function initPortfolioFilter() {
+  var buttons = document.querySelectorAll('.portfolio-filter-btn');
+  var cards = document.querySelectorAll('.portfolio-card');
+  var emptyMsg = document.querySelector('[data-portfolio-empty]');
+  if (!buttons.length || !cards.length) return;
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      buttons.forEach(function (b) { b.classList.remove('is-active'); });
+      btn.classList.add('is-active');
+
+      var filter = btn.dataset.filter;
+      var visibleCount = 0;
+      cards.forEach(function (card) {
+        var match = filter === 'all' || card.dataset.category === filter;
+        card.classList.toggle('is-hidden', !match);
+        if (match) visibleCount++;
+      });
+      if (emptyMsg) emptyMsg.hidden = visibleCount !== 0;
+    });
+  });
+}
+
 initNavToggle();
 initNavIndicator();
 initScrollReveal();
 initBookingFade();
 initHeroParallax();
 initContactForm();
+initPortfolioFilter();

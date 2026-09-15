@@ -1183,8 +1183,6 @@ img { max-width: 100%; display: block; }
 }
 
 /* ---------- Portfolio (projects.html) ---------- */
-/* Categories always render, even empty ones — an honest taxonomy of what's
-   offered beats hiding sections until there's something to fill them. */
 .portfolio {
   padding: var(--space-4) 0 var(--space-12);
 }
@@ -1193,51 +1191,55 @@ img { max-width: 100%; display: block; }
   .portfolio { padding: var(--space-2) 0 var(--space-8); }
 }
 
-.portfolio-category {
-  margin-bottom: var(--space-10);
-}
-
-.portfolio-category:last-child {
-  margin-bottom: 0;
-}
-
-.portfolio-category-head {
+.portfolio-filter {
   display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  margin-bottom: var(--space-4);
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-8);
 }
 
-.portfolio-category-icon {
-  width: 44px;
-  height: 44px;
-  margin-bottom: 0;
-  flex-shrink: 0;
-}
-
-.portfolio-category-icon .service-icon {
-  width: 22px;
-  height: 22px;
-}
-
-.portfolio-category-head h3 {
+.portfolio-filter-btn {
   font-family: var(--font-head);
-  font-size: 1.2rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  color: var(--text);
+  color: var(--text-dim);
+  background: var(--surface);
+  border: 1px solid var(--border-default);
+  border-radius: 999px;
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+  transition: color var(--duration-base) var(--ease-out),
+              border-color var(--duration-base) var(--ease-out),
+              background var(--duration-base) var(--ease-out);
 }
 
-.portfolio-subgrid {
+.portfolio-filter-btn:hover {
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+
+.portfolio-filter-btn.is-active {
+  color: var(--on-accent);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.portfolio-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-4);
 }
 
 @media (max-width: 860px) {
-  .portfolio-subgrid { grid-template-columns: 1fr; }
+  .portfolio-grid { grid-template-columns: 1fr; }
 }
 
-.portfolio-subitem-label {
+.portfolio-card.is-hidden {
+  display: none;
+}
+
+.portfolio-card-tag {
   display: block;
   font-family: var(--font-head);
   font-size: 0.78rem;
@@ -1251,26 +1253,24 @@ img { max-width: 100%; display: block; }
 /* Real project card: a .service-card underneath, so it gets the same
    tilt/hover-lift/box-shadow treatment as Services and Studio cards. */
 .portfolio-thumb {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
+  overflow: hidden;
   width: 100%;
   height: 96px;
   border-radius: calc(var(--radius) - 4px);
   margin-bottom: var(--space-3);
-  font-family: var(--font-head);
-  font-weight: 700;
-  font-size: 1.1rem;
-  letter-spacing: 0.06em;
-  color: var(--text);
-}
-
-.portfolio-thumb-youroma {
   background: linear-gradient(135deg, var(--surface-2), var(--secondary));
   border: 1px solid var(--border-subtle);
 }
 
-.portfolio-subitem h4 {
+.portfolio-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.portfolio-card h3 {
   font-family: var(--font-head);
   font-size: 1.1rem;
   font-weight: 600;
@@ -1278,25 +1278,75 @@ img { max-width: 100%; display: block; }
   margin-bottom: var(--space-2);
 }
 
-.portfolio-subitem p {
+.portfolio-card p {
   color: var(--text-dim);
   font-size: 0.95rem;
   margin-bottom: var(--space-3);
 }
 
-/* Empty sub-category: same footprint, deliberately muted and non-interactive
-   so it reads as "not yet", not as a broken link. */
-.portfolio-subitem-empty {
-  border: 1px dashed var(--border-default);
-  border-radius: var(--radius);
-  padding: var(--space-6);
-  opacity: 0.6;
+.portfolio-empty {
+  text-align: center;
+  color: var(--text-dim);
+  padding: var(--space-6) 0 0;
 }
 
-.portfolio-subitem-soon {
+/* ---------- Project story (project-*.html) ---------- */
+.project-story-back {
   display: inline-block;
-  font-size: 0.85rem;
   color: var(--text-dim);
+  font-size: 0.9rem;
+  margin-bottom: var(--space-3);
+}
+
+.project-story-back:hover {
+  color: var(--accent);
+}
+
+.project-story {
+  padding: var(--space-4) 0 var(--space-12);
+}
+
+@media (max-width: 600px) {
+  .project-story { padding: var(--space-2) 0 var(--space-8); }
+}
+
+.project-story-image {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  max-width: 640px;
+  margin: 0 auto var(--space-8);
+  border-radius: var(--radius);
+  transition: transform var(--duration-lift) var(--ease-out), box-shadow var(--duration-lift) var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .project-story-image:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 32px var(--shadow-lift);
+  }
+}
+
+.project-story-thumb {
+  height: 280px;
+  margin-bottom: 0;
+}
+
+.project-story-copy {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.project-story-copy p {
+  color: var(--text-dim);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin-bottom: var(--space-4);
+}
+
+.project-story-link a {
+  color: var(--accent);
+  font-weight: 600;
 }
 
 /* ---------- Why us ("Warum Armsin") ---------- */
