@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title data-i18n="projects.meta.title">Projekte: Armsin Digital Media</title>
-<meta name="description" content="Woran Armsin Digital Media gerade arbeitet. Noch keine abgeschlossenen Kundenprojekte, dafür ehrlich darüber." data-i18n="projects.meta.description">
+<title data-i18n="projectYouroma.meta.title">Youroma – Parfümerie Dresden: Armsin Digital Media</title>
+<meta name="description" content="Website für die Parfümerie Youroma in Dresden: eine kuratierte Duft-Kollektion aus den Golfstaaten, ruhig und hochwertig in Szene gesetzt." data-i18n="projectYouroma.meta.description">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -36,54 +36,48 @@
 
 <main>
 
-  <!-- ================= PROJECTS HERO ================= -->
-  <section class="page-hero">
+  <!-- ================= PROJECT STORY HERO ================= -->
+  <section class="page-hero project-story-hero">
     <div class="container" data-reveal-group>
-      <h1 data-reveal data-i18n="projects.hero.h1">Noch am Anfang</h1>
-      <p class="lead" data-reveal data-i18n="projects.hero.lead">
-        Armsin Digital Media ist ein junges Studio. Aktuell gibt es noch
-        keine abgeschlossenen Kundenprojekte, die ich hier zeigen könnte,
-        und ich erfinde keine.
-      </p>
+      <a href="projects.html" class="project-story-back" data-reveal data-i18n="projectYouroma.back">&larr; Zurück zu Projekten</a>
+      <h1 data-reveal data-i18n="projectYouroma.hero.h1">Youroma – Parfümerie in Dresden</h1>
+      <p class="lead" data-reveal data-i18n="projectYouroma.hero.lead">Website für eine kleine Parfümerie in Dresden mit einer kuratierten Duft-Kollektion aus den Golfstaaten.</p>
     </div>
   </section>
 
-  <!-- ================= PORTFOLIO ================= -->
-  <section class="portfolio" id="portfolio">
+  <!-- ================= PROJECT STORY ================= -->
+  <section class="project-story">
     <div class="container">
-      <div class="section-head" data-reveal>
-        <h2 data-i18n="projects.portfolio.h2">Projekte</h2>
-        <p data-i18n="projects.portfolio.lead">Nach Kategorie filtern und ein Projekt öffnen, um die ganze Geschichte zu sehen.</p>
+      <a href="https://youroma.netlify.app/" class="project-story-image" target="_blank" rel="noopener" data-i18n-aria="projectYouroma.imageAria" aria-label="Youroma – Website in neuem Tab öffnen" data-reveal>
+        <span class="portfolio-thumb portfolio-thumb-youroma project-story-thumb" aria-hidden="true">YOUROMA</span>
+      </a>
+
+      <div class="project-story-copy" data-reveal>
+        <p data-i18n="projectYouroma.story.p1">
+          Youroma ist eine kleine Parfümerie in Dresden mit einer kuratierten
+          Auswahl an Eau de Parfum aus den Golfstaaten, für Kundschaft, die
+          auf der Suche nach besonderen Düften abseits der üblichen
+          Drogerie-Regale ist.
+        </p>
+        <p data-i18n="projectYouroma.story.p2">
+          Die Website sollte die Flakons so in Szene setzen, wie man es aus
+          einer echten Parfümerie kennt: ruhig, hochwertig, ohne Ablenkung.
+          Entstanden ist eine dunkle, editoriale Optik mit klarer Typografie,
+          bei der von der Startseite bis zur Kollektionsübersicht der Fokus
+          auf den Produkten selbst liegt.
+        </p>
+        <p class="project-story-link">
+          <span data-i18n="projectYouroma.story.linkLabel">Website ansehen:</span>
+          <a href="https://youroma.netlify.app/" target="_blank" rel="noopener">youroma.netlify.app</a>
+        </p>
       </div>
-
-      <div class="portfolio-filter" role="group" data-i18n-aria="projects.filter.aria" aria-label="Nach Kategorie filtern" data-reveal>
-        <button type="button" class="portfolio-filter-btn is-active" data-filter="all" data-i18n="projects.filter.all">Alle</button>
-        <button type="button" class="portfolio-filter-btn" data-filter="websites" data-i18n="projects.filter.websites">Websites</button>
-        <button type="button" class="portfolio-filter-btn" data-filter="apps" data-i18n="projects.filter.apps">Apps</button>
-        <button type="button" class="portfolio-filter-btn" data-filter="photo" data-i18n="projects.filter.photo">Fotografie</button>
-        <button type="button" class="portfolio-filter-btn" data-filter="automation" data-i18n="projects.filter.automation">Systeme &amp; Automatisierung</button>
-      </div>
-
-      <div class="portfolio-grid" data-reveal-group>
-
-        <a href="project-youroma.html" class="service-card portfolio-card" data-category="websites" data-reveal>
-          <span class="portfolio-thumb portfolio-thumb-youroma" aria-hidden="true">YOUROMA</span>
-          <span class="portfolio-card-tag" data-i18n="projects.youroma.tag">Websites · Shops</span>
-          <h3 data-i18n="projects.youroma.h4">Youroma – Parfümerie Dresden</h3>
-          <p data-i18n="projects.youroma.p">Website für eine kleine Parfümerie in Dresden mit einer kuratierten Duft-Kollektion aus den Golfstaaten.</p>
-          <span class="service-arrow" data-i18n="projects.youroma.arrow">Geschichte ansehen &rarr;</span>
-        </a>
-
-      </div>
-
-      <p class="portfolio-empty" data-portfolio-empty hidden data-i18n="projects.empty">Noch keine Projekte in dieser Kategorie — bald mehr.</p>
     </div>
   </section>
 
   <!-- ================= CTA ================= -->
   <section class="about-cta">
     <div class="container about-cta-inner" data-reveal>
-      <h2 data-i18n="projects.cta.h2">Eines der ersten Projekte werden?</h2>
+      <h2 data-i18n="projectYouroma.cta.h2">Ein ähnliches Projekt für Ihren Betrieb?</h2>
       <a href="index.html#contact" class="btn btn-primary" data-i18n="projects.cta.btn">Kostenlosen Check anfragen</a>
     </div>
   </section>
