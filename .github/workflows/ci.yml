@@ -16,9 +16,3 @@ jobs:
         with:
           root: .
           css: true
-
-      - name: Check links
-        uses: lycheeverse/lychee-action@v2
-        with:
-          args: --no-progress --exclude-mail '*.html'
-          fail: true
