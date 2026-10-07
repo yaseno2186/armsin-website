@@ -1884,7 +1884,7 @@ img { max-width: 100%; display: block; }
 .footer-links .footer-social {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  padding: 2px;
 }
 
 .lang-switch {
