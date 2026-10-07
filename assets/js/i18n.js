@@ -15,7 +15,7 @@ var I18N_EN = {
   'footer.impressum': 'Legal Notice',
   'footer.datenschutz': 'Privacy Policy',
 
-  'index.meta.title': 'Armsin Digital Media: Digital Solutions Made in Germany',
+  'index.meta.title': 'Armsin Digital Media: Web Design & Websites for Local Businesses in Freiberg',
   'index.meta.description': 'Websites, apps, photography, and systems/automation for local shops, restaurants, and small businesses – nationwide in Germany, with clients worldwide welcome. Fast, straightforward, fairly priced.',
   'index.hero.eyebrow': 'Digital Solutions Made in Germany',
   'index.hero.visualAria': '3D model of a retro workstation, surrounded by two floating code windows',
