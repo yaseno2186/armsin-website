@@ -1865,7 +1865,9 @@ img { max-width: 100%; display: block; }
 
 .footer-links {
   display: flex;
-  gap: var(--space-4);
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2) var(--space-4);
 }
 
 .footer-links a {
@@ -1877,6 +1879,12 @@ img { max-width: 100%; display: block; }
 
 .footer-links a:hover {
   color: var(--text);
+}
+
+.footer-links .footer-social {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .lang-switch {
