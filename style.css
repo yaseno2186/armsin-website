@@ -105,48 +105,6 @@ body::before {
   body::before { opacity: 0.025; }
 }
 
-/* One retro CRT scanline field + phosphor sweep for every secondary page
-   (scoped to body.crt-page — every page except the homepage, which keeps
-   its own existing Trust/Process treatment) — fixed to the viewport so
-   the whole page shares one continuous beat instead of each section
-   running its own separate copy. */
-body.crt-page::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 998;
-  pointer-events: none;
-  background-image:
-    repeating-linear-gradient(
-      to bottom,
-      var(--wash) 0,
-      var(--wash) 1px,
-      transparent 1px,
-      transparent 3px
-    ),
-    linear-gradient(
-      to bottom,
-      transparent,
-      var(--accent-glow-strong) 45%,
-      var(--accent-glow-strong) 55%,
-      transparent
-    );
-  background-repeat: repeat, no-repeat;
-  background-size: 100% 100%, 100% 45vh;
-  background-position: 0 0, 0 -45vh;
-  animation: crt-page-sweep 14s linear infinite;
-}
-
-@keyframes crt-page-sweep {
-  0%   { background-position: 0 0, 0 -45vh; }
-  100% { background-position: 0 0, 0 100vh; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  body.crt-page::after { animation: none; background-position: 0 0, 0 30vh; }
-}
-
-
 /* Every heading uses the display face at a size well above body text, so
    it needs its own tighter rhythm — inheriting body's 1.6 line-height (a
    value tuned for long-form German paragraphs) read visibly loose on
