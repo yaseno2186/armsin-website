@@ -1,4 +1,4 @@
-# Armsin Digital Media — Portfolio Site
+# Armsin Digital Media: Portfolio Site
 
 Client-facing portfolio site for **Armsin Digital Media**, a German digital
 products studio. It's the first thing a prospective client sees: local
@@ -8,22 +8,22 @@ welcome) looking for websites, apps, photography, or systems/automation.
 ## Goal
 
 Give a potential client, in under a minute, three things:
-1. **What we do** — websites, apps, photography, systems/automation.
-2. **Why trust us** — fast, unkompliziert, lokal, fair kalkuliert (no fake
-   reviews or client logos — there are none yet, and the copy says so).
-3. **How to get in touch** — a direct, frictionless path to a first
+1. **What we do:** websites, apps, photography, systems/automation.
+2. **Why trust us:** fast, unkompliziert, lokal, fair kalkuliert (no fake
+   reviews or client logos, since there are none yet, and the copy says so).
+3. **How to get in touch:** a direct, frictionless path to a first
    conversation (contact form / mailto / phone).
 
 ## Tech stack
 
 Plain **HTML / CSS / JS**. No backend, no build step, no npm, no bundler,
-no framework — a static site the non-technical owner can safely edit later.
+no framework. A static site the non-technical owner can safely edit later.
 
-- HTML — one file per page (flat structure, no routing)
-- `style.css` — single global stylesheet (retro-terminal / CRT dark theme)
-- `assets/js/site.js` — shared vanilla JS (nav, small interactions)
-- `assets/js/i18n.js` — DE/EN language switch (see [Language](#language))
-- `assets/js/hero-model.js` — Three.js module rendering the homepage hero's
+- HTML: one file per page (flat structure, no routing)
+- `style.css`: single global stylesheet (retro-terminal / CRT dark theme)
+- `assets/js/site.js`: shared vanilla JS (nav, small interactions)
+- `assets/js/i18n.js`: DE/EN language switch (see [Language](#language))
+- `assets/js/hero-model.js`: Three.js module rendering the homepage hero's
   3D retro-workstation (`assets/models/retro-workstation.glb`)
 
 ## Site map
@@ -71,7 +71,7 @@ flowchart TD
 
 ```
 Armsin Website/
-├── index.html              # Home — hero, services, why-us, contact, footer
+├── index.html              # Home: hero, services, why-us, contact, footer
 ├── ablauf.html              # Process / how we work
 ├── studio.html              # Studio overview
 ├── about.html               # About / founder story
@@ -95,7 +95,7 @@ Armsin Website/
 ## Design system
 
 Repainted 2026-09-05 into a **retro-terminal / CRT dark theme** (from an
-original light "paper" palette — kept for reference in the CSS history and
+original light "paper" palette, kept for reference in the CSS history and
 `.tastemaker/` notes).
 
 | Token        | Value                     | Use                                 |
@@ -129,7 +129,7 @@ key in `i18n.js`.
 
 **`impressum.html` and `datenschutz.html` are excluded from translation.**
 Their legal body text carries no `data-i18n` attributes and stays German
-regardless of the toggle — only the shared nav/footer chrome around it
+regardless of the toggle. Only the shared nav/footer chrome around it
 translates. Do not add `data-i18n` to the legal content itself.
 
 ## Editing guide (non-technical)
@@ -137,7 +137,7 @@ translates. Do not add `data-i18n` to the legal content itself.
 - **Text**: open the relevant `.html` file, edit the text between tags
   (e.g. `<h1>...</h1>`), save. Don't touch anything in `<` `>` brackets.
 - **Colors/fonts**: change values at the top of `style.css` (CSS custom
-  properties) — don't edit values scattered throughout the file.
+  properties). Don't edit values scattered throughout the file.
 - **Images**: replace files in `assets/images/`, `assets/icons/`, or
   `assets/logo/` keeping the same filename, or update the `src="..."`
   path in the HTML if you rename a file.
@@ -146,12 +146,12 @@ translates. Do not add `data-i18n` to the legal content itself.
 
 ## Constraints (do not break these)
 
-- No frameworks, no build tools, no npm — plain HTML/CSS/JS only.
-- Mobile-first and responsive — most visitors are on their phone.
-- No fake testimonials or client logos (zero real clients yet — copy is
+- No frameworks, no build tools, no npm, plain HTML/CSS/JS only.
+- Mobile-first and responsive, most visitors are on their phone.
+- No fake testimonials or client logos (zero real clients yet, copy is
   honest about this).
 - No stock "people high-fiving" imagery.
-- Tone: direct, practical, no fluff — no overly salesy language.
+- Tone: direct, practical, no fluff, no overly salesy language.
 
 ## Legal
 
