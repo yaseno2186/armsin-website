@@ -3215,3 +3215,102 @@ html[data-theme="light"] body::before { opacity: 0.02; }
   .blog-section .blog-points li, .blog-built li { opacity: 1; transform: none; transition: none; }
   .blog-figure[data-reveal] img, .project-story-image[data-reveal] img { transform: none; transition: none; }
 }
+
+/* ---------- FAQ (homepage) ---------- */
+.faq-section {
+  padding: var(--space-12) 0;
+  background: var(--secondary);
+}
+
+@media (max-width: 600px) {
+  .faq-section { padding: var(--space-8) 0; }
+}
+
+.faq-list {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.faq-list details {
+  border-top: 1px solid var(--border-default);
+}
+
+.faq-list details:last-child {
+  border-bottom: 1px solid var(--border-default);
+}
+
+.faq-list summary {
+  position: relative;
+  cursor: pointer;
+  list-style: none;
+  padding: var(--space-3) var(--space-6) var(--space-3) 0;
+  font-family: var(--font-head);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.faq-list summary::-webkit-details-marker { display: none; }
+
+.faq-list summary::after {
+  content: "+";
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%) rotate(0deg);
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--accent);
+  transition: transform var(--duration-lift) var(--ease-out);
+}
+
+.faq-list details[open] summary::after { transform: translateY(-50%) rotate(45deg); }
+
+.faq-list summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.faq-list details p {
+  color: var(--text-dim);
+  line-height: 1.7;
+  padding: 0 var(--space-6) var(--space-3) 0;
+}
+
+/* FAQ motion: question shifts right on hover, the answer slides in */
+.faq-list summary {
+  transition: color var(--duration-base) ease, padding-left var(--duration-lift) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .faq-list summary:hover { color: var(--accent); padding-left: 6px; }
+}
+.faq-list details[open] p { animation: faq-open 380ms var(--ease-out); }
+@keyframes faq-open {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: none; }
+}
+/* FAQ items cascade in when the list scrolls into view */
+.faq-list details { opacity: 0; transform: translateY(10px); transition: opacity 450ms var(--ease-out), transform 450ms var(--ease-out); }
+.faq-list.is-visible details { opacity: 1; transform: none; }
+.faq-list details:nth-child(2) { transition-delay: 90ms; }
+.faq-list details:nth-child(3) { transition-delay: 180ms; }
+.faq-list details:nth-child(4) { transition-delay: 270ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-list details { opacity: 1; transform: none; transition: none; }
+  .faq-list details[open] p { animation: none; }
+  .faq-list summary, .faq-list summary::after { transition: none; }
+}
+
+/* The hero tag is the page's H1 (for search engines) but keeps the
+   small terminal-tag look */
+h1.hero-eyebrow { line-height: 1.4; }
+@media (max-width: 600px) {
+  h1.hero-eyebrow {
+    max-width: calc(100% - 32px);
+    text-align: center;
+    font-size: 0.7rem;
+    letter-spacing: 0.03em;
+  }
+}

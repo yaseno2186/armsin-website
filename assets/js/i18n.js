@@ -18,9 +18,9 @@ var I18N_EN = {
   'footer.theme.dark': 'Dark theme',
   'footer.theme.light': 'Light theme',
 
-  'index.meta.title': 'Armsin Digital Media: Web Design & Websites for Local Businesses in Freiberg',
-  'index.meta.description': 'Web design from Freiberg: websites, online booking and digital loyalty cards for shops, salons, restaurants and trades. Free first consultation.',
-  'index.hero.eyebrow': 'Digital Solutions Made in Germany',
+  'index.meta.title': 'Web Design from Saxony for All of Germany | Armsin Digital Media',
+  'index.meta.description': 'Websites, apps and automation for small businesses: web design from Freiberg in Saxony for clients across Germany. Fixed price, one contact person, free check.',
+  'index.hero.eyebrow': 'Web design from Saxony for all of Germany',
   'index.hero.visualAria': '3D model of a retro workstation, surrounded by two floating code windows',
   'index.hero.ctaPrimary': 'Request a free check',
   'index.hero.ctaGhost': 'See services',
@@ -61,7 +61,7 @@ var I18N_EN = {
   'index.contact.h2': 'Ready for a digital solution that pays off?',
   'index.contact.lead': "Send me a quick note about what you need. You'll get an honest, no-obligation assessment.",
   'index.contact.locationLabel': 'Location',
-  'index.contact.locationValue': 'Germany, clients worldwide welcome',
+  'index.contact.locationValue': 'Freiberg, Saxony, for clients across Germany and beyond',
   'index.contact.name': 'Name',
   'index.contact.email': 'Email',
   'index.contact.message': 'Message',
@@ -229,7 +229,19 @@ var I18N_EN = {
   "blog.tag.sample": "Case study · Sample project · AI",
   "blog.hero.lead": "How AI helps small businesses work faster and more efficiently: case studies, a look at how I work, and practical tips. Honest and without jargon.",
   "blog.meta.description": "How AI helps small businesses work faster and more efficiently: case studies and practical tips from Armsin Digital Media in Freiberg.",
-  "blog.cta.h2": "Where could AI take work off your hands?"
+  "blog.cta.h2": "Where could AI take work off your hands?",
+  "index.faq.h2": "Frequently asked questions",
+  "index.faq.lead": "About websites for small businesses, in Saxony and across Germany. Answered briefly.",
+  "index.faq1.q": "What does a website for my business cost?",
+  "index.faq1.a": "That depends on what your site needs to do. A café with a menu needs something different from a trade business with an enquiry form. That is why we start with a free check. Then you get a written fixed-price offer, and work starts only once you agree.",
+  "index.faq2.q": "Do you only work in Freiberg and Saxony?",
+  "index.faq2.a": "No. I am based in Freiberg, Saxony, and work for businesses all over Germany. Calls and check-ins happen by phone or video, and in Saxony in person if you like.",
+  "index.faq3.q": "How long until my website is online?",
+  "index.faq3.a": "We set the timeline in the offer. It depends most on how quickly texts, photos and details like opening hours are ready. I help you with that so it does not get stuck on your side.",
+  "index.faq4.q": "Will people find me on Google with the new website?",
+  "index.faq4.a": "Nobody can honestly guarantee Google rankings, and neither can I. I make sure of a clean technical base, fast loading and clear details about your location and service area, and I help with your Google Business Profile. Those are the building blocks that matter for search.",
+  "index.faq5.q": "Who is my contact person?",
+  "index.faq5.a": "Me, Yass Almardoud. From the first conversation until after launch you talk to the same person, with no forwarding and no waiting line."
 };
 
 function initI18n() {
