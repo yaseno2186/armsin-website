@@ -49,7 +49,12 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
   // nodes), so scene lighting stays neutral/modest here rather than adding
   // more — a second light source on top of that geometry over-exposed it
   // to a blown-out white blob.
-  scene.add(new THREE.HemisphereLight(0xd6e8dd, 0x0a0e0c, 1.1));
+  // Two lighting moods. Dark theme: green CRT key light (the original
+  // terminal look). Light theme: neutral, warm daylight so the model shows
+  // its real colours (cream case, red details, rainbow stripe) instead of
+  // reading as a washed-out mint block on a light page.
+  var hemi = new THREE.HemisphereLight(0xd6e8dd, 0x0a0e0c, 1.1);
+  scene.add(hemi);
   var key = new THREE.DirectionalLight(0x39d97a, 1.4);
   key.position.set(3, 4, 5);
   scene.add(key);
@@ -57,15 +62,30 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
   fill.position.set(-4, 2, -3);
   scene.add(fill);
 
+  var LIGHTS = {
+    dark:  { sky: 0xd6e8dd, ground: 0x0a0e0c, hemi: 1.1, key: 0x39d97a, keyI: 1.4, fill: 0xe0a458, fillI: 0.5 },
+    light: { sky: 0xffffff, ground: 0x9aa89c, hemi: 1.5, key: 0xfff1de, keyI: 2.1, fill: 0xcfe0ff, fillI: 0.7 }
+  };
+  function applyThemeLights() {
+    var t = LIGHTS[document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark'];
+    hemi.color.setHex(t.sky); hemi.groundColor.setHex(t.ground); hemi.intensity = t.hemi;
+    key.color.setHex(t.key); key.intensity = t.keyI;
+    fill.color.setHex(t.fill); fill.intensity = t.fillI;
+  }
+  applyThemeLights();
+  new MutationObserver(applyThemeLights).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
   var modelGroup = new THREE.Group();
   scene.add(modelGroup);
 
+  var refit = null; // set once the model is loaded and framed
   function fit() {
     var w = container.clientWidth || 1;
     var h = container.clientHeight || 1;
     renderer.setSize(w, h);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
+    if (refit) refit();
   }
   fit();
   new ResizeObserver(fit).observe(container);
@@ -92,7 +112,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
   // play (see the loader callback) to suppress that rotation entirely.
   var hasCloseUp = false;
   var EASE_GENTLE = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }; // ease-in-out-cubic
-  var INTRO_MS = 8500;
+  var INTRO_MS = 3200;
   var introCamPos = new THREE.Vector3();
   var introLookAt = new THREE.Vector3();
 
@@ -128,10 +148,10 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
         // the close-up shot is framed on the screen mesh, the same tilt
         // applies at a much smaller amplitude so it still reads as reacting
         // to the cursor without swinging the tight crop off the screen.
-        var tiltScale = hasCloseUp ? 0.12 : 1;
+        var tiltScale = 0.45;
         modelGroup.rotation.y += (targetX * 0.35 * tiltScale - modelGroup.rotation.y) * lerp;
         modelGroup.rotation.x += (targetY * 0.18 * tiltScale - modelGroup.rotation.x) * lerp;
-      } else if (!hasCloseUp) {
+      } else {
         // No pointer to react to (touch/coarse input) — a slow, gentle
         // idle sway (Float, per animation-vocabulary) so the model reads as
         // alive instead of frozen, matching the CSS hero-float/code-float
@@ -400,72 +420,84 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
       // landing the shot near the top of the case instead of the monitor.
       object.updateMatrixWorld(true);
 
-      // Top-angle establishing shot: elevated and pulled back (1.8x padding,
-      // more room than a front-on fit needs, since an angled view foreshortens
-      // the model) so the whole workstation reads clearly before the push-in.
-      var halfFovRad = (camera.fov * Math.PI) / 360;
-      var wideDist = sphere.radius / Math.tan(halfFovRad) * 1.8;
-      var elevation = 42 * Math.PI / 180; // degrees over the horizon
-      var wideStartPos = new THREE.Vector3(0, wideDist * Math.sin(elevation), wideDist * Math.cos(elevation));
-      var wideStartLookAt = new THREE.Vector3(0, 0, 0);
-      camera.position.copy(wideStartPos);
-      camera.lookAt(wideStartLookAt);
-      // Entrance fade+scale and the resting size (--model-scale) live in
-      // style.css (.hero-model.is-loaded) so the mobile override and the
-      // reduced-motion variant stay in one place instead of forking here.
+      // Framing: the whole workstation (monitor, case, keyboard, mouse)
+      // fills the hero. The old close-up on the screen mesh cropped the
+      // keyboard and case away and read as "cut off". fitDistance() finds
+      // the smallest camera distance at which every corner of the model's
+      // box still lands inside the frame (with a margin), for the current
+      // canvas aspect ratio, so phones and wide desktops both get a full,
+      // edge-to-edge shot.
+      // Sample real vertex positions (not the 8 corners of the bounding
+      // box, which stick out far past the actual shape at a 3/4 angle and
+      // made the model look small). ~6000 points is plenty for framing.
+      var corners = [];
+      var meshes = [];
+      object.traverse(function (o) {
+        if (o.isMesh && !glowNamePattern.test(o.name) && o.geometry && o.geometry.attributes.position) meshes.push(o);
+      });
+      var total = meshes.reduce(function (n, m) { return n + m.geometry.attributes.position.count; }, 0);
+      var stride = Math.max(1, Math.floor(total / 6000));
+      meshes.forEach(function (m) {
+        var pos = m.geometry.attributes.position;
+        for (var i = 0; i < pos.count; i += stride) {
+          corners.push(new THREE.Vector3().fromBufferAttribute(pos, i).applyMatrix4(m.matrixWorld));
+        }
+      });
+      var VIEW_DIR = new THREE.Vector3(Math.sin(0.42), Math.sin(0.22), Math.cos(0.42)).normalize(); // 3/4 view, slightly from above
+      var tmpCam = new THREE.PerspectiveCamera();
+      var tmpV = new THREE.Vector3();
+      var LOOK = new THREE.Vector3(0, 0, 0);
+      function fitDistance(margin) {
+        tmpCam.fov = camera.fov; tmpCam.aspect = camera.aspect; tmpCam.near = 0.01; tmpCam.far = 1000;
+        tmpCam.updateProjectionMatrix();
+        var lo = sphere.radius * 0.5, hi = sphere.radius * 20;
+        for (var i = 0; i < 28; i++) {
+          var d = (lo + hi) / 2;
+          tmpCam.position.copy(VIEW_DIR).multiplyScalar(d);
+          tmpCam.lookAt(LOOK);
+          tmpCam.updateMatrixWorld(true);
+          var inside = corners.every(function (c) {
+            tmpV.copy(c).project(tmpCam);
+            return Math.abs(tmpV.x) <= margin && Math.abs(tmpV.y) <= margin;
+          });
+          if (inside) hi = d; else lo = d;
+        }
+        return hi;
+      }
+      // Leaves room for the gentle pointer tilt / idle sway so the model
+      // never swings past the canvas edge.
+      var MARGIN = 0.9;
+      function finalPos() { return VIEW_DIR.clone().multiplyScalar(fitDistance(MARGIN)); }
+
+      var endPos = finalPos();
       container.classList.add('is-loaded');
 
       var screenFace = object.getObjectByName('screen_code_face');
       if (screenFace) startScreenAnimation(screenFace);
 
-      if (screenFace) {
-        // Close framing on the screen mesh alone: centered on its own
-        // bounding box, pulled back along its facing side far enough that
-        // the screen fills ~62% of the frame height — leaves the physical
-        // monitor bezel/case visible around it instead of cropping tight
-        // to the glowing screen (which read as a borderless block of green).
-        var screenBox = new THREE.Box3().setFromObject(screenFace);
-        var screenCenter = screenBox.getCenter(new THREE.Vector3());
-        var screenSize = screenBox.getSize(new THREE.Vector3());
-        var fillFraction = 0.5;
-        var closeUpDist = screenSize.y / (2 * Math.tan(halfFovRad) * fillFraction);
-        // Final elevation is a gentle, fixed downward angle onto the screen
-        // itself (scaled off closeUpDist, not off the wide shot's height).
-        // Two things this avoids, both tried and rejected before:
-        //   - Pinning Y to wideStartPos.y (the wide establishing shot's
-        //     elevation) keeps that height constant while Z collapses to
-        //     closeUpDist, so the downward angle onto the screen keeps
-        //     getting steeper as the shot closes in — by the end the camera
-        //     is nearly overhead, looking almost straight down, and the
-        //     screen (which faces forward, not up) reads as a sliver or
-        //     goes fully unseen behind the case's top bezel.
-        //   - Copying screenCenter.y verbatim (dead-level, 0° elevation)
-        //     put the camera low enough that the keyboard/case in front of
-        //     the monitor entered the frame, reading as the shot "sinking"
-        //     below the monitor into the desk instead of resting on it.
-        // A small fixed angle keeps the monitor centered and unobstructed
-        // regardless of the wide shot's geometry or the model's proportions.
-        var closeUpElevation = 9 * Math.PI / 180;
-        var closeUpPos = new THREE.Vector3(
-          screenCenter.x,
-          screenCenter.y + closeUpDist * Math.tan(closeUpElevation),
-          screenCenter.z + closeUpDist
-        );
-        hasCloseUp = true;
-        if (reduceMotion) {
-          // Same final framing, no animated push — fewer/gentler, not
-          // zero, matching the pointer-tilt's reduced-motion behavior.
-          camera.position.copy(closeUpPos);
-          camera.lookAt(screenCenter);
-        } else {
-          intro.wideStartPos = wideStartPos;
-          intro.wideStartLookAt = wideStartLookAt;
-          intro.closeUpPos = closeUpPos;
-          intro.closeUpLookAt = screenCenter.clone();
-          intro.phase = 'in';
-          intro.startTime = clock.elapsedTime;
-        }
+      if (reduceMotion) {
+        camera.position.copy(endPos);
+        camera.lookAt(LOOK);
+      } else {
+        // Short establishing move: starts higher and further out, settles
+        // on the full-model framing.
+        var startPos = new THREE.Vector3(0, 0.62, 0.78).normalize().multiplyScalar(endPos.length() * 1.55);
+        camera.position.copy(startPos);
+        camera.lookAt(LOOK);
+        intro.wideStartPos = startPos;
+        intro.wideStartLookAt = LOOK.clone();
+        intro.closeUpPos = endPos;
+        intro.closeUpLookAt = LOOK.clone();
+        intro.phase = 'in';
+        intro.startTime = clock.elapsedTime;
       }
+
+      // Re-fit whenever the canvas changes shape (rotate phone, resize window).
+      refit = function () {
+        var p = finalPos();
+        if (intro.phase === 'in') { intro.closeUpPos = p; }
+        else { camera.position.copy(p); camera.lookAt(LOOK); }
+      };
     },
     undefined,
     function (err) {

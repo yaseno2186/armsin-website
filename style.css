@@ -3314,3 +3314,207 @@ h1.hero-eyebrow { line-height: 1.4; }
     letter-spacing: 0.03em;
   }
 }
+
+/* =====================================================================
+   Hero v2 (2026-10-09): the 3D workstation fills the whole hero height
+   between the heading tag and the button, on every screen size. The
+   camera framing in hero-model.js fits the full model into whatever box
+   it gets, so the box only has to be big. Higher-specificity selectors
+   on purpose: they replace the older width/aspect-ratio juggling above.
+   ===================================================================== */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100svh;
+  min-height: 560px;
+  max-height: 1100px;
+  padding: calc(84px + 6px) 0 var(--space-4);
+  gap: var(--space-2);
+}
+
+.hero > .hero-eyebrow { flex: none; margin: 0 auto; }
+
+.hero > .hero-visual {
+  position: relative;
+  top: auto;
+  right: auto;
+  left: auto;
+  transform: none;
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  margin: 0;
+  animation-name: hero-visual-enter-centered;
+}
+
+.hero .pc-scene {
+  aspect-ratio: auto;
+  width: 100%;
+  height: 100%;
+}
+
+.hero .hero-model {
+  width: 100%;
+  height: 100%;
+}
+
+.hero > .container { flex: none; height: auto; }
+.hero .hero-copy { height: auto; padding: 0; }
+.hero .hero-copy::before { display: none; }
+.hero .hero-actions { justify-content: center; }
+
+/* Code windows sit beside the model, not on top of it: pinned to the
+   left/upper and right/lower edges of the model's area, pulled inward on
+   wide screens so they stay close to it */
+.hero .pc-scene-inner .code-float-a,
+.hero .hero-model.is-loaded ~ .pc-scene-inner .code-float-a {
+  top: 8%;
+  left: max(2%, calc(50% - 26em));
+  right: auto;
+  bottom: auto;
+  transition-duration: 3.2s;
+}
+.hero .pc-scene-inner .code-float-b,
+.hero .hero-model.is-loaded ~ .pc-scene-inner .code-float-b {
+  bottom: 8%;
+  right: max(2%, calc(50% - 26em));
+  top: auto;
+  left: auto;
+  transition-duration: 3.2s;
+}
+
+@media (max-width: 600px) {
+  .hero { min-height: 520px; padding-bottom: var(--space-3); }
+  .hero .hero-actions { width: 100%; }
+  .hero .pc-scene-inner .code-float-a,
+  .hero .hero-model.is-loaded ~ .pc-scene-inner .code-float-a { top: 2%; left: 2%; }
+  .hero .pc-scene-inner .code-float-b,
+  .hero .hero-model.is-loaded ~ .pc-scene-inner .code-float-b { bottom: 2%; right: 2%; }
+}
+
+/* Light theme: the green halo behind the model becomes a soft neutral
+   shadow, so the coloured model stands on the page instead of in a fog */
+html[data-theme="light"] .hero-model::before {
+  background: radial-gradient(circle at 50% 58%, rgba(19, 36, 27, 0.10) 0%, rgba(19, 36, 27, 0.04) 40%, transparent 70%);
+}
+html[data-theme="light"] .hero-visual-frame { filter: drop-shadow(0 24px 36px rgba(19, 36, 27, 0.16)); }
+
+/* =====================================================================
+   Services carousel (homepage "Meine Leistungen"). Image cards in one
+   row. Scrolls by itself gently, pauses as soon as someone touches,
+   drags, hovers or uses the arrows, and resumes a few seconds later.
+   The card nearest the middle grows slightly (scale set by site.js).
+   ===================================================================== */
+.svc-carousel { position: relative; }
+
+.svc-track {
+  --card-w: clamp(250px, 74vw, 340px);
+  display: flex;
+  gap: var(--space-3);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  padding: var(--space-4) calc(50% - var(--card-w) / 2) var(--space-6);
+  scrollbar-width: none;
+  cursor: grab;
+  outline: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 6%, #000 94%, transparent 100%);
+}
+.svc-track::-webkit-scrollbar { display: none; }
+.svc-track.is-dragging { cursor: grabbing; }
+.svc-track.is-dragging .svc-card { pointer-events: none; }
+/* snapping only while a person is in control; off during auto-scroll */
+.svc-track.is-user { scroll-snap-type: x mandatory; }
+.svc-track:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); border-radius: var(--radius); }
+
+.svc-card {
+  position: relative;
+  flex: none;
+  width: var(--card-w);
+  aspect-ratio: 4 / 5;
+  border-radius: 18px;
+  overflow: hidden;
+  scroll-snap-align: center;
+  background: #0E1512;
+  transform: scale(var(--s, 1));
+  transform-origin: center center;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  will-change: transform;
+  user-select: none;
+}
+
+.svc-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  -webkit-user-drag: none;
+}
+
+/* Text sits on a dark gradient at the bottom of the image, in both themes,
+   so it stays readable over any photo */
+.svc-body {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 72px var(--space-3) var(--space-3);
+  background: linear-gradient(180deg, transparent 0%, rgba(6, 12, 9, 0.78) 38%, rgba(6, 12, 9, 0.94) 100%);
+  color: #E6F2EA;
+}
+.svc-num {
+  display: inline-block;
+  font-family: var(--font-head);
+  font-size: 0.75rem;
+  color: #39D97A;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+.svc-body h3 {
+  font-family: var(--font-head);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #F2FAF5;
+}
+.svc-body p {
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: rgba(230, 242, 234, 0.82);
+}
+
+.svc-controls {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-top: calc(var(--space-2) * -1);
+}
+.svc-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border-default);
+  cursor: pointer;
+  transition: transform var(--duration-fast) var(--ease-out), border-color var(--duration-base) ease, color var(--duration-base) ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .svc-btn:hover { border-color: var(--accent); color: var(--accent); }
+}
+.svc-btn:active { transform: scale(0.94); }
+.svc-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+html[data-theme="light"] .svc-card { box-shadow: var(--card-shadow-hover); border-color: rgba(255, 255, 255, 0.5); }
+html[data-theme="light"] .svc-btn { box-shadow: var(--card-shadow); }
+
+@media (prefers-reduced-motion: reduce) {
+  .svc-card { transform: none; }
+}

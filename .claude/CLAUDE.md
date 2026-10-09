@@ -58,6 +58,11 @@ New pages need the head script and the footer `.footer-toggles` markup.
 Use tokens (var(--text), var(--surface) ...) for new CSS, never fixed
 white/black, so both themes keep working.
 
+**Homepage services (2026-10-09):** "Meine Leistungen" is an auto-scrolling
+image-card carousel (`.svc-track` in index.html, `initServiceCarousel` in
+site.js). Card images live in `assets/images/service-*.jpg` (900x1125,
+4:5). To change a card, edit its text in index.html and swap its image.
+
 <details>
 <summary>Original light palette (superseded, kept for reference)</summary>
 

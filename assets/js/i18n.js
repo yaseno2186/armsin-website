@@ -25,15 +25,15 @@ var I18N_EN = {
   'index.hero.ctaPrimary': 'Request a free check',
   'index.hero.ctaGhost': 'See services',
   'index.services.h2': 'What I offer',
-  'index.services.lead': 'From idea to ongoing support, all from one hand.',
+  'index.services.lead': 'Four things that take work off your business. From idea to ongoing support, all from one hand.',
   'index.services.websites.h3': 'Websites',
-  'index.services.websites.p': 'New or reworked websites, tailored to your business and your customers.',
-  'index.services.apps.h3': 'Apps',
-  'index.services.apps.p': 'Simple apps for orders, bookings, or internal workflows in your business.',
+  'index.services.websites.p': "A website that works on phones: opening hours, what you offer and contact with one tap. Built new or reworked.",
+  'index.services.apps.h3': 'Apps & Online Booking',
+  'index.services.apps.p': "Customers book appointments or order online, around the clock. You see everything in one place, no phone back-and-forth.",
   'index.services.photo.h3': 'Photography',
-  'index.services.photo.p': 'Product and business photos for your website, menu, and social media.',
+  'index.services.photo.p': "Phone photos become clean product images for your website, menu and social media. Edited with AI, checked by me.",
   'index.services.automation.h3': 'Systems & Automation',
-  'index.services.automation.p': 'Recurring tasks like scheduling, orders, or emails handled automatically.',
+  'index.services.automation.p': "Recurring tasks run by themselves: confirmations, calendar entries and reminders for your customers.",
   'index.trust.h2': 'Why Armsin',
   'index.trust.lead': 'Small, direct, no detours.',
   'index.trust.fast.h3': 'Fast',
@@ -241,7 +241,10 @@ var I18N_EN = {
   "index.faq4.q": "Will people find me on Google with the new website?",
   "index.faq4.a": "Nobody can honestly guarantee Google rankings, and neither can I. I make sure of a clean technical base, fast loading and clear details about your location and service area, and I help with your Google Business Profile. Those are the building blocks that matter for search.",
   "index.faq5.q": "Who is my contact person?",
-  "index.faq5.a": "Me, Yass Almardoud. From the first conversation until after launch you talk to the same person, with no forwarding and no waiting line."
+  "index.faq5.a": "Me, Yass Almardoud. From the first conversation until after launch you talk to the same person, with no forwarding and no waiting line.",
+  "index.services.trackAria": "Services, swipe to browse",
+  "index.services.prev": "Previous service",
+  "index.services.next": "Next service"
 };
 
 function initI18n() {

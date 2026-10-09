@@ -331,6 +331,152 @@ function markFooterReveal() {
   if (f) f.setAttribute('data-reveal', '');
 }
 
+// Services carousel: endless row of image cards. Auto-scrolls slowly to
+// the right; any touch, drag, wheel, hover, focus or arrow click pauses it
+// and it resumes after a few quiet seconds. The card nearest the middle
+// grows a little, the others return to normal size.
+function initServiceCarousel() {
+  var track = document.querySelector('.svc-track');
+  if (!track) return;
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var originals = Array.prototype.slice.call(track.children);
+  var SPEED = 28;            // px per second
+  var RESUME_MS = 3500;      // quiet time before auto-scroll restarts
+  var GROW = 0.07;           // centre card is 7% bigger
+
+  // Endless loop: a copy of the set before and two after the real cards.
+  // Copies are hidden from screen readers and keyboard.
+  var setWidth = 0;
+  function buildClones() {
+    track.querySelectorAll('.svc-clone').forEach(function (c) { c.remove(); });
+    var make = function () {
+      return originals.map(function (card) {
+        var c = card.cloneNode(true);
+        c.classList.add('svc-clone');
+        c.setAttribute('aria-hidden', 'true');
+        c.setAttribute('inert', '');
+        c.querySelectorAll('[data-i18n]').forEach(function (el) { el.removeAttribute('data-i18n'); });
+        return c;
+      });
+    };
+    make().forEach(function (c) { track.insertBefore(c, originals[0]); });
+    make().concat(make()).forEach(function (c) { track.appendChild(c); });
+  }
+  function measure() {
+    var gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+    setWidth = originals.reduce(function (w, c) { return w + c.offsetWidth + gap; }, 0);
+  }
+  buildClones();
+  measure();
+
+  var cards = function () { return track.children; };
+  var pos = 0;
+  // start with the first real card in the middle
+  function centerOn(card) {
+    return card.offsetLeft + card.offsetWidth / 2 - track.clientWidth / 2;
+  }
+  pos = centerOn(originals[0]);
+  track.scrollLeft = pos;
+
+  // Jump by exactly one set when the view drifts too far: the copies make
+  // the jump invisible. `pos` keeps sub-pixel precision for the slow
+  // auto-scroll (browsers round scrollLeft to whole pixels).
+  function wrap() {
+    var base = centerOn(originals[0]);
+    if (track.scrollLeft < base - setWidth * 0.5) { track.scrollLeft += setWidth; pos += setWidth; }
+    else if (track.scrollLeft > base + setWidth * 1.5) { track.scrollLeft -= setWidth; pos -= setWidth; }
+  }
+
+  function scaleCards() {
+    if (reduceMotion) return;
+    var mid = track.scrollLeft + track.clientWidth / 2;
+    var list = cards();
+    for (var i = 0; i < list.length; i++) {
+      var c = list[i];
+      var d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid);
+      var t = Math.max(0, 1 - d / (c.offsetWidth * 0.9));
+      var e = t * t * (3 - 2 * t); // smoothstep: eases in and out of the centre
+      c.style.setProperty('--s', (1 + GROW * e).toFixed(4));
+    }
+  }
+
+  // ---- who is in control: auto or person ----
+  var userUntil = 0;
+  var visible = true;
+  var hovering = false;
+  function userActive() {
+    userUntil = performance.now() + RESUME_MS;
+    track.classList.add('is-user');
+  }
+
+  ['pointerdown', 'wheel', 'touchstart', 'keydown', 'focusin'].forEach(function (ev) {
+    track.addEventListener(ev, userActive, { passive: true });
+  });
+  track.addEventListener('mouseenter', function () { hovering = true; });
+  track.addEventListener('mouseleave', function () { hovering = false; userUntil = performance.now() + 1200; });
+
+  // Mouse drag (touch scrolls natively)
+  var drag = null;
+  track.addEventListener('pointerdown', function (e) {
+    if (e.pointerType !== 'mouse' || e.button !== 0) return;
+    drag = { x: e.clientX, left: track.scrollLeft, moved: false };
+    track.classList.add('is-user');
+  });
+  window.addEventListener('pointermove', function (e) {
+    if (!drag) return;
+    var dx = e.clientX - drag.x;
+    if (Math.abs(dx) > 4) { drag.moved = true; track.classList.add('is-dragging'); track.style.scrollSnapType = 'none'; }
+    track.scrollLeft = drag.left - dx;
+  });
+  window.addEventListener('pointerup', function () {
+    if (!drag) return;
+    drag = null;
+    track.classList.remove('is-dragging');
+    track.style.scrollSnapType = '';
+    userActive();
+  });
+
+  // Arrow buttons: one card left/right
+  document.querySelectorAll('.svc-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      userActive();
+      var step = originals[0].offsetWidth + (parseFloat(getComputedStyle(track).columnGap) || 0);
+      track.scrollBy({ left: step * Number(btn.dataset.svcDir), behavior: reduceMotion ? 'auto' : 'smooth' });
+    });
+  });
+
+  track.addEventListener('scroll', function () {
+    if (!drag) wrap();
+    scaleCards();
+  }, { passive: true });
+
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) { visible = entries[0].isIntersecting; }).observe(track);
+  }
+
+  // Language switch: refresh the copies so they show the new language
+  document.querySelectorAll('.lang-btn').forEach(function (b) {
+    b.addEventListener('click', function () { setTimeout(function () { var l = track.scrollLeft; buildClones(); measure(); track.scrollLeft = l; scaleCards(); }, 0); });
+  });
+  window.addEventListener('resize', function () { measure(); scaleCards(); });
+
+  var last = performance.now();
+  function tick(now) {
+    var dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+    var auto = !reduceMotion && visible && !hovering && !drag && now > userUntil && !document.hidden;
+    if (auto) {
+      if (track.classList.contains('is-user')) { track.classList.remove('is-user'); pos = track.scrollLeft; }
+      pos += SPEED * dt;
+      track.scrollLeft = pos;   // scroll event wraps + scales
+    }
+    requestAnimationFrame(tick);
+  }
+  scaleCards();
+  if (!reduceMotion) requestAnimationFrame(tick);
+  else track.classList.add('is-user');
+}
+
 markFooterReveal();
 initNavToggle();
 initNavIndicator();
@@ -344,3 +490,4 @@ initScrollProgress();
 initHeadingDecode();
 initCardSpotlight();
 initProcessLine();
+initServiceCarousel();
