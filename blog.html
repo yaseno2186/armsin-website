@@ -3,9 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Datenschutz: Armsin Digital Media</title>
-<meta name="description" content="Datenschutzerklärung von Armsin Digital Media: welche Daten auf armsin.de verarbeitet werden und welche Rechte Sie haben.">
-<meta name="robots" content="noindex">
+<title data-i18n="blog.meta.title">Blog: Armsin Digital Media</title>
+<meta name="description" content="Fallstudien, Einblicke und praktische Tipps rund um Websites für lokale Betriebe, von Armsin Digital Media aus Freiberg." data-i18n="blog.meta.description">
+<link rel="canonical" href="https://armsin.de/blog.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Blog: Armsin Digital Media">
+<meta property="og:description" content="Fallstudien, Einblicke und praktische Tipps rund um Websites für lokale Betriebe, von Armsin Digital Media aus Freiberg.">
+<meta property="og:url" content="https://armsin.de/blog.html">
+<meta property="og:image" content="https://armsin.de/assets/logo/armsin-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -28,7 +33,7 @@
         <a href="ablauf.html" data-i18n="nav.ablauf">Ablauf</a>
         <a href="ablauf.html#termin" data-i18n="nav.termin">Termin buchen</a>
         <a href="studio.html" data-i18n="nav.studio">Studio</a>
-        <a href="blog.html" data-i18n="nav.blog">Blog</a>
+        <a href="blog.html" class="is-active" data-i18n="nav.blog">Blog</a>
       </div>
       <a href="./#contact" class="nav-cta" data-i18n="nav.cta">Kostenlosen Check anfragen</a>
     </div>
@@ -37,63 +42,47 @@
     </button>
   </nav>
 </header>
-
 <main>
-  <section class="legal-page">
+
+  <!-- ================= BLOG HERO ================= -->
+  <section class="page-hero">
+    <div class="container" data-reveal-group>
+      <p class="blog-kicker" data-reveal><span class="blog-prompt">~/armsin</span> <span data-i18n="blog.hero.kicker">cat blog/*.md</span><span class="blog-caret" aria-hidden="true"></span></p>
+      <h1 data-reveal data-i18n="blog.hero.h1">Blog</h1>
+      <p class="lead" data-reveal data-i18n="blog.hero.lead">Fallstudien, Einblicke in meine Arbeit und praktische Tipps für Websites lokaler Betriebe. Ehrlich und ohne Fachchinesisch.</p>
+    </div>
+  </section>
+
+  <!-- ================= POSTS ================= -->
+  <section class="blog-list">
     <div class="container">
-      <h1>Datenschutzerklärung</h1>
-      <div class="legal-content">
-        <h2>1. Verantwortlicher</h2>
-        <p>
-          Yass Almardoud, Armsin Digital Media<br>
-          Karl-Kegel-Str. 45, 09599 Freiberg<br>
-          E-Mail: yaseno2186ss@gmail.com
-        </p>
+      <div class="blog-grid" data-reveal-group>
 
-        <h2>2. Hosting</h2>
-        <p>
-          Diese Website wird über GitHub Pages gehostet (GitHub Inc.,
-          88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA).
-          Beim Aufruf der Website erhebt GitHub automatisch technische
-          Daten (z. B. IP-Adresse, Zeitpunkt des Zugriffs) in sogenannten
-          Server-Logfiles. Diese Datenübertragung kann in die USA erfolgen.
-          Weitere Informationen:
-          <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement</a>
-        </p>
+        <a href="blog-parfum-galerie.html" class="service-card blog-card" data-reveal>
+          <span class="blog-card-thumb">
+            <img src="assets/blog/parfum-galerie.jpg" alt="Illustration: Produktgalerie eines Parfümladens auf Laptop und Handy" width="1920" height="1080" loading="lazy">
+          </span>
+          <span class="blog-meta">
+            <span class="blog-tag" data-i18n="blog.tag.case">Fallstudie</span>
+            <time datetime="2026-10-09" data-i18n="blog.post1.date">9. Oktober 2026</time>
+          </span>
+          <h2 data-i18n="blog.post1.title">Parfüm-Kollektion: alle Düfte auf einen Blick</h2>
+          <p data-i18n="blog.post1.excerpt">Ein Beispielprojekt: wie ein kleiner Parfümladen sein Sortiment online klar und ansprechend zeigen kann.</p>
+          <span class="service-arrow" data-i18n="blog.readMore">Weiterlesen &rarr;</span>
+        </a>
 
-        <h2>3. Kontaktaufnahme</h2>
-        <p>
-          Das Kontaktformular auf dieser Website nutzt eine "mailto"-Funktion.
-          Beim Absenden werden keine Daten an einen Server dieser Website
-          oder an Dritte übermittelt oder gespeichert. Es öffnet sich
-          lediglich das E-Mail-Programm des Nutzers mit einer vorausgefüllten
-          Nachricht. Die eigentliche Datenübertragung erfolgt erst, wenn der
-          Nutzer die E-Mail über sein eigenes E-Mail-Programm versendet, und
-          unterliegt dann den Datenschutzbestimmungen des jeweiligen
-          E-Mail-Anbieters.
-        </p>
-
-        <h2>4. Cookies und Analyse-Tools</h2>
-        <p>
-          Diese Website verwendet aktuell keine Cookies und keine
-          Analyse- oder Tracking-Tools.
-        </p>
-
-        <h2>5. Ihre Rechte</h2>
-        <p>
-          Sie haben jederzeit das Recht auf Auskunft, Berichtigung, Löschung
-          und Einschränkung der Verarbeitung Ihrer personenbezogenen Daten
-          sowie ein Widerspruchsrecht. Bei Fragen wenden Sie sich bitte an
-          die oben genannte E-Mail-Adresse.
-        </p>
-
-        <p>
-          Diese Datenschutzerklärung wird aktualisiert, sobald weitere
-          Tools (z. B. Analyse-Software) zum Einsatz kommen.
-        </p>
       </div>
     </div>
   </section>
+
+  <!-- ================= CTA ================= -->
+  <section class="about-cta">
+    <div class="container about-cta-inner" data-reveal>
+      <h2 data-i18n="blog.cta.h2">Eine Frage zu Ihrer eigenen Website?</h2>
+      <a href="./#contact" class="btn btn-primary" data-i18n="projects.cta.btn">Kostenlosen Check anfragen</a>
+    </div>
+  </section>
+
 </main>
 
 <footer class="site-footer">
