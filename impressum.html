@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
+<script>try{if(localStorage.getItem('armsin-theme')==='light')document.documentElement.setAttribute('data-theme','light')}catch(e){}</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Impressum: Armsin Digital Media</title>
@@ -9,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=8">
+<link rel="stylesheet" href="style.css?v=9">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="48x48" href="assets/logo/favicon-48.png">
 <link rel="icon" type="image/png" sizes="192x192" href="assets/logo/favicon-192.png">
@@ -88,9 +89,15 @@
       <a href="datenschutz.html" data-i18n="footer.datenschutz">Datenschutz</a>
       <a href="https://www.linkedin.com/company/armsin-digital-media/" class="footer-social" target="_blank" rel="noopener" aria-label="Armsin Digital Media auf LinkedIn"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></a>
     </nav>
-    <div class="lang-switch" role="group" aria-label="Sprache wählen / Choose language">
-      <button type="button" class="lang-btn is-active" data-lang="de">DE</button>
-      <button type="button" class="lang-btn" data-lang="en">EN</button>
+    <div class="footer-toggles">
+      <div class="theme-switch" role="group" aria-label="Farbschema / Color theme">
+        <button type="button" class="theme-btn is-active" data-theme-set="dark" aria-pressed="true" aria-label="Dunkles Design" data-i18n-aria="footer.theme.dark"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 14.6A8.5 8.5 0 0 1 9.4 3.5a8.5 8.5 0 1 0 11.1 11.1z"/></svg></button>
+        <button type="button" class="theme-btn" data-theme-set="light" aria-pressed="false" aria-label="Helles Design" data-i18n-aria="footer.theme.light"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor" stroke="none"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button>
+      </div>
+      <div class="lang-switch" role="group" aria-label="Sprache wählen / Choose language">
+        <button type="button" class="lang-btn is-active" data-lang="de">DE</button>
+        <button type="button" class="lang-btn" data-lang="en">EN</button>
+      </div>
     </div>
   </div>
 </footer>

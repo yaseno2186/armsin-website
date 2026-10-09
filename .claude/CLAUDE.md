@@ -45,6 +45,16 @@ direction, chosen from 3 named options. Supersedes the original light
   applies, just expressed through a terminal/developer register now
   instead of the original warm-editorial one.
 
+**Light theme (added 2026-10-09):** sun/moon switch in the footer next to
+DE/EN. Dark stays the default; choice saved in localStorage
+(`armsin-theme`) and applied via `<html data-theme="light">` by an inline
+script at the top of every page's `<head>`. All light colors live in one
+`html[data-theme="light"]` block at the end of style.css (bg #F4F7F3,
+surface #FFFFFF, text #102018, accent #15803D with white on-accent).
+New pages need the head script and the footer `.footer-toggles` markup.
+Use tokens (var(--text), var(--surface) ...) for new CSS, never fixed
+white/black, so both themes keep working.
+
 <details>
 <summary>Original light palette (superseded, kept for reference)</summary>
 

@@ -175,6 +175,39 @@ function initPortfolioFilter() {
   });
 }
 
+// Dark/light switch in the footer. The saved choice is applied before
+// first paint by the inline script in each page's <head>; this only keeps
+// the buttons in sync and handles clicks.
+function initThemeSwitch() {
+  var KEY = 'armsin-theme';
+  var root = document.documentElement;
+  var buttons = document.querySelectorAll('.theme-btn');
+  if (!buttons.length) return;
+
+  var sync = function () {
+    var current = root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+    buttons.forEach(function (btn) {
+      var on = btn.dataset.themeSet === current;
+      btn.classList.toggle('is-active', on);
+      btn.setAttribute('aria-pressed', String(on));
+    });
+  };
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var next = btn.dataset.themeSet;
+      root.classList.add('theme-switching');
+      if (next === 'light') root.setAttribute('data-theme', 'light');
+      else root.removeAttribute('data-theme');
+      try { localStorage.setItem(KEY, next); } catch (e) {}
+      sync();
+      window.setTimeout(function () { root.classList.remove('theme-switching'); }, 400);
+    });
+  });
+
+  sync();
+}
+
 initNavToggle();
 initNavIndicator();
 initScrollReveal();
@@ -182,3 +215,4 @@ initBookingFade();
 initHeroParallax();
 initContactForm();
 initPortfolioFilter();
+initThemeSwitch();

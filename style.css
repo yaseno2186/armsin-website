@@ -2935,3 +2935,161 @@ a.service-card .service-arrow {
   .footer-links a:not(.footer-social)::after,
   .footer-links .footer-social { transition: none; }
 }
+
+/* =====================================================================
+   Light theme ("Hell") — toggled by the sun/moon switch in the footer.
+   Dark stays the default; the choice is stored in localStorage and set
+   on <html data-theme="light"> by a tiny inline script in each page's
+   <head> (so there is no dark flash on load). Almost everything follows
+   from re-pointing the tokens; the few hardcoded colors are fixed below.
+   The terminal code windows and the retro-PC illustration stay dark on
+   purpose: they are "screens", not page surfaces.
+   ===================================================================== */
+html[data-theme="light"] {
+  --bg: #F4F7F3;
+  --surface: #FFFFFF;
+  --surface-2: #EDF2EE;
+  --secondary: #E8EFE9;
+  --text: #102018;
+  --text-dim: rgba(16, 32, 24, 0.70);
+  --accent: #15803D;          /* darker phosphor green: ~4.8:1 on --bg, readable as text */
+  --accent-dark: #116932;
+  --on-accent: #FFFFFF;       /* white on #15803D ~5:1 */
+  --amber: #B4501F;
+  --amber-dark: #933F17;
+  --amber-glow: rgba(180, 80, 31, 0.25);
+  --amber-wash: rgba(180, 80, 31, 0.08);
+
+  --wash: rgba(16, 32, 24, 0.04);
+  --border-subtle: rgba(16, 32, 24, 0.08);
+  --border-default: rgba(16, 32, 24, 0.14);
+  --border-strong: rgba(16, 32, 24, 0.24);
+  --shadow-soft: rgba(16, 32, 24, 0.08);
+  --shadow-lift: rgba(16, 32, 24, 0.14);
+  --shadow-card: rgba(16, 32, 24, 0.12);
+  --accent-wash: rgba(21, 128, 61, 0.08);
+  --accent-tint: rgba(21, 128, 61, 0.10);
+  --accent-ring: rgba(21, 128, 61, 0.30);
+  --accent-glow: rgba(21, 128, 61, 0.10);
+  --accent-glow-strong: rgba(21, 128, 61, 0.22);
+  --accent-shadow: rgba(21, 128, 61, 0.28);
+  color-scheme: light;
+}
+
+/* Smooth cross-fade when switching (only while the switch is used,
+   see .theme-switching in site.js, so normal hovers keep their timing). */
+html.theme-switching,
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition: background-color 350ms ease, color 350ms ease, border-color 350ms ease, box-shadow 350ms ease !important;
+}
+
+/* Nav pill: white-alpha borders/indicator only work on dark */
+html[data-theme="light"] .floating-nav,
+html[data-theme="light"] .nav-menu { border-color: var(--border-subtle); }
+html[data-theme="light"] .floating-nav { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(8px); }
+html[data-theme="light"] .nav-indicator { background: rgba(16, 32, 24, 0.06); }
+html[data-theme="light"] .site-nav,
+html[data-theme="light"] .nav-links a { color: var(--text-dim); }
+html[data-theme="light"] .nav-links a:hover,
+html[data-theme="light"] .nav-links a.is-active { color: var(--text); }
+html[data-theme="light"] .nav-toggle:hover { background: rgba(16, 32, 24, 0.06); }
+html[data-theme="light"] .nav-toggle span { background: rgba(16, 32, 24, 0.75); }
+@media (max-width: 700px) {
+  html[data-theme="light"] .nav-menu { background: #FFFFFF; }
+  html[data-theme="light"] .nav-links a:hover,
+  html[data-theme="light"] .nav-links a:focus-visible,
+  html[data-theme="light"] .nav-links a.is-active { background: rgba(16, 32, 24, 0.05); }
+}
+
+/* Booking section used pure white text (it sits on a dark band) */
+html[data-theme="light"] .booking-head h2,
+html[data-theme="light"] .booking-head p,
+html[data-theme="light"] .booking-fallback,
+html[data-theme="light"] .booking-fallback a,
+html[data-theme="light"] .booking-duration { color: var(--text); }
+html[data-theme="light"] .booking-fallback a:focus-visible { outline-color: var(--accent); }
+html[data-theme="light"] .booking-frame { background: #FFFFFF; }
+
+html[data-theme="light"] .lang-switch,
+html[data-theme="light"] .theme-switch { border-color: var(--border-default); }
+
+/* Paper grain reads as dirt on a light page — tone it down */
+html[data-theme="light"] body::before { opacity: 0.02; }
+
+/* ---------- Theme switch (footer, next to DE/EN) ---------- */
+.footer-toggles {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.theme-switch {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid rgba(214, 232, 221, 0.16);
+  border-radius: 999px;
+}
+
+.theme-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+  background: none;
+  border: none;
+  padding: 4px 9px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color var(--duration-base) ease, background var(--duration-base) ease;
+}
+
+.theme-btn svg { width: 14px; height: 14px; display: block; }
+.theme-btn:hover { color: var(--text); }
+.theme-btn.is-active { color: var(--on-accent); background: var(--accent); }
+.theme-btn.is-active svg { animation: theme-icon-in 420ms var(--ease-out); }
+.theme-btn:focus-visible,
+.lang-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+@keyframes theme-icon-in {
+  from { transform: rotate(-90deg) scale(0.6); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-btn.is-active svg { animation: none; }
+  html.theme-switching *, html.theme-switching *::before, html.theme-switching *::after { transition: none !important; }
+}
+
+/* Hero: the dark legibility halo behind the copy becomes a light one */
+html[data-theme="light"] .hero-copy::before {
+  background: radial-gradient(closest-side, rgba(244, 247, 243, 0.85), rgba(244, 247, 243, 0) 72%);
+}
+
+/* Footer wordmark icon is a white "a" + orange bar: invert the white,
+   rotate the hue back so the orange stays orange */
+html[data-theme="light"] .footer-brand img {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* Icons are drawn with light strokes for the dark theme: on light, they
+   sit on small dark "screen" tiles instead of disappearing */
+html[data-theme="light"] .service-icon-badge {
+  background: #0F1A14;
+}
+html[data-theme="light"] .process-icon {
+  background: #0F1A14;
+  border-radius: 10px;
+  padding: 6px;
+}
+
+/* The hero's floating code windows poke ~20px past the right edge on
+   phones, which let the whole page scroll sideways. Clip them to the hero. */
+.hero { overflow-x: clip; }
+
+/* Contact grid: let both columns shrink below their longest word
+   (long email/LinkedIn text was pushing the page wider than the phone) */
+.contact-grid > * { min-width: 0; }
+.contact-details { overflow-wrap: anywhere; }
