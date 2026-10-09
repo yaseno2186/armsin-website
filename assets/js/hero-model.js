@@ -96,7 +96,19 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
   var introCamPos = new THREE.Vector3();
   var introLookAt = new THREE.Vector3();
 
-  renderer.setAnimationLoop(function () {
+  // Only draw while the hero is actually on screen. Rendering a WebGL scene
+  // every frame after the visitor has scrolled past it cost battery and made
+  // scrolling and the light/dark switch stutter on slower devices.
+  var heroVisible = true;
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      heroVisible = entries[0].isIntersecting;
+      renderer.setAnimationLoop(heroVisible ? frame : null);
+      if (heroVisible) clock.getDelta(); // drop the paused gap so motion doesn't jump
+    }).observe(container);
+  }
+
+  function frame() {
     var dt = clock.getDelta();
 
     if (intro.phase === 'in') {
@@ -130,7 +142,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
       }
     }
     renderer.render(scene, camera);
-  });
+  }
+  renderer.setAnimationLoop(frame);
 
   // Ported from the Claude Design source (retro-workstation.html) that built
   // this model. The GLB only ever carries a static baked snapshot of this
@@ -351,6 +364,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
     var clock2 = 0;
     setInterval(function () {
+      if (!heroVisible) return;   // no texture updates while off screen
       clock2 += 40;
       typeTick(clock2);
       composite(clock2);

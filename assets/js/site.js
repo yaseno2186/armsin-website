@@ -175,39 +175,163 @@ function initPortfolioFilter() {
   });
 }
 
-// Dark/light switch in the footer. The saved choice is applied before
-// first paint by the inline script in each page's <head>; this only keeps
-// the buttons in sync and handles clicks.
+// Dark/light switch in the footer. Dark is the default; a saved "light"
+// choice is applied before first paint by the inline script in each
+// page's <head>. Switching uses the View Transitions API where available:
+// the browser cross-fades one snapshot of the page on the GPU instead of
+// animating every element, which is what made the old switch laggy.
+var THEME_KEY = 'armsin-theme-v2';
+
+// Icons and step illustrations have a "-light.svg" twin drawn in the light
+// palette; swap them so the graphics always match the page.
+function swapThemeAssets(theme) {
+  document.querySelectorAll('img[src*="assets/icons/"], img[src*="assets/images/"]').forEach(function (img) {
+    var src = img.getAttribute('src');
+    if (!/\.svg$/.test(src)) return;
+    var isLight = /-light\.svg$/.test(src);
+    if (theme === 'light' && !isLight) img.setAttribute('src', src.replace(/\.svg$/, '-light.svg'));
+    if (theme !== 'light' && isLight) img.setAttribute('src', src.replace(/-light\.svg$/, '.svg'));
+  });
+}
+
 function initThemeSwitch() {
-  var KEY = 'armsin-theme';
   var root = document.documentElement;
   var buttons = document.querySelectorAll('.theme-btn');
-  if (!buttons.length) return;
+  var current = function () { return root.getAttribute('data-theme') === 'light' ? 'light' : 'dark'; };
 
   var sync = function () {
-    var current = root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+    var theme = current();
     buttons.forEach(function (btn) {
-      var on = btn.dataset.themeSet === current;
+      var on = btn.dataset.themeSet === theme;
       btn.classList.toggle('is-active', on);
       btn.setAttribute('aria-pressed', String(on));
     });
+    swapThemeAssets(theme);
   };
+
+  var apply = function (theme) {
+    if (theme === 'light') root.setAttribute('data-theme', 'light');
+    else root.removeAttribute('data-theme');
+    try { localStorage.setItem(THEME_KEY, theme); } catch (e) {}
+    sync();
+  };
+
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   buttons.forEach(function (btn) {
     btn.addEventListener('click', function () {
       var next = btn.dataset.themeSet;
-      root.classList.add('theme-switching');
-      if (next === 'light') root.setAttribute('data-theme', 'light');
-      else root.removeAttribute('data-theme');
-      try { localStorage.setItem(KEY, next); } catch (e) {}
-      sync();
-      window.setTimeout(function () { root.classList.remove('theme-switching'); }, 400);
+      if (next === current()) return;
+      if (document.startViewTransition && !reduceMotion) {
+        document.startViewTransition(function () { apply(next); });
+      } else {
+        apply(next);
+      }
     });
   });
 
   sync();
 }
 
+// ---------- Motion pass ----------
+
+// Thin progress line at the top showing how far down the page you are.
+function initScrollProgress() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var bar = document.createElement('div');
+  bar.className = 'scroll-progress';
+  bar.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(bar);
+  var ticking = false;
+  var update = function () {
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    var p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+    bar.style.transform = 'scaleX(' + p.toFixed(4) + ')';
+    ticking = false;
+  };
+  window.addEventListener('scroll', function () {
+    if (!ticking) { ticking = true; window.requestAnimationFrame(update); }
+  }, { passive: true });
+  update();
+}
+
+// Terminal "decode" effect: headings briefly show random characters that
+// resolve left to right into the real text when they scroll into view.
+// The heading font is monospaced, so the line never changes width.
+function initHeadingDecode() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  if (!('IntersectionObserver' in window)) return;
+  var GLYPHS = '01<>/{}[]=+*#$%&_';
+  var targets = document.querySelectorAll(
+    '.section-head h2, .page-hero h1, .about-cta-inner h2, .booking-head h2, .contact-info h2, .blog-section h2, .studio-hero-inner h1'
+  );
+
+  var decode = function (el) {
+    if (el.children.length) return;          // only plain-text headings
+    var finalText = el.textContent;
+    var len = finalText.length;
+    var start = null;
+    var duration = Math.min(900, 300 + len * 14);
+    var last = '';
+    el.setAttribute('aria-label', finalText);   // screen readers get the real text
+    var step = function (now) {
+      if (last && el.textContent !== last) return;   // text changed (language switch): stop
+      if (start === null) start = now;
+      var t = Math.min(1, (now - start) / duration);
+      var settled = Math.floor(t * len);
+      var out = '';
+      for (var i = 0; i < len; i++) {
+        var c = finalText[i];
+        out += (i < settled || c === ' ') ? c : GLYPHS[(Math.random() * GLYPHS.length) | 0];
+      }
+      el.textContent = out;
+      last = out;
+      if (t < 1) window.requestAnimationFrame(step);
+      else { el.textContent = finalText; el.removeAttribute('aria-label'); }
+    };
+    window.requestAnimationFrame(step);
+  };
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+      io.unobserve(entry.target);
+      decode(entry.target);
+    });
+  }, { threshold: 0.6 });
+  targets.forEach(function (el) { io.observe(el); });
+}
+
+// Cursor spotlight on cards: feeds the pointer position to CSS.
+function initCardSpotlight() {
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+  document.querySelectorAll('.service-card, .blog-card').forEach(function (card) {
+    card.addEventListener('pointermove', function (e) {
+      var r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+  });
+}
+
+// Homepage process thread draws itself once it scrolls into view.
+function initProcessLine() {
+  var steps = document.querySelector('.process-steps');
+  if (!steps) return;
+  if (!('IntersectionObserver' in window)) { steps.classList.add('is-drawn'); return; }
+  var io = new IntersectionObserver(function (entries) {
+    if (entries[0].isIntersecting) { steps.classList.add('is-drawn'); io.disconnect(); }
+  }, { threshold: 0.3 });
+  io.observe(steps);
+}
+
+// Footer joins the scroll reveal (must run before initScrollReveal).
+function markFooterReveal() {
+  var f = document.querySelector('.footer-inner');
+  if (f) f.setAttribute('data-reveal', '');
+}
+
+markFooterReveal();
 initNavToggle();
 initNavIndicator();
 initScrollReveal();
@@ -216,3 +340,7 @@ initHeroParallax();
 initContactForm();
 initPortfolioFilter();
 initThemeSwitch();
+initScrollProgress();
+initHeadingDecode();
+initCardSpotlight();
+initProcessLine();
