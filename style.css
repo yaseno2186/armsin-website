@@ -3214,4 +3214,72 @@ html[data-theme="light"] body::before { opacity: 0.02; }
   .process-steps::before { transform: none; transition: none; }
   .blog-section .blog-points li, .blog-built li { opacity: 1; transform: none; transition: none; }
   .blog-figure[data-reveal] img, .project-story-image[data-reveal] img { transform: none; transition: none; }
+
+/* ---------- Local landing page: Webdesign Freiberg (webdesign-freiberg.html) ---------- */
+.lp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+.lp-faq {
+  padding: var(--space-12) 0;
+  background: var(--secondary);
+}
+
+@media (max-width: 600px) {
+  .lp-faq { padding: var(--space-8) 0; }
+  .lp-actions .btn { width: 100%; text-align: center; }
+}
+
+.lp-faq-list {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.lp-faq-list details {
+  border-top: 1px solid var(--border-default);
+}
+
+.lp-faq-list details:last-child {
+  border-bottom: 1px solid var(--border-default);
+}
+
+.lp-faq-list summary {
+  position: relative;
+  cursor: pointer;
+  list-style: none;
+  padding: var(--space-3) var(--space-6) var(--space-3) 0;
+  font-family: var(--font-head);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.lp-faq-list summary::-webkit-details-marker { display: none; }
+
+.lp-faq-list summary::after {
+  content: "+";
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.4rem;
+  color: var(--accent);
+}
+
+.lp-faq-list details[open] summary::after { content: "−"; }
+
+.lp-faq-list summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.lp-faq-list details p {
+  color: var(--text-dim);
+  line-height: 1.7;
+  padding: 0 var(--space-6) var(--space-3) 0;
 }

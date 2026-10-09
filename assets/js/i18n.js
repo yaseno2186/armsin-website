@@ -13,6 +13,7 @@ var I18N_EN = {
   'nav.blog': 'Blog',
   'nav.cta': 'Request a free check',
   'footer.studio': 'Studio',
+  'footer.freiberg': 'Web Design Freiberg',
   'footer.impressum': 'Legal Notice',
   'footer.datenschutz': 'Privacy Policy',
   'footer.theme.dark': 'Dark theme',
