@@ -807,7 +807,7 @@ img { max-width: 100%; display: block; }
 
 /* Desktop-only: ease the two floaters outward, away from the monitor, over
    the same span and curve as the camera's cinematic push-in (INTRO_MS/
-   EASE_GENTLE in hero-model.js — 8.5s, easeInOutCubic) so all three elements
+   EASE_GENTLE in hero-model.js — 6.5s, easeInOutCubic) so all three elements
    read as one deliberate shot settling into place together. Left/top and
    right/bottom (not `transform`) carry the move so it composes with the
    drift keyframes above instead of fighting them for the same property.
@@ -819,8 +819,8 @@ img { max-width: 100%; display: block; }
 @media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
   .code-float-a,
   .code-float-b {
-    transition: left 8.5s cubic-bezier(0.65, 0, 0.35, 1), top 8.5s cubic-bezier(0.65, 0, 0.35, 1),
-      right 8.5s cubic-bezier(0.65, 0, 0.35, 1), bottom 8.5s cubic-bezier(0.65, 0, 0.35, 1);
+    transition: left 6.5s cubic-bezier(0.65, 0, 0.35, 1), top 6.5s cubic-bezier(0.65, 0, 0.35, 1),
+      right 6.5s cubic-bezier(0.65, 0, 0.35, 1), bottom 6.5s cubic-bezier(0.65, 0, 0.35, 1);
   }
 
   .hero-model.is-loaded ~ .pc-scene-inner .code-float-a {
@@ -3373,7 +3373,7 @@ h1.hero-eyebrow { line-height: 1.4; }
   left: max(2%, calc(50% - 26em));
   right: auto;
   bottom: auto;
-  transition-duration: 8.5s;
+  transition-duration: 6.5s;
 }
 .hero .pc-scene-inner .code-float-b,
 .hero .hero-model.is-loaded ~ .pc-scene-inner .code-float-b {
@@ -3381,7 +3381,7 @@ h1.hero-eyebrow { line-height: 1.4; }
   right: max(2%, calc(50% - 26em));
   top: auto;
   left: auto;
-  transition-duration: 8.5s;
+  transition-duration: 6.5s;
 }
 
 @media (max-width: 600px) {

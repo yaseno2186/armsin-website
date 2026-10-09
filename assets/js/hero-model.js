@@ -110,7 +110,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
   // play (see the loader callback) to suppress that rotation entirely.
   var hasCloseUp = false;
   var EASE_GENTLE = function (t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }; // ease-in-out-cubic
-  var INTRO_MS = 8500;
+  var INTRO_MS = 6500;
   var introCamPos = new THREE.Vector3();
   var introLookAt = new THREE.Vector3();
 
