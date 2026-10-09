@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<script>try{if(localStorage.getItem('armsin-theme')==='light')document.documentElement.setAttribute('data-theme','light')}catch(e){}</script>
+<script>try{if(localStorage.getItem('armsin-theme-v2')==='light')document.documentElement.setAttribute('data-theme','light')}catch(e){}</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Webdesign Freiberg: Websites für lokale Betriebe | Armsin</title>
-<meta name="description" content="Webdesign in Freiberg für Läden, Restaurants und kleine Betriebe: klarer Ablauf, ein fester Ansprechpartner. Starten Sie mit dem kostenlosen Erstcheck.">
+<title data-i18n="lp.meta.title">Webdesign Freiberg: Websites für lokale Betriebe | Armsin</title>
+<meta name="description" content="Webdesign in Freiberg für Läden, Restaurants und kleine Betriebe: klarer Ablauf, ein fester Ansprechpartner. Starten Sie mit dem kostenlosen Erstcheck." data-i18n="lp.meta.description">
 <link rel="canonical" href="https://armsin.de/webdesign-freiberg.html">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Webdesign Freiberg: Websites für lokale Betriebe | Armsin">
@@ -46,7 +46,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=10">
+<link rel="stylesheet" href="style.css?v=11">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="48x48" href="assets/logo/favicon-48.png">
 <link rel="icon" type="image/png" sizes="192x192" href="assets/logo/favicon-192.png">
@@ -80,11 +80,12 @@
   <!-- ================= HERO ================= -->
   <section class="page-hero">
     <div class="container" data-reveal-group>
-      <h1 data-reveal>Webdesign in Freiberg für Läden, Restaurants und kleine Betriebe</h1>
-      <p class="lead" data-reveal>Eine Website, auf der Ihre Kunden in Sekunden finden, was sie suchen: Öffnungszeiten, Angebot, Anfahrt und wie sie Sie erreichen. Sie sehen vorher, wie ich arbeite, und wissen vor dem Start, was es kostet.</p>
+      <p class="blog-kicker" data-reveal><span class="blog-prompt">~/armsin</span> <span>cd freiberg</span><span class="blog-caret" aria-hidden="true"></span></p>
+      <h1 data-reveal data-i18n="lp.hero.h1">Webdesign in Freiberg für Läden, Restaurants und kleine Betriebe</h1>
+      <p class="lead" data-reveal data-i18n="lp.hero.lead">Eine Website, auf der Ihre Kunden in Sekunden finden, was sie suchen: Öffnungszeiten, Angebot, Anfahrt und wie sie Sie erreichen. Sie sehen vorher, wie ich arbeite, und wissen vor dem Start, was es kostet.</p>
       <div class="lp-actions" data-reveal>
-        <a href="./#contact" class="btn btn-primary">Kostenlosen Erstcheck anfragen</a>
-        <a href="#ablauf" class="btn btn-ghost">So läuft es ab</a>
+        <a href="./#contact" class="btn btn-primary" data-i18n="lp.cta.primary">Kostenlosen Erstcheck anfragen</a>
+        <a href="#ablauf" class="btn btn-ghost" data-i18n="lp.hero.ghost">So läuft es ab</a>
       </div>
     </div>
   </section>
@@ -93,27 +94,27 @@
   <section class="services" id="fuer-wen">
     <div class="container">
       <div class="section-head" data-reveal>
-        <h2>Für wen</h2>
-        <p>Für Betriebe in Freiberg und Umgebung, etwa Brand-Erbisdorf, Oederan, Großschirma oder Halsbrücke, die vor Ort gefunden werden wollen.</p>
+        <h2 data-i18n="lp.who.h2">Für wen</h2>
+        <p data-i18n="lp.who.lead">Für Betriebe in Freiberg und Umgebung, etwa Brand-Erbisdorf, Oederan, Großschirma oder Halsbrücke, die vor Ort gefunden werden wollen.</p>
       </div>
 
       <div class="services-grid">
         <article class="service-card" data-reveal>
           <span class="service-icon-badge"><img class="service-icon" src="assets/icons/icon-build.svg" alt="" width="28" height="28"></span>
-          <h3>Läden und Geschäfte</h3>
-          <p>Ihre Kunden schauen vor dem Besuch kurz online nach. Öffnungszeiten, Anfahrt und Sortiment stehen sofort sichtbar da, passend zu Ihrem Google-Unternehmensprofil.</p>
+          <h3 data-i18n="lp.who.shops.h3">Läden und Geschäfte</h3>
+          <p data-i18n="lp.who.shops.p">Ihre Kunden schauen vor dem Besuch kurz online nach. Öffnungszeiten, Anfahrt und Sortiment stehen sofort sichtbar da, passend zu Ihrem Google-Unternehmensprofil.</p>
         </article>
 
         <article class="service-card" data-reveal>
           <span class="service-icon-badge"><img class="service-icon" src="assets/icons/icon-photo.svg" alt="" width="28" height="28"></span>
-          <h3>Restaurants und Cafés</h3>
-          <p>Ihre Gäste entscheiden am Handy, wo sie heute essen. Eine Speisekarte, die Sie selbst aktuell halten, Reservierung oder Anruf mit einem Tipp und Fotos, die Lust auf einen Besuch machen.</p>
+          <h3 data-i18n="lp.who.food.h3">Restaurants und Cafés</h3>
+          <p data-i18n="lp.who.food.p">Ihre Gäste entscheiden am Handy, wo sie heute essen. Eine Speisekarte, die Sie selbst aktuell halten, Reservierung oder Anruf mit einem Tipp und Fotos, die Lust auf einen Besuch machen.</p>
         </article>
 
         <article class="service-card" data-reveal>
           <span class="service-icon-badge"><img class="service-icon" src="assets/icons/icon-work.svg" alt="" width="28" height="28"></span>
-          <h3>Handwerk und Dienstleister</h3>
-          <p>Sie wollen mehr Anfragen aus der Region. Leistungen klar erklärt, ein Kontaktformular, das wirklich ankommt, und Impressum und Datenschutz sauber umgesetzt.</p>
+          <h3 data-i18n="lp.who.trades.h3">Handwerk und Dienstleister</h3>
+          <p data-i18n="lp.who.trades.p">Sie wollen mehr Anfragen aus der Region. Leistungen klar erklärt, ein Kontaktweg, über den Anfragen zuverlässig bei Ihnen landen, und Seiten für Impressum und Datenschutz von Anfang an eingeplant.</p>
         </article>
       </div>
     </div>
@@ -123,42 +124,42 @@
   <section class="process" id="ablauf">
     <div class="container">
       <div class="section-head" data-reveal>
-        <h2>So läuft es ab</h2>
-        <p>Vier Schritte. Bei jedem wissen Sie, was ich mache und was ich von Ihnen brauche.</p>
+        <h2 data-i18n="lp.process.h2">So läuft es ab</h2>
+        <p data-i18n="lp.process.lead">Vier Schritte. Bei jedem wissen Sie, was ich mache und was ich von Ihnen brauche.</p>
       </div>
 
       <ol class="process-steps">
         <li class="process-step" data-reveal>
           <span class="process-num">01</span>
           <span class="process-icon"><img src="assets/icons/icon-talk.svg" alt="" width="30" height="30"></span>
-          <h3>Kostenloser Erstcheck</h3>
-          <p>Ich schaue mir Ihren Auftritt an: Website, falls vorhanden, Google-Profil und wie Sie am Handy gefunden werden. Dazu ein kurzes Gespräch, persönlich in Freiberg oder am Telefon.</p>
+          <h3 data-i18n="lp.step1.h3">Kostenloser Erstcheck</h3>
+          <p data-i18n="lp.step1.p">Ich schaue mir Ihren Auftritt an: Website, falls vorhanden, Google-Profil und wie Sie am Handy gefunden werden. Dazu ein kurzes Gespräch, persönlich in Freiberg oder am Telefon.</p>
         </li>
 
         <li class="process-step" data-reveal>
           <span class="process-num">02</span>
           <span class="process-icon"><img src="assets/icons/icon-offer.svg" alt="" width="30" height="30"></span>
-          <h3>Schriftliches Festangebot</h3>
-          <p>Umfang, Preis und Zeitplan stehen schwarz auf weiß fest, ohne versteckte Kosten. Sie prüfen in Ruhe und entscheiden.</p>
+          <h3 data-i18n="lp.step2.h3">Schriftliches Festangebot</h3>
+          <p data-i18n="lp.step2.p">Umfang, Preis und Zeitplan stehen schwarz auf weiß fest, ohne versteckte Kosten. Sie prüfen in Ruhe und entscheiden.</p>
         </li>
 
         <li class="process-step" data-reveal>
           <span class="process-num">03</span>
           <span class="process-icon"><img src="assets/icons/icon-work.svg" alt="" width="30" height="30"></span>
-          <h3>Umsetzung mit Abstimmung</h3>
-          <p>Sie liefern Texte, Fotos und Infos, ich helfe dabei. Sie sehen Zwischenstände und geben Feedback, bevor etwas fertig ist.</p>
+          <h3 data-i18n="lp.step3.h3">Umsetzung mit Abstimmung</h3>
+          <p data-i18n="lp.step3.p">Sie liefern Texte, Fotos und Infos, ich helfe dabei. Sie sehen Zwischenstände und geben Feedback, bevor etwas fertig ist.</p>
         </li>
 
         <li class="process-step" data-reveal>
           <span class="process-num">04</span>
           <span class="process-icon"><img src="assets/icons/icon-handover.svg" alt="" width="30" height="30"></span>
-          <h3>Livegang und Übergabe</h3>
-          <p>Die Seite geht online, getestet auf Handy und Computer. Sie bekommen Zugang zu allem und wissen, wie Sie einfache Änderungen selbst machen.</p>
+          <h3 data-i18n="lp.step4.h3">Livegang und Übergabe</h3>
+          <p data-i18n="lp.step4.p">Die Seite geht online, getestet auf Handy und Computer. Sie bekommen Zugang zu allem und wissen, wie Sie einfache Änderungen selbst machen.</p>
         </li>
       </ol>
 
       <div class="process-more" data-reveal>
-        <a href="ablauf.html" class="btn btn-ghost">Ablauf im Detail ansehen</a>
+        <a href="ablauf.html" class="btn btn-ghost" data-i18n="lp.process.more">Ablauf im Detail ansehen</a>
       </div>
     </div>
   </section>
@@ -168,24 +169,24 @@
   <section class="trust" id="beispiele">
     <div class="container">
       <div class="section-head" data-reveal>
-        <h2>Was Ihre Website leisten muss</h2>
-        <p>Drei typische Situationen in Freiberg. Keine Kundenprojekte, sondern das, worauf es ankommt.</p>
+        <h2 data-i18n="lp.cases.h2">Was Ihre Website leisten muss</h2>
+        <p data-i18n="lp.cases.lead">Drei typische Situationen in Freiberg. Keine Kundenprojekte, sondern das, worauf es ankommt.</p>
       </div>
 
       <div class="trust-grid">
         <div class="trust-item" data-reveal>
-          <h3>„Haben die heute offen?“</h3>
-          <p>Ein Gast steht am Obermarkt und sucht am Handy nach einem Café. Öffnungszeiten, Karte und die Wegbeschreibung müssen oben stehen, nicht drei Klicks tief.</p>
+          <h3 data-i18n="lp.case1.h3">„Haben die heute offen?“</h3>
+          <p data-i18n="lp.case1.p">Ein Gast steht am Obermarkt und sucht am Handy nach einem Café. Öffnungszeiten, Karte und die Wegbeschreibung müssen oben stehen, nicht drei Klicks tief.</p>
         </div>
 
         <div class="trust-item" data-reveal>
-          <h3>„Führen die das?“</h3>
-          <p>Eine Kundin will vor der Fahrt in die Stadt wissen, ob es eine Marke gibt. Eine klare Sortimentsseite und ein Anruf-Knopf sparen ihr den Weg und Ihnen die Rückfragen.</p>
+          <h3 data-i18n="lp.case2.h3">„Führen die das?“</h3>
+          <p data-i18n="lp.case2.p">Eine Kundin will vor der Fahrt in die Stadt wissen, ob es eine Marke gibt. Eine klare Sortimentsseite und ein Anruf-Knopf sparen ihr den Weg und Ihnen die Rückfragen.</p>
         </div>
 
         <div class="trust-item" data-reveal>
-          <h3>„Kommen die auch zu uns?“</h3>
-          <p>Ein Hausbesitzer aus dem Umland sucht einen Handwerker. Einzugsgebiet, Leistungen und ein einfaches Anfrageformular entscheiden, ob er anruft.</p>
+          <h3 data-i18n="lp.case3.h3">„Kommen die auch zu uns?“</h3>
+          <p data-i18n="lp.case3.p">Ein Hausbesitzer aus dem Umland sucht einen Handwerker. Einzugsgebiet, Leistungen und ein einfaches Anfrageformular entscheiden, ob er anruft.</p>
         </div>
       </div>
     </div>
@@ -195,26 +196,26 @@
   <section class="lp-faq" id="faq">
     <div class="container">
       <div class="section-head" data-reveal>
-        <h2>Häufige Fragen</h2>
-        <p>Zu Webdesign in Freiberg, kurz beantwortet.</p>
+        <h2 data-i18n="lp.faq.h2">Häufige Fragen</h2>
+        <p data-i18n="lp.faq.lead">Zu Webdesign in Freiberg, kurz beantwortet.</p>
       </div>
 
       <div class="lp-faq-list" data-reveal>
         <details>
-          <summary>Was kostet eine Website in Freiberg?</summary>
-          <p>Das hängt davon ab, was Ihre Seite können muss. Ein Café mit Speisekarte braucht etwas anderes als ein Handwerksbetrieb mit Anfrageformular. Deshalb steht am Anfang ein kostenloser Erstcheck. Danach bekommen Sie ein schriftliches Festangebot. Erst wenn Sie zustimmen, geht es los.</p>
+          <summary data-i18n="lp.faq1.q">Was kostet eine Website in Freiberg?</summary>
+          <p data-i18n="lp.faq1.a">Das hängt davon ab, was Ihre Seite können muss. Ein Café mit Speisekarte braucht etwas anderes als ein Handwerksbetrieb mit Anfrageformular. Deshalb steht am Anfang ein kostenloser Erstcheck. Danach bekommen Sie ein schriftliches Festangebot. Erst wenn Sie zustimmen, geht es los.</p>
         </details>
         <details>
-          <summary>Wie lange dauert es, bis meine Website online ist?</summary>
-          <p>Den Zeitplan halten wir im Angebot fest. Am meisten hängt davon ab, wie schnell Texte, Fotos und Infos wie Öffnungszeiten oder Speisekarte vorliegen. Dabei helfe ich Ihnen, damit es nicht an Ihnen hängen bleibt.</p>
+          <summary data-i18n="lp.faq2.q">Wie lange dauert es, bis meine Website online ist?</summary>
+          <p data-i18n="lp.faq2.a">Den Zeitplan halten wir im Angebot fest. Am meisten hängt davon ab, wie schnell Texte, Fotos und Infos wie Öffnungszeiten oder Speisekarte vorliegen. Dabei helfe ich Ihnen, damit es nicht an Ihnen hängen bleibt.</p>
         </details>
         <details>
-          <summary>Bringt mich die neue Website bei Google nach oben?</summary>
-          <p>Niemand kann Platzierungen bei Google seriös garantieren, ich auch nicht. Ich sorge für eine saubere technische Grundlage, schnelle Ladezeiten, klare Angaben zu Freiberg und Ihrem Einzugsgebiet und helfe beim Google-Unternehmensprofil. Das sind die Bausteine, auf die es bei der lokalen Suche ankommt.</p>
+          <summary data-i18n="lp.faq3.q">Bringt mich die neue Website bei Google nach oben?</summary>
+          <p data-i18n="lp.faq3.a">Niemand kann Platzierungen bei Google seriös garantieren, ich auch nicht. Ich sorge für eine saubere technische Grundlage, schnelle Ladezeiten, klare Angaben zu Freiberg und Ihrem Einzugsgebiet und helfe beim Google-Unternehmensprofil. Das sind die Bausteine, auf die es bei der lokalen Suche ankommt.</p>
         </details>
         <details>
-          <summary>Wer ist mein Ansprechpartner?</summary>
-          <p>Ich, Yass Almardoud. Vom ersten Gespräch bis nach dem Livegang sprechen Sie mit derselben Person, ohne Weiterleitung und ohne Warteschleife.</p>
+          <summary data-i18n="lp.faq4.q">Wer ist mein Ansprechpartner?</summary>
+          <p data-i18n="lp.faq4.a">Ich, Yass Almardoud. Vom ersten Gespräch bis nach dem Livegang sprechen Sie mit derselben Person, ohne Weiterleitung und ohne Warteschleife.</p>
         </details>
       </div>
     </div>
@@ -223,11 +224,11 @@
   <!-- ================= CTA ================= -->
   <section class="about-cta" id="erstcheck">
     <div class="container about-cta-inner" data-reveal>
-      <h2>Lassen Sie uns Ihren Auftritt in Freiberg ansehen</h2>
-      <p class="blog-cta-lead">Schreiben Sie mir kurz, was Ihr Betrieb macht und ob Sie schon eine Website haben, oder buchen Sie direkt einen Termin. Der Erstcheck ist kostenlos und unverbindlich. Kosten nenne ich erst danach, schriftlich.</p>
+      <h2 data-i18n="lp.cta.h2">Lassen Sie uns Ihren Auftritt in Freiberg ansehen</h2>
+      <p class="blog-cta-lead" data-i18n="lp.cta.p">Schreiben Sie mir kurz, was Ihr Betrieb macht und ob Sie schon eine Website haben, oder buchen Sie direkt einen Termin. Der Erstcheck ist kostenlos und unverbindlich. Kosten nenne ich erst danach, schriftlich.</p>
       <div class="lp-actions">
-        <a href="./#contact" class="btn btn-primary">Kostenlosen Erstcheck anfragen</a>
-        <a href="./#termin" class="btn btn-ghost">Termin buchen</a>
+        <a href="./#contact" class="btn btn-primary" data-i18n="lp.cta.primary">Kostenlosen Erstcheck anfragen</a>
+        <a href="./#termin" class="btn btn-ghost" data-i18n="lp.cta.book">Termin buchen</a>
       </div>
     </div>
   </section>
@@ -259,7 +260,7 @@
 </footer>
 
 <script src="assets/js/i18n.js"></script>
-<script src="assets/js/site.js"></script>
+<script src="assets/js/site.js?v=2"></script>
 
 </body>
 </html>

@@ -3214,6 +3214,7 @@ html[data-theme="light"] body::before { opacity: 0.02; }
   .process-steps::before { transform: none; transition: none; }
   .blog-section .blog-points li, .blog-built li { opacity: 1; transform: none; transition: none; }
   .blog-figure[data-reveal] img, .project-story-image[data-reveal] img { transform: none; transition: none; }
+}
 
 /* ---------- Local landing page: Webdesign Freiberg (webdesign-freiberg.html) ---------- */
 .lp-actions {
@@ -3265,12 +3266,14 @@ html[data-theme="light"] body::before { opacity: 0.02; }
   position: absolute;
   right: 4px;
   top: 50%;
-  transform: translateY(-50%);
+  transform: translateY(-50%) rotate(0deg);
   font-size: 1.4rem;
+  line-height: 1;
   color: var(--accent);
+  transition: transform var(--duration-lift) var(--ease-out);
 }
 
-.lp-faq-list details[open] summary::after { content: "−"; }
+.lp-faq-list details[open] summary::after { transform: translateY(-50%) rotate(45deg); }
 
 .lp-faq-list summary:focus-visible {
   outline: 2px solid var(--accent);
@@ -3282,4 +3285,46 @@ html[data-theme="light"] body::before { opacity: 0.02; }
   color: var(--text-dim);
   line-height: 1.7;
   padding: 0 var(--space-6) var(--space-3) 0;
+}
+
+/* FAQ motion: question shifts right on hover, the answer slides in */
+.lp-faq-list summary {
+  transition: color var(--duration-base) ease, padding-left var(--duration-lift) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .lp-faq-list summary:hover { color: var(--accent); padding-left: 6px; }
+}
+.lp-faq-list details[open] p { animation: lp-faq-open 380ms var(--ease-out); }
+@keyframes lp-faq-open {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: none; }
+}
+/* FAQ items cascade in when the list scrolls into view */
+.lp-faq-list details { opacity: 0; transform: translateY(10px); transition: opacity 450ms var(--ease-out), transform 450ms var(--ease-out); }
+.lp-faq-list.is-visible details { opacity: 1; transform: none; }
+.lp-faq-list details:nth-child(2) { transition-delay: 90ms; }
+.lp-faq-list details:nth-child(3) { transition-delay: 180ms; }
+.lp-faq-list details:nth-child(4) { transition-delay: 270ms; }
+
+/* Homepage: small link to the Freiberg page under the services cards */
+.services-local {
+  margin-top: var(--space-6);
+  text-align: center;
+  color: var(--text-dim);
+}
+.services-local a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  transition: transform var(--duration-lift) var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) {
+  .services-local a:hover { transform: translateX(4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lp-faq-list details { opacity: 1; transform: none; transition: none; }
+  .lp-faq-list details[open] p { animation: none; }
+  .lp-faq-list summary, .lp-faq-list summary::after, .services-local a { transition: none; }
 }
