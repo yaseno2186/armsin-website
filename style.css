@@ -1689,6 +1689,46 @@ img { max-width: 100%; display: block; }
   }
 }
 
+/* Click-to-load panel shown inside the booking frame until the visitor
+   agrees to load the Google Calendar (no request to Google before that). */
+.booking-frame { position: relative; }
+.booking-consent {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 35%, var(--accent-glow-strong), transparent 60%),
+    var(--surface);
+  transition: opacity var(--duration-reveal) var(--ease-out), visibility var(--duration-reveal);
+}
+.booking-consent-icon { color: var(--accent); margin-bottom: var(--space-1); }
+.booking-consent-title {
+  font-family: var(--font-head);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.booking-consent-text {
+  max-width: 440px;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  margin-bottom: var(--space-2);
+}
+.booking-consent-text a { color: var(--accent); white-space: nowrap; }
+.booking-frame.is-loading .booking-consent-btn { opacity: 0.6; pointer-events: none; }
+.booking-frame.is-loaded .booking-consent {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .booking-fallback {
   text-align: center;
   margin-top: var(--space-3);

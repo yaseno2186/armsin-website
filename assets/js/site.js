@@ -98,13 +98,24 @@ function initScrollReveal() {
   revealEls.forEach(function (el) { observer.observe(el); });
 }
 
-// The Google Calendar iframe otherwise pops in unstyled the instant it
-// finishes loading; fading it in avoids that jarring flash.
+// Google Calendar booking embed: click-to-load. The iframe has no src
+// until the visitor clicks "Kalender laden", so no data goes to Google
+// before that (see datenschutz.html section 6). Fades in once loaded.
 function initBookingFade() {
-  var iframe = document.querySelector('.booking-frame iframe');
-  if (!iframe) return;
-  iframe.addEventListener('load', function () {
-    iframe.classList.add('is-loaded');
+  document.querySelectorAll('.booking-frame').forEach(function (frame) {
+    var iframe = frame.querySelector('iframe[data-src]');
+    var btn = frame.querySelector('.booking-consent-btn');
+    if (!iframe || !btn) return;
+    iframe.addEventListener('load', function () {
+      if (!iframe.getAttribute('src')) return;
+      iframe.classList.add('is-loaded');
+      frame.classList.add('is-loaded');
+    });
+    btn.addEventListener('click', function () {
+      frame.classList.add('is-loading');
+      iframe.setAttribute('src', iframe.getAttribute('data-src'));
+      iframe.focus();
+    });
   });
 }
 

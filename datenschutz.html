@@ -23,7 +23,7 @@
 <link rel="canonical" href="https://armsin.de/datenschutz.html">
 <link rel="preload" href="assets/fonts/inter-var.woff" as="font" type="font/woff" crossorigin>
 <link rel="preload" href="assets/fonts/jetbrains-mono-var.woff" as="font" type="font/woff" crossorigin>
-<link rel="stylesheet" href="style.css?v=17">
+<link rel="stylesheet" href="style.css?v=18">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="48x48" href="assets/logo/favicon-48.png">
 <link rel="icon" type="image/png" sizes="192x192" href="assets/logo/favicon-192.png">
@@ -79,8 +79,8 @@
           ohne Werbung aus. Schriftarten und Programmcode (auch für die
           3D-Darstellung) liegen auf dem eigenen Webspace und werden nicht von
           fremden Servern nachgeladen. Eine Verbindung zu einem Drittanbieter
-          entsteht nur beim eingebundenen Terminkalender (Abschnitt 6) und wenn
-          Sie selbst einen externen Link anklicken (Abschnitt 8).
+          entsteht nur, wenn Sie selbst den Terminkalender laden (Abschnitt 6)
+          oder einen externen Link anklicken (Abschnitt 8).
         </p>
 
         <h2>3. Hosting und Server-Logfiles</h2>
@@ -135,13 +135,15 @@
           entgegenstehen.
         </p>
 
-        <h2>6. Online-Terminbuchung (Google Kalender)</h2>
+        <h2 id="termin">6. Online-Terminbuchung (Google Kalender)</h2>
         <p>
-          Auf der Startseite und der Seite „Ablauf“ ist eine Terminbuchungsseite
-          von Google Kalender eingebunden. Anbieter ist Google Ireland Limited,
-          Gordon House, Barrow Street, Dublin 4, Irland. Sobald Sie zu diesem
-          Bereich scrollen, lädt Ihr Browser den Kalender von Servern von Google.
-          Dabei werden mindestens Ihre IP-Adresse und technische
+          Auf der Startseite und der Seite „Ablauf“ können Sie über eine
+          eingebundene Terminbuchungsseite von Google Kalender einen Termin
+          buchen. Anbieter ist Google Ireland Limited, Gordon House, Barrow
+          Street, Dublin 4, Irland. Der Kalender wird erst geladen, wenn Sie auf
+          „Kalender laden“ klicken. Vorher wird keine Verbindung zu Google
+          hergestellt. Nach dem Klick lädt Ihr Browser den Kalender von Servern
+          von Google. Dabei werden mindestens Ihre IP-Adresse und technische
           Browserinformationen an Google übermittelt. Sind Sie bei Google
           angemeldet, kann Google den Aufruf Ihrem Konto zuordnen. Google kann
           dabei eigene Cookies oder ähnliche Technologien einsetzen.
@@ -152,9 +154,12 @@
           an Google und an mich übermittelt, um den Termin zu vereinbaren und
           Ihnen eine Bestätigung zu senden. Rechtsgrundlage für die Buchung ist
           Art. 6 Abs. 1 lit. b DSGVO (Anbahnung eines Vertrags). Rechtsgrundlage
-          für die Einbindung des Kalenders ist Art. 6 Abs. 1 lit. f DSGVO. Mein
-          berechtigtes Interesse liegt in einer einfachen Terminvereinbarung ohne
-          lange E-Mail-Abstimmung. Die Terminbuchung ist freiwillig. Sie können
+          für das Laden des Kalenders ist Ihre Einwilligung durch den Klick auf
+          „Kalender laden“ (Art. 6 Abs. 1 lit. a DSGVO und § 25 Abs. 1 TDDDG).
+          Die Einwilligung gilt nur für den aktuellen Seitenaufruf und wird nicht
+          gespeichert. Sie können sie jederzeit für die Zukunft widerrufen, indem
+          Sie die Seite neu laden und den Kalender nicht erneut laden. Die
+          Terminbuchung ist freiwillig. Sie können
           stattdessen jederzeit per E-Mail oder Telefon einen Termin vereinbaren.
         </p>
         <p>
@@ -258,8 +263,8 @@
   </div>
 </footer>
 
-<script src="assets/js/i18n.js"></script>
-<script src="assets/js/site.js?v=3"></script>
+<script src="assets/js/i18n.js?v=2"></script>
+<script src="assets/js/site.js?v=4"></script>
 
 </body>
 </html>
