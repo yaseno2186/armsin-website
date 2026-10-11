@@ -98,7 +98,15 @@
 .lp-js .lp-card.drawn .lp-ico svg *:nth-child(2) { animation-delay: .9s; }
 .lp-js .lp-card.drawn .lp-ico svg *:nth-child(3) { animation-delay: 1.4s; }
 .lp-js .lp-card.drawn .lp-ico svg *:nth-child(4) { animation-delay: 1.8s; }
-@media (hover: hover) { .lp-js .lp-card.drawn:hover .lp-ico svg * { animation: lp-draw-again 1.6s ease forwards; } }
+/* Hover: the icon tile glows and a light sweep flows across it */
+.lp-ico { position: relative; overflow: hidden; }
+.lp-ico::after { content: ""; position: absolute; inset: -40%; background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.28) 50%, transparent 60%); transform: translateX(-120%); pointer-events: none; }
+.lp-ico svg { transition: filter .4s ease; }
+@media (hover: hover) {
+  .lp-card:hover .lp-ico { animation: lp-glow 1.8s ease-in-out infinite; }
+  .lp-card:hover .lp-ico svg { filter: drop-shadow(0 0 4px currentColor) drop-shadow(0 0 10px currentColor); }
+  .lp-card:hover .lp-ico::after { animation: lp-sweep 1.8s ease-in-out infinite; }
+}
 .lp-ico.amber { background: var(--amber-wash); color: var(--amber); border-color: var(--amber-glow); }
 .lp-card .tag { position: absolute; top: 16px; right: 16px; font: 500 11px var(--font-head); color: var(--text-dim); border: 1px solid var(--border-default); border-radius: 99px; padding: 2px 8px; }
 /* stagger cards */
@@ -184,7 +192,8 @@
 .lp-search .q { --chars: 16; }
 @keyframes lp-blink { 50% { opacity: 0; } }
 @keyframes lp-draw { to { stroke-dashoffset: 0; } }
-@keyframes lp-draw-again { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes lp-glow { 0%, 100% { box-shadow: 0 0 0 0 transparent, 0 0 14px -2px currentColor; } 50% { box-shadow: 0 0 0 5px var(--accent-wash), 0 0 26px 2px currentColor; } }
+@keyframes lp-sweep { 0% { transform: translateX(-120%); } 60%, 100% { transform: translateX(120%); } }
 @keyframes lp-draw-in { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 @keyframes lp-light { 0%, 100% { opacity: .15; } 40%, 60% { opacity: .95; } }
 @keyframes lp-twinkle { 50% { opacity: .9; } }
