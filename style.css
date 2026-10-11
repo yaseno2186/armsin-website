@@ -1882,7 +1882,7 @@ img { max-width: 100%; display: block; }
   color: var(--text);
 }
 
-.footer-links .footer-social {
+.footer-links .footer-ico {
   display: inline-flex;
   align-items: center;
   padding: 2px;
@@ -2638,12 +2638,12 @@ a.service-card .service-arrow {
 /* A thin phosphor underline grows from the left on hover/focus, so the
    footer links get the same quiet feedback as the top nav indicator.
    The LinkedIn icon is excluded (it lifts slightly instead). */
-.footer-links a:not(.footer-social) {
+.footer-links a:not(.footer-ico) {
   position: relative;
   padding-bottom: 3px;
 }
 
-.footer-links a:not(.footer-social)::after {
+.footer-links a:not(.footer-ico)::after {
   content: '';
   position: absolute;
   left: 0;
@@ -2657,16 +2657,16 @@ a.service-card .service-arrow {
   transition: transform var(--duration-lift) var(--ease-out);
 }
 
-.footer-links a:not(.footer-social):hover::after,
-.footer-links a:not(.footer-social):focus-visible::after {
+.footer-links a:not(.footer-ico):hover::after,
+.footer-links a:not(.footer-ico):focus-visible::after {
   transform: scaleX(1);
 }
 
-.footer-links .footer-social {
+.footer-links .footer-ico {
   transition: color var(--duration-base) ease, transform var(--duration-lift) var(--ease-out);
 }
 
-.footer-links .footer-social:hover {
+.footer-links .footer-ico:hover {
   color: var(--accent);
   transform: translateY(-2px);
 }
@@ -2933,8 +2933,8 @@ a.service-card .service-arrow {
   .blog-caret { animation: none; }
   .blog-card-thumb img,
   .blog-points li,
-  .footer-links a:not(.footer-social)::after,
-  .footer-links .footer-social { transition: none; }
+  .footer-links a:not(.footer-ico)::after,
+  .footer-links .footer-ico { transition: none; }
 }
 
 /* Hero: floating code windows poke past the right edge on phones */
