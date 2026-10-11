@@ -90,7 +90,15 @@
 .lp-card:hover .lp-ico { transform: rotate(-6deg) scale(1.08); }
 .lp-ico svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .lp-ico svg * { stroke-dasharray: 1; stroke-dashoffset: 0; }
-.lp-cards.is-visible .lp-ico svg * { animation: lp-draw-in 1.2s ease forwards; }
+/* Each card draws its icon when that card itself is well inside the screen
+   (class .drawn set by the small script in the page), slow enough to watch.
+   Hovering a card draws the icon again. */
+.lp-js .lp-card .lp-ico svg * { stroke-dashoffset: 1; }
+.lp-js .lp-card.drawn .lp-ico svg * { animation: lp-draw-in 2.6s cubic-bezier(.45,.05,.25,1) .3s forwards; }
+.lp-js .lp-card.drawn .lp-ico svg *:nth-child(2) { animation-delay: .9s; }
+.lp-js .lp-card.drawn .lp-ico svg *:nth-child(3) { animation-delay: 1.4s; }
+.lp-js .lp-card.drawn .lp-ico svg *:nth-child(4) { animation-delay: 1.8s; }
+@media (hover: hover) { .lp-js .lp-card.drawn:hover .lp-ico svg * { animation: lp-draw-again 1.6s ease forwards; } }
 .lp-ico.amber { background: var(--amber-wash); color: var(--amber); border-color: var(--amber-glow); }
 .lp-card .tag { position: absolute; top: 16px; right: 16px; font: 500 11px var(--font-head); color: var(--text-dim); border: 1px solid var(--border-default); border-radius: 99px; padding: 2px 8px; }
 /* stagger cards */
@@ -176,6 +184,7 @@
 .lp-search .q { --chars: 16; }
 @keyframes lp-blink { 50% { opacity: 0; } }
 @keyframes lp-draw { to { stroke-dashoffset: 0; } }
+@keyframes lp-draw-again { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 @keyframes lp-draw-in { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
 @keyframes lp-light { 0%, 100% { opacity: .15; } 40%, 60% { opacity: .95; } }
 @keyframes lp-twinkle { 50% { opacity: .9; } }
@@ -197,4 +206,5 @@
   .lp .lp-phone { transform: rotate(4deg); }
   .lp .city .win { opacity: .7; }
   .lp .lp-steps::after { transform: none; }
+  .lp-js .lp .lp-card .lp-ico svg * { stroke-dashoffset: 0; }
 }
