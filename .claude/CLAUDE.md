@@ -63,6 +63,13 @@ image-card carousel (`.svc-track` in index.html, `initServiceCarousel` in
 site.js). Card images live in `assets/images/service-*.jpg` (900x1125,
 4:5). To change a card, edit its text in index.html and swap its image.
 
+**Privacy / no third-party loads (2026-10-11):** fonts are self-hosted
+(`assets/fonts/*.woff`, @font-face at the top of style.css) and three.js is
+vendored in `assets/js/vendor/three/` (importmap in index.html). Never add
+Google Fonts, CDN scripts or other external embeds without updating
+datenschutz.html. The only external embed is the Google Calendar booking
+iframe (index.html, ablauf.html), described in datenschutz.html section 6.
+
 <details>
 <summary>Original light palette (superseded, kept for reference)</summary>
 
