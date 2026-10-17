@@ -1,0 +1,6 @@
+Unsplash photo ID: UlHSF20AHu0
+Page: https://unsplash.com/photos/desk-with-laptop-books-and-papers-at-night-UlHSF20AHu0
+Photographer: Yen Vu (@yenvu2410)
+Downloaded: 2026-10-17 (via Unsplash API download_asset + manual download by Yass)
+License: Unsplash License (free, no attribution required)
+Used in: H-story-anfang slides 01 and 05
