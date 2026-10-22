@@ -170,7 +170,7 @@ L = [
      ("anthropic",700,52,150,150,6,"#D97757"),("proofpoint",30,58,280,54,4,"#FFFFFF"),("varonis",320,82,250,42,-3,"#FFFFFF")]) + '</div>',
    kicker="KW 43 · 5 NEWS · 2 MINUTEN", box="Und was sie für kleine Betriebe bedeuten.", cover=True),
  news(2, "NEWS 1 VON 5 · NVIDIA", lg("nvidia",260,170), 'Nvidia: <em>96,2 Mrd. $</em> in einem Quartal',
-   [("Rekord · Q2 (Aug. 2026)","left:14px;top:6%",-3),("+106 % zum Vorjahr","right:14px;top:24%",3),("KI-Deal mit dem Bund geplant","left:10px;bottom:6%",2)],
+   [("Rekord · Q2 (Aug. 2026)","left:14px;top:6%",-3),("+106 % zum Vorjahr","right:14px;top:24%",3),("KI-Pakt mit dem Bund · 19.10.","left:10px;bottom:6%",2)],
    "Für Sie: KI-Rechenleistung wird Grundversorgung, wie Strom."),
  news(3, "NEWS 2 VON 5 · DATENSICHERHEIT", lg("proofpoint",170,40) + f'<div style="font:700 50px Outfit;color:{G}">×</div>' + lg("varonis",160,30), 'Proofpoint kauft Varonis für <em>6,3 Mrd. $</em>',
    [("angekündigt 15.10.2026","left:14px;top:8%",-3),("komplett in bar","right:14px;top:28%",3),("Abschluss 1. Hälfte 2027","right:30px;bottom:8%",-2)],
