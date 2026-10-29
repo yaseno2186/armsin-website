@@ -17,10 +17,10 @@ def bignum(n_, txt):
 # ---------------- A: PHP2Shell (Thu 29) ----------------
 n = 6
 PHP = [
- slide(1, n, f'Läuft Ihre Website mit <em>PHP<span class="s">?</span>{circ(RED)}</em>',
+ slide(1, n, f'Läuft Ihre Website mit <em style="padding:0 34px"><span class="logo-c" style="display:inline-block;width:1.95em;height:1.04em;vertical-align:-0.16em;margin-right:0.06em;--c:#8B8FD0;filter:drop-shadow(0 0 22px rgba(119,123,180,.9))">{logo_svg("php").replace('viewBox="0 0 24 24"','viewBox="0 5.6 24 12.8" preserveAspectRatio="xMidYMid meet"')}</span><span class="s">?</span>{circ(RED)}</em>',
    '<div style="position:relative;width:920px;height:100%;display:flex;align-items:center;justify-content:center">'
-   + f'<div class="tile" style="width:520px;height:330px;border-color:rgba(119,123,180,.7);background:radial-gradient(circle at 50% 45%,rgba(119,123,180,.28),rgba(8,12,20,.95) 70%);box-shadow:0 0 70px rgba(119,123,180,.35)"><div class="logo-c" style="width:330px;height:330px;--c:#8B8FD0;filter:drop-shadow(0 0 30px rgba(119,123,180,.8))">{logo_svg("php")}</div></div>'
-   + pills([("seit 21.10.2026","left:10px;top:4%",-4),("BSI: Update noch heute","right:10px;top:13%",3),("WordPress & Shops","left:30px;bottom:4%",2)]) + '</div>',
+   + term([("$ status --sicherheit", "#8FB19B"), ("⚠ CVE-2026-109618", RED), ("⚠ CVE-2026-109619", RED), ("Name: PHP2Shell", LIGHT)], w=620)
+   + pills([("seit 21.10.2026","left:10px;top:4%",-4),("BSI: Update noch heute","right:10px;top:16%",3),("WordPress & Shops","left:30px;bottom:4%",2)]) + '</div>',
    kicker="SICHERHEITSLÜCKE · PHP2SHELL", box="2 Fragen an Ihren Hoster. Am besten heute.", cover=True),
  slide(2, n, 'Was ist <em>PHP2Shell</em>?',
    f'''<div style="display:flex;flex-direction:column;gap:20px;width:880px"><svg width="120" height="130" viewBox="0 0 120 130" style="filter:drop-shadow(0 0 30px rgba(224,106,78,.55));align-self:center"><path d="M30 58 V38 C30 20 44 8 60 8 C74 8 86 18 89 32" fill="none" stroke="#E06A4E" stroke-width="9" stroke-linecap="round"/><rect x="16" y="56" width="88" height="66" rx="14" fill="#1A0F0C" stroke="#E06A4E" stroke-width="6"/><path d="M60 74 L54 90 L64 94 L58 110" fill="none" stroke="#E06A4E" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
