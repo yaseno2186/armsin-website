@@ -55,6 +55,11 @@ def news(i, k, logos, h1, pills_, box):
     return slide(i, n, h1, vis, kicker=k, box=box, boxcls="o")
 def flo(inner, x, y, r, c):
     return f'<div style="position:absolute;left:{x}px;top:{y}%;transform:rotate({r}deg);filter:drop-shadow(0 0 28px {c}88)">{inner}</div>'
+CEO = HERE + "dl/ceo/"
+def pnews(i, k, who, badge, credit, h1, pills_, box):
+    photo = f'''<div style="display:flex;flex-direction:column;align-items:center;gap:12px"><div style="position:relative;width:330px;height:410px;border-radius:28px;border:3px solid {G};box-shadow:0 0 60px rgba(57,217,122,.4);background:url(file://{CEO}{who}.jpg) center 20%/cover;overflow:hidden"><div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(4,12,7,.55))"></div><div style="position:absolute;right:14px;bottom:14px;width:92px;height:92px;border-radius:22px;background:rgba(4,12,7,.88);border:2px solid rgba(57,217,122,.6);display:flex;align-items:center;justify-content:center">{badge}</div></div><div style="font:400 22px/1.2 Inter;color:#8FB19B;max-width:880px;white-space:nowrap">{credit}</div></div>'''
+    vis = f'<div style="position:relative;width:920px;height:100%;display:flex;align-items:center;justify-content:center">{photo}' + pills(pills_) + '</div>'
+    return slide(i, n, h1, vis, kicker=k, box=box, boxcls="o")
 L44 = [
  slide(1, n, f'Tech-News der <em><span class="s">Woche</span>{und()}</em>',
    '<div style="position:relative;width:920px;height:100%">'
@@ -64,24 +69,24 @@ L44 = [
    + flo(f'<div class="logo-c" style="width:150px;height:150px;--c:#D97757">{logo_svg("anthropic")}</div>', 700, 50, 6, "#D97757")
    + flo(ddi(150), 40, 58, 0, "#39D97A") + '</div>',
    kicker="KW 44 · 5 NEWS · 2 MINUTEN", box="Und was sie für kleine Betriebe bedeuten.", cover=True),
- news(2, "NEWS 1 VON 5 · DEUTSCHLAND", ddi(170), 'Deutschland wird digital <em>abhängiger</em>',
+ pnews(2, "NEWS 1 VON 5 · MICROSOFT", "nadella", ms(56), "Satya Nadella, CEO · Foto: Brian Smale / Microsoft · CC BY-SA 4.0", 'Microsoft: <em>60.000</em> Abfindungs-Angebote',
+   [("seit 26.10.2026","left:8px;top:3%",-3),("rund ein Viertel der Belegschaft","right:10px;top:52%",3),("Grund: hohe KI-Kosten","left:8px;bottom:30%",2)],
+   "Für Sie: KI kostet auch Konzerne viel. Klein anfangen lohnt sich."),
+ pnews(3, "NEWS 2 VON 5 · OPENAI", "altman", f'<div class="logo-c" style="width:120px;height:32px;--c:#FFFFFF">{logo_svg("openai")}</div>', "Sam Altman, CEO · Foto: Office of the PM of Japan · CC BY 4.0", 'GPT-6.1 Terra: <em>halber Preis</em>',
+   [("seit 26.10.2026","left:8px;top:3%",-3),("1 $ / 5 $ pro Mio. Tokens","right:10px;top:52%",3),("kann den Computer bedienen","left:8px;bottom:30%",2)],
+   "Für Sie: Gute KI wird billiger. Auch für kleine Projekte."),
+ pnews(4, "NEWS 3 VON 5 · APPLE", "ternus", lg("apple",46,56), "John Ternus, CEO · Foto: Tessa Bury · CC BY 4.0", 'MacBook Pro jetzt mit <em>Touchscreen</em>',
+   [("vorgestellt 28.10.2026","left:8px;top:3%",-3),("OLED, M5 Pro / Max","right:10px;top:52%",3),("ab 2.899 $ · ab 6.11.","left:8px;bottom:30%",2)],
+   "Für Sie: Websites müssen jetzt auch am Laptop per Finger gut gehen."),
+ pnews(5, "NEWS 4 VON 5 · ANTHROPIC", "amodei", lg("anthropic",56,56), "Dario Amodei, CEO · Foto: TechCrunch · CC BY 2.0", 'Anthropic will an die <em>Börse</em>',
+   [("Börsenprospekt seit 26.10.","left:8px;top:3%",-3),("Kürzel: ANT (geplant)","right:10px;top:52%",3),("Start evtl. ab 9.11. (Bloomberg)","left:8px;bottom:30%",2)],
+   "Für Sie: KI wird Großkonzern-Sache. Prüfen Sie, wem Sie Daten geben."),
+ news(6, "NEWS 5 VON 5 · DEUTSCHLAND", ddi(170), 'Deutschland wird digital <em>abhängiger</em>',
    [("Studie Uni Bonn · 28.10.","left:14px;top:6%",-3),("Index 0,73 · 1 = ganz abhängig","right:10px;top:24%",3),("Platz 25 von 51 Ländern","left:10px;bottom:6%",2)],
    "Für Sie: Wo liegen Ihre Daten? Ein Blick lohnt sich."),
- news(3, "NEWS 2 VON 5 · MICROSOFT", ms(170), 'Microsoft: <em>60.000</em> Abfindungs-Angebote',
-   [("seit 26.10.2026","left:14px;top:8%",-3),("rund ein Viertel der Belegschaft","right:14px;top:28%",3),("Grund: hohe KI-Kosten","left:20px;bottom:8%",2)],
-   "Für Sie: KI kostet auch Konzerne viel. Klein anfangen lohnt sich."),
- news(4, "NEWS 3 VON 5 · OPENAI", lg("openai",300,80,cls="logo-c").replace('style="','style="--c:#FFFFFF;'), 'GPT-6.1 Terra: <em>halber Preis</em>',
-   [("seit 26.10.2026","left:14px;top:8%",-3),("1 $ / 5 $ pro Mio. Tokens","right:14px;top:28%",3),("kann den Computer bedienen","left:20px;bottom:8%",2)],
-   "Für Sie: Gute KI wird billiger. Auch für kleine Projekte."),
- news(5, "NEWS 4 VON 5 · APPLE", lg("apple",150,180), 'MacBook Pro jetzt mit <em>Touchscreen</em>',
-   [("vorgestellt 28.10.2026","left:14px;top:8%",-3),("OLED, M5 Pro / Max","right:14px;top:28%",3),("ab 2.899 $ · ab 6.11.","left:20px;bottom:8%",2)],
-   "Für Sie: Websites müssen jetzt auch am Laptop per Finger gut gehen."),
- news(6, "NEWS 5 VON 5 · ANTHROPIC", lg("anthropic",170,170), 'Anthropic will an die <em>Börse</em>',
-   [("Börsenprospekt seit 26.10.","left:14px;top:8%",-3),("Kürzel: ANT (geplant)","right:14px;top:28%",3),("Start evtl. ab 9.11. (Bloomberg)","left:10px;bottom:8%",2)],
-   "Für Sie: KI wird Großkonzern-Sache. Prüfen Sie, wem Sie Daten geben."),
  slide(7, n, 'Welche News betrifft <em>Sie</em> am meisten?',
    '<div style="display:flex;gap:18px">' + ''.join(f'<div class="tile" style="width:160px;height:210px;flex-direction:column;gap:16px"><div style="font:400 76px/1 Outfit">{k}</div>{v}</div>' for k,v in [
-     ("🌍", f'<div style="font:400 30px Pix;color:{G}">DE</div>'), ("💼", ms(50)), ("🤖", f'<div class="logo-c" style="width:110px;height:30px;--c:#FFFFFF">{logo_svg("openai")}</div>'), ("💻", lg("apple",50,60)), ("📈", lg("anthropic",50,50))]) + '</div>',
+     ("💼", ms(50)), ("🤖", f'<div class="logo-c" style="width:110px;height:30px;--c:#FFFFFF">{logo_svg("openai")}</div>'), ("💻", lg("apple",50,60)), ("📈", lg("anthropic",50,50)), ("🌍", f'<div style="font:400 30px Pix;color:{G}">DE</div>')]) + '</div>',
    kicker="IHRE MEINUNG", box="Antworten Sie mit dem Emoji in den Kommentaren.", last=True),
 ]
 POSTS["L-tech-news-kw44"] = L44
