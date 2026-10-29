@@ -95,6 +95,7 @@ body.e .bg{{background:radial-gradient(ellipse 800px 600px at 70% 30%,rgba(233,1
 body.e h1 em{{color:#E9B949;text-shadow:none}} body.e .txt{{font-size:38px}} body.e h1 .s{{color:#F3EBDD}}
 body.e .kicker{{color:#E9B949;text-shadow:0 0 18px rgba(233,185,73,.5)}} body.e .box.o{{border-color:#E9B949;background:rgba(233,185,73,.08)}} body.e .hint{{color:#E9B949;text-shadow:none}}
 body.p .box.n{{color:#3A352D;font:600 32px/1.3 Inter}}
+body.q h1{{font:700 96px/1.06 Outfit;font-style:normal;letter-spacing:-2px}}
 """
 
 IG_SVG = '<svg viewBox="0 0 32 32" fill="none" stroke="#B9C9BF" stroke-width="2.4"><rect x="3" y="3" width="26" height="26" rx="8"/><circle cx="16" cy="16" r="6.2"/><circle cx="23.4" cy="8.6" r="1.4" fill="#B9C9BF" stroke="none"/></svg>'
@@ -121,7 +122,7 @@ def slide(i, n, h1, visual, kicker="", box="", boxcls="", hand="", cover=False, 
     b = f'<div class="box {boxcls}">{box}</div>' if box else ""
     mk = f'<span class="mk">{MERK}MERKEN</span>' if (cover or last) else '<span></span>'
     hint = f'<div class="hint">{mk}<span>{"" if last else "WISCHEN &gt;"}</span></div>'
-    bgl = '<div class="paper"></div><div class="holes"><i></i><i></i><i></i></div>' if variant == "p" else '<div class="bg"></div><div class="grain"></div>'
+    bgl = '<div class="paper"></div><div class="holes"><i></i><i></i><i></i></div>' if variant in ("p","q") else '<div class="bg"></div><div class="grain"></div>'
     return variant, f'''{bgl}<div class="wrap">{top}{k}{hd}<h1>{h1}</h1><div class="visual">{visual}</div>{b}{hint}
 <div class="foot"><div class="l">{IG_SVG}<span class="in">in</span><span>@armsin_digital_media</span></div><span>armsin.de</span></div></div>'''
 
@@ -176,7 +177,7 @@ async def render(post_dir, slides, out_root):
         pg = await b.new_page(viewport={"width":1080,"height":1350}, device_scale_factor=2)
         for i, (variant, body) in enumerate(slides, 1):
             path = d + f"{i:02d}.html"
-            cls = {"p":"p","e":"e"}.get(variant, "")
+            cls = {"p":"p","e":"e","q":"p q"}.get(variant, "")
             body = re.sub(r'<div class="cnt">\d+/\d+</div>', f'<div class="cnt">{i:02d}/{len(slides):02d}</div>', body)
             open(path, "w").write(f'<!doctype html><html><head><meta charset="utf-8"><style>{CSS}</style></head><body class="{cls}">{body}</body></html>')
             await pg.goto("file://" + path)

@@ -107,21 +107,21 @@ def pphone(msgs, w=470, label="Nachricht an Ihre Kundin"):
 def side(phone, items):
     lst = ''.join(f'<div style="display:flex;gap:14px;align-items:flex-start;font:400 34px/1.25 Outfit;color:{INK2};text-align:left"><span style="font:400 26px/1.4 Pix;color:{PG}">{k}</span><span>{t}</span></div>' for k, t in items)
     return f'<div style="display:flex;gap:44px;align-items:center;width:900px">{phone}<div style="display:flex;flex-direction:column;gap:26px;flex:1">{lst}</div></div>'
-n = 6
+n = 5
 AUT = [
- slide(1, n, 'Drei Aufgaben, die Sie <em>nicht mehr</em> selbst machen müssen',
+ slide(1, n, '3 Aufgaben, die Sie <em>abgeben</em> können',
    '<div style="position:relative;width:900px;height:100%;display:flex;align-items:center;justify-content:center">'
    + todo([("Termine erinnern", True), ("Um Bewertungen bitten", True), ("Gleiche Fragen beantworten", True)])
    + pnote("läuft automatisch!", "right:0px", "bottom:4%", 4) + '</div>',
-   kicker="AUTOMATISIEREN · OHNE TECHNIK-STRESS", box="Das kann ein kleiner Betrieb heute abgeben.", boxcls="n", cover=True, variant="p"),
+   kicker="AUTOMATISIEREN · OHNE TECHNIK-STRESS", box="Das kann ein kleiner Betrieb heute abgeben.", boxcls="n", cover=True, variant="q"),
  slide(2, n, 'Aufgabe 1: <em>Termine erinnern</em>',
    side(pphone([("Hallo Frau Weber, kleine Erinnerung: morgen 10:00 Uhr Termin bei uns. Passt es nicht? Einfach hier absagen.", False), ("Danke, passt!", True)]),
         [("→", "Geht 24 h vorher raus, von allein"), ("→", "Absage per Klick statt Anruf"), ("→", "Freier Termin kann neu vergeben werden")]),
-   kicker="AUFGABE 1 VON 3", box="Weniger leere Termine. Kein Hinterhertelefonieren.", boxcls="n", variant="p"),
+   kicker="AUFGABE 1 VON 3", box="Weniger leere Termine. Kein Hinterhertelefonieren.", boxcls="n", variant="q"),
  slide(3, n, 'Aufgabe 2: <em>um Bewertungen bitten</em>',
    side(pphone([("Danke für Ihren Besuch heute! Hat alles gepasst? Wir freuen uns über eine kurze Google-Bewertung: ★★★★★", False)]),
         [("→", "Kommt ein paar Stunden nach dem Termin"), ("→", "Nur einmal, freundlich, mit Link"), ("→", "Sie müssen nicht mehr daran denken")]),
-   kicker="AUFGABE 2 VON 3", box="Mehr Bewertungen, ohne jedes Mal zu fragen.", boxcls="n", variant="p"),
+   kicker="AUFGABE 2 VON 3", box="Mehr Bewertungen, ohne jedes Mal zu fragen.", boxcls="n", variant="q"),
  slide(4, n, 'Aufgabe 3: <em>immer gleiche Fragen</em>',
    '<div style="position:relative;width:900px;height:100%">'
    + pnote("Haben Sie heute offen?", "left:10px", "top:6%", -4)
@@ -129,13 +129,12 @@ AUT = [
    + pnote("Was kostet das?", "left:60px", "top:33%", 2, "#F2C4AE")
    + pnote("Nehmen Sie Karte?", "right:40px", "top:39%", -3)
    + f'<div style="position:absolute;left:50%;bottom:4%;transform:translateX(-50%);width:740px;background:#FBF8F1;border:4px solid {INK};border-radius:22px;padding:24px 32px;text-align:left;box-shadow:0 18px 40px rgba(60,45,20,.18)"><div style="font:400 24px/1 Pix;color:{PG};margin-bottom:10px">DIE LÖSUNG</div><div style="font:700 40px/1.2 Outfit;color:{INK}">Eine FAQ-Seite + eine automatische Antwort mit dem Link.</div></div></div>',
-   kicker="AUFGABE 3 VON 3", box="Jede Frage nur noch einmal beantworten. Dann nie wieder.", boxcls="n", variant="p"),
+   kicker="AUFGABE 3 VON 3", box="Jede Frage nur noch einmal beantworten. Dann nie wieder.", boxcls="n", variant="q"),
  slide(5, n, 'Was Sie <em>dafür</em> brauchen',
    '<div style="display:flex;flex-direction:column;gap:22px;width:860px">' + ''.join(
      f'<div class="step" style="flex:none;flex-direction:row;align-items:center;gap:28px;padding:26px 32px"><div class="n" style="flex:none">{k}</div><div style="display:flex;flex-direction:column;gap:8px"><h3 style="font-size:46px">{h}</h3><p style="font-size:32px">{p}</p></div></div>'
      for k, h, p in [("01", "Online-Terminbuchung", "Viele haben Erinnerungen schon eingebaut."), ("02", "Ihr Google-Bewertungslink", "Gibt es kostenlos im Unternehmensprofil."), ("03", "Eine FAQ-Seite", "Zehn Fragen, ehrlich beantwortet.")]) + '</div>',
-   kicker="KLEINER START", box="Oft reicht, was Sie schon haben. Es muss nur verbunden werden.", boxcls="n", variant="p"),
- cta(6, n, "AUTOMAT", "Ich schicke Ihnen meine Automation-Checkliste als PDF.", "Automation-Checkliste"),
+   kicker="KLEINER START", box="Oft reicht, was Sie schon haben. Es muss nur verbunden werden.", boxcls="n", last=True, variant="q"),
 ]
 POSTS["D-3-aufgaben"] = AUT
 
@@ -189,48 +188,61 @@ BAU = [
 ]
 POSTS["E-baukasten"] = BAU
 
-# ================= H: Armsin Hub (Mon 2), dev build-in-public =================
-def dash(w=860):
-    days = ["MO","DI","MI","DO","FR","SA","SO"]
-    cells = ''
-    marks = {0:("IG","17:30"),3:("IG","17:30"),4:("IG","17:30"),5:("IG","10:00"),6:("IG","18:00")}
-    for i, d in enumerate(days):
-        m = marks.get(i)
-        chip = f'<div style="margin-top:10px;background:rgba(57,217,122,.18);border:2px solid {G};border-radius:10px;padding:6px 2px;font:400 22px/1.15 Pix;color:{G};text-align:center">{m[0]}<br>{m[1]}</div>' if m else ''
-        cells += f'<div style="flex:1;border:2px solid rgba(234,246,238,.14);border-radius:12px;padding:10px 6px;min-height:150px;background:rgba(0,0,0,.25)"><div style="font:400 22px/1 Pix;color:#8FB19B;text-align:center">{d}</div>{chip}</div>'
-    side_ = ''.join(f'<div style="font:400 22px/1 Outfit;color:{G if k==0 else "#8FB19B"};padding:10px 0">{t}</div>' for k, t in enumerate(["Kalender","Posts","Inbox","Statistik"]))
-    return f'''<div class="brow" style="width:{w}px"><div class="bar"><i></i><i></i><i></i><span>hub · armsin</span></div>
-<div style="display:flex;gap:20px;padding:22px"><div style="flex:none;width:118px;border-right:2px solid rgba(234,246,238,.1);text-align:left">{side_}</div>
-<div style="flex:1;display:flex;flex-direction:column;gap:14px"><div style="font:700 32px/1 Outfit;text-align:left">Diese Woche</div><div style="display:flex;gap:8px">{cells}</div>
-<div style="display:flex;gap:10px"><div class="btn" style="font-size:24px;padding:14px 20px">+ Neuer Post</div><div class="btn o" style="font-size:24px;padding:14px 20px">Karussell hochladen</div></div></div></div></div>'''
-def stk(items):
-    return '<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;width:880px">' + ''.join(
-        f'<div class="card" style="padding:26px 30px"><div class="lab g">{a}</div><div class="big" style="font-size:40px">{b}</div><div class="txt" style="font-size:28px">{c}</div></div>' for a, b, c in items) + '</div>'
-n = 6
-HUB = [
- slide(1, n, 'Mein eigener Social-Media-Planer für <em>0 €</em>',
-   '<div style="position:relative;width:920px;height:100%;display:flex;align-items:center;justify-content:center">' + dash(900)
-   + pills([("selbst gebaut","left:20px;top:6%",-4),("Gratis-Tarif","right:20px;bottom:7%",3)]) + '</div>',
-   kicker="BUILD IN PUBLIC · ARMSIN HUB", box="Dieser Post wurde damit geplant.", cover=True),
- slide(2, n, 'Warum <em>selbst</em> bauen?',
-   '<div style="display:flex;flex-direction:column;gap:24px;width:860px">'
-   + term([("$ posts --diesen-monat", "#8FB19B"), ("⚠ Gratis-Limit erreicht", RED), ("→ nächster Post erst im November", LIGHT)], w=860, title="planer · gratis-version")
-   + '<div class="card"><div class="lab g">MEINE LÖSUNG</div><div class="big" style="font-size:44px">Ein eigener Planer. Ohne Monatslimit, ohne Abo.</div></div></div>',
-   kicker="DAS PROBLEM", box="Ich poste mehr, als ein Gratis-Tarif erlaubt.", boxcls="o"),
- slide(3, n, 'Der Stack: <em>alles gratis</em>',
-   stk([("WORKERS", "Die App", "Seite, API, Webhooks"), ("CRON", "Jede Minute", "Postet, was fällig ist"),
-        ("D1", "Datenbank", "Posts, Zeiten, Status"), ("R2", "Bilder", "Karussell-JPEGs")]),
-   kicker="CLOUDFLARE · FREE PLAN", box="Kosten bisher: 0 €. Nur meine Zeit.", boxcls="o"),
- slide(4, n, 'Was er <em>schon</em> kann',
-   '<div style="display:flex;flex-direction:column;gap:18px;width:860px">' + ''.join(
-     f'<div class="card" style="display:flex;align-items:center;gap:24px;padding:24px 30px"><div style="flex:none;width:52px;height:52px;border-radius:14px;background:{G if ok else "transparent"};border:3px solid {G};display:flex;align-items:center;justify-content:center;font:700 34px/1 Outfit;color:#04150A">{"✓" if ok else ""}</div><div class="big" style="font-size:42px;color:{LIGHT if ok else "#8FB19B"}">{t}</div></div>'
-     for t, ok in [("Instagram-Karussells planen", True), ("Auf die Minute posten", True), ("Kommentare + Keyword-Antworten", False), ("LinkedIn und Google", False)]) + '</div>',
-   kicker="STAND HEUTE", box="Zwei Haken fehlen noch. Kommt Schritt für Schritt.", boxcls="o"),
- slide(5, n, 'Was ich <em>gelernt</em> habe',
-   '<div style="display:flex;flex-direction:column;gap:22px;width:860px">' + ''.join(
-     f'<div class="card"><div class="lab g">{k}</div><div class="big" style="font-size:40px">{t}</div></div>'
-     for k, t in [("01 · APIS", "Offizielle Schnittstellen statt Tricks. Dann bleibt der Account sicher."), ("02 · KLEIN", "Erst eine Plattform fertig machen, dann die nächste."), ("03 · GEHEIM", "Schlüssel gehören nie in den Code.")]) + '</div>',
-   kicker="3 LEHREN"),
- cta(6, n, "HUB", "Ich schicke Ihnen meine Cloudflare-Gratis-Stack Checkliste als PDF.", "Cloudflare-Free-Stack Checkliste"),
+# ================= W: Weihnachtsgeschäft-Ready (Mon 2) =================
+ICO = {"uhr":'<svg viewBox="0 0 40 40" fill="none" stroke="#39D97A" stroke-width="3.5" stroke-linecap="round"><circle cx="20" cy="20" r="16"/><path d="M20 11v10l7 4"/></svg>',
+ "geschenk":'<svg viewBox="0 0 40 40" fill="none" stroke="#E9B949" stroke-width="3.5" stroke-linejoin="round"><rect x="6" y="16" width="28" height="18" rx="3"/><path d="M4 11h32v6H4zM20 11v23M20 11c-3-7-11-6-9-1 1 2 9 1 9 1zM20 11c3-7 11-6 9-1-1 2-9 1-9 1z"/></svg>',
+ "stern":'<svg viewBox="0 0 40 40"><path d="M20 4l4.6 10.2 11 1.2-8.2 7.4 2.3 10.9L20 28.2l-9.7 5.5 2.3-10.9-8.2-7.4 11-1.2z" fill="#E9B949"/></svg>',
+ "pin":'<svg viewBox="0 0 40 40" fill="none" stroke="#39D97A" stroke-width="3.5"><path d="M20 36s11-11 11-19a11 11 0 0 0-22 0c0 8 11 19 11 19z"/><circle cx="20" cy="17" r="4"/></svg>',
+ "tel":'<svg viewBox="0 0 40 40" fill="none" stroke="#E9B949" stroke-width="3.5" stroke-linejoin="round"><path d="M9 5h7l3 8-4 3a20 20 0 0 0 9 9l3-4 8 3v7c0 2-2 4-4 4C18 35 5 22 5 9c0-2 2-4 4-4z"/></svg>'}
+def advent():
+    nums = [7,15,2,22,10,18,4,13,24,9,20,1,16,6,11,23,3,19,8,14,21,5,17,12]
+    opened = {24:"stern",2:"uhr",13:"geschenk",20:"pin",9:"tel"}
+    cells = ""
+    for k in nums:
+        if k in opened:
+            cells += f'<div style="border-radius:16px;border:3px solid {G};background:radial-gradient(circle,rgba(57,217,122,.22),rgba(8,20,13,.95));box-shadow:0 0 26px rgba(57,217,122,.35);display:flex;align-items:center;justify-content:center"><div style="width:60px;height:60px">{ICO[opened[k]]}</div></div>'
+        else:
+            cells += f'<div style="border-radius:16px;border:2px solid rgba(234,246,238,.16);background:rgba(10,25,16,.7);display:flex;align-items:flex-start;justify-content:flex-start;padding:10px 12px"><span style="font:400 24px/1 Pix;color:#8FB19B">{k}</span></div>'
+    return f'<div style="display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:repeat(4,1fr);gap:14px;width:840px;height:520px">{cells}</div>'
+def dates(items):
+    return '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;width:880px">' + ''.join(
+      f'<div class="card" style="padding:22px 24px;text-align:center;border-color:{G if hl else "rgba(57,217,122,.35)"};{"box-shadow:0 0 30px rgba(57,217,122,.3)" if hl else ""}"><div style="font:400 44px/1 Pix;color:{G}">{d}</div><div class="txt" style="font-size:28px;margin-top:12px">{t}</div></div>' for d, t, hl in items) + '</div>'
+def voucher():
+    return f"""<div style="position:relative;width:700px;height:360px;border-radius:28px;background:linear-gradient(135deg,#123222,#0A1A11);border:3px solid #E9B949;box-shadow:0 0 60px rgba(233,185,73,.3);padding:40px 46px;text-align:left;display:flex;flex-direction:column;justify-content:space-between">
+<div style="display:flex;justify-content:space-between;align-items:center"><div style="font:400 26px/1 Pix;color:#E9B949;letter-spacing:2px">GESCHENKGUTSCHEIN</div><div style="width:70px;height:70px">{ICO["geschenk"]}</div></div>
+<div style="font:700 110px/1 Outfit;color:{LIGHT}">50 €</div>
+<div style="display:flex;justify-content:space-between;align-items:center"><div class="txt" style="font-size:28px">Ihr Laden · online kaufen</div><div class="btn" style="font-size:26px;padding:14px 22px">Jetzt verschenken</div></div></div>"""
+def site_banner():
+    return f"""<div class="brow" style="width:820px"><div class="bar"><i></i><i></i><i></i><span>ihr-laden.de</span></div>
+<div style="background:#E9B949;color:#1A1405;font:700 32px/1.2 Outfit;padding:18px 26px;display:flex;align-items:center;gap:14px"><div style="width:36px;height:36px">{ICO["stern"].replace("#E9B949","#1A1405")}</div>Weihnachtsmenü ab sofort buchbar →</div>
+<div class="in"><div style="height:150px;border-radius:14px;background:rgba(234,246,238,.08)"></div><div class="ln" style="width:65%"></div><div class="ln" style="width:85%"></div><div style="display:flex;gap:14px"><div class="btn" style="font-size:26px;padding:14px 22px">Tisch reservieren</div><div class="btn o" style="font-size:26px;padding:14px 22px">Speisekarte</div></div></div></div>"""
+def faqph():
+    rows = [("Letzter Bestelltag für Weihnachten?", "Freitag, 18.12."), ("Geöffnet an Heiligabend?", "9 bis 13 Uhr"), ("Zwischen den Jahren?", "27. bis 30.12. normal")]
+    r = ''.join(f'<div style="border-bottom:2px solid rgba(234,246,238,.1);padding:14px 0"><div style="font:700 32px/1.2 Outfit;color:{LIGHT}">{q}</div><div style="font:400 30px/1.3 Outfit;color:{G};margin-top:6px">{a}</div></div>' for q, a in rows)
+    return f'<div class="brow" style="width:760px"><div class="bar"><i></i><i></i><i></i><span>ihr-laden.de/weihnachten</span></div><div class="in" style="gap:0">{r}</div></div>'
+n = 7
+XMAS = [
+ slide(1, n, 'Ist Ihr Betrieb <em>weihnachtsbereit</em>?', advent(),
+   kicker="WEIHNACHTSGESCHÄFT · CHECKLISTE", box="5 Dinge, die Sie jetzt schon erledigen können.", cover=True),
+ slide(2, n, '1. <em>Sonderöffnungszeiten</em> eintragen',
+   dates([("18.11.", "Buß- und Bettag (nur Sachsen)", True), ("24.12.", "Heiligabend", False), ("25.12.", "1. Weihnachtstag", False),
+          ("26.12.", "2. Weihnachtstag", False), ("31.12.", "Silvester", False), ("01.01.", "Neujahr", False)]),
+   kicker="GOOGLE-UNTERNEHMENSPROFIL", box="Unter „Sonderöffnungszeiten“. Dann steht niemand vor verschlossener Tür.", boxcls="o"),
+ slide(3, n, '2. <em>Gutscheine</em> online anbieten', voucher(),
+   kicker="FÜR LAST-MINUTE-KÄUFER", box="Wer kurz vor Weihnachten sucht, kauft gern sofort. Ein Link reicht oft.", boxcls="o"),
+ slide(4, n, '3. Angebot <em>ganz oben</em> zeigen', site_banner(),
+   kicker="STARTSEITE", box="Ein Satz oben auf der Startseite. Nicht versteckt im Blog.", boxcls="o"),
+ slide(5, n, '4. <em>Fristen</em> klar sagen', faqph(),
+   kicker="BESTELLEN · ABHOLEN · BUCHEN", box="Klare Daten auf der Website sparen Ihnen viele Anrufe.", boxcls="o"),
+ slide(6, n, '5. <em>Erreichbar</em> bleiben',
+   '<div style="display:flex;flex-direction:column;gap:20px;width:860px">' + ''.join(
+     f'<div class="card" style="display:flex;align-items:center;gap:28px;padding:26px 30px"><div style="flex:none;width:64px;height:64px">{ICO[i]}</div><div><div class="big" style="font-size:42px">{h}</div><div class="txt" style="font-size:30px">{p}</div></div></div>'
+     for i, h, p in [("tel", "Telefonnummer antippbar", "Am Handy ein Tipp, und es klingelt."), ("pin", "Adresse in Google Maps", "Richtig verlinkt, mit Parkhinweis."), ("uhr", "Antwortzeit nennen", "„Wir melden uns innerhalb eines Tages.“")]) + '</div>',
+   kicker="WENN ES VOLL WIRD", box="Gerade im Dezember entscheidet ein Klick, ob jemand anruft.", boxcls="o"),
+ slide(7, n, 'Was fehlt bei <em>Ihnen</em> noch?',
+   '<div style="display:flex;flex-direction:column;gap:16px;width:820px">' + ''.join(
+     f'<div class="card" style="display:flex;align-items:center;gap:24px;padding:22px 30px"><div style="flex:none;width:50px;height:50px;border-radius:12px;border:3px solid {G}"></div><div style="flex:none;font:400 30px/1 Pix;color:{G}">{k}</div><div class="big" style="font-size:40px">{t}</div></div>'
+     for k, t in enumerate(["Sonderöffnungszeiten", "Gutscheine online", "Angebot auf der Startseite", "Fristen genannt", "Gut erreichbar"], 1)) + '</div>',
+   kicker="IHRE CHECKLISTE", box="Speichern Sie den Post und haken Sie ab. Schreiben Sie die Nummer, die noch fehlt.", last=True),
 ]
-POSTS["H-hub"] = HUB
+POSTS["W-weihnachten"] = XMAS
