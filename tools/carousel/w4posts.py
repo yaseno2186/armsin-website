@@ -19,13 +19,13 @@ n = 6
 PHP = [
  slide(1, n, f'Läuft Ihre Website mit <em>PHP<span class="s">?</span>{circ(RED)}</em>',
    '<div style="position:relative;width:920px;height:100%;display:flex;align-items:center;justify-content:center">'
-   + term([("$ status --sicherheit", "#8FB19B"), ("⚠ CVE-2026-109618", RED), ("⚠ CVE-2026-109619", RED), ("Name: PHP2Shell", LIGHT)], w=620)
-   + pills([("seit 21.10.2026","left:10px;top:4%",-4),("WordPress & Shops","right:10px;top:16%",3),("Mainz: Seite offline","left:10px;bottom:4%",2)]) + '</div>',
-   kicker="SICHERHEITSLÜCKE · OKTOBER 2026", box="2 Fragen an Ihren Hoster. Am besten heute.", cover=True),
+   + f'<div class="tile" style="width:520px;height:330px;border-color:rgba(119,123,180,.7);background:radial-gradient(circle at 50% 45%,rgba(119,123,180,.28),rgba(8,12,20,.95) 70%);box-shadow:0 0 70px rgba(119,123,180,.35)"><div class="logo-c" style="width:330px;height:330px;--c:#8B8FD0;filter:drop-shadow(0 0 30px rgba(119,123,180,.8))">{logo_svg("php")}</div></div>'
+   + pills([("seit 21.10.2026","left:10px;top:4%",-4),("BSI: Update noch heute","right:10px;top:13%",3),("WordPress & Shops","left:30px;bottom:4%",2)]) + '</div>',
+   kicker="SICHERHEITSLÜCKE · PHP2SHELL", box="2 Fragen an Ihren Hoster. Am besten heute.", cover=True),
  slide(2, n, 'Was ist <em>PHP2Shell</em>?',
-   f'''<div style="display:flex;flex-direction:column;gap:28px;width:880px"><svg width="160" height="173" viewBox="0 0 120 130" style="filter:drop-shadow(0 0 30px rgba(224,106,78,.55));align-self:center"><path d="M30 58 V38 C30 20 44 8 60 8 C74 8 86 18 89 32" fill="none" stroke="#E06A4E" stroke-width="9" stroke-linecap="round"/><rect x="16" y="56" width="88" height="66" rx="14" fill="#1A0F0C" stroke="#E06A4E" stroke-width="6"/><path d="M60 74 L54 90 L64 94 L58 110" fill="none" stroke="#E06A4E" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+   f'''<div style="display:flex;flex-direction:column;gap:20px;width:880px"><svg width="120" height="130" viewBox="0 0 120 130" style="filter:drop-shadow(0 0 30px rgba(224,106,78,.55));align-self:center"><path d="M30 58 V38 C30 20 44 8 60 8 C74 8 86 18 89 32" fill="none" stroke="#E06A4E" stroke-width="9" stroke-linecap="round"/><rect x="16" y="56" width="88" height="66" rx="14" fill="#1A0F0C" stroke="#E06A4E" stroke-width="6"/><path d="M60 74 L54 90 L64 94 L58 110" fill="none" stroke="#E06A4E" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
 <div class="card"><div class="lab g">KURZ ERKLÄRT</div><div class="big" style="font-size:46px">Zwei kritische Lücken in PHP. Angreifer können damit <em>Code auf Ihrem Server</em> ausführen.</div></div>
-<div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap"><div class="chip"><span>1</span>Website übernehmen</div><div class="chip"><span>2</span>Kundendaten lesen</div><div class="chip"><span>3</span>weiter angreifen</div></div></div>''',
+<div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap"><div class="chip"><span>1</span>Website übernehmen</div><div class="chip"><span>2</span>Kundendaten lesen</div><div class="chip"><span>3</span>weiter angreifen</div></div><div class="txt" style="text-align:center;font-size:30px">Laut BSI betroffen: alle bekannten Versionen bis mindestens PHP 5.</div></div>''',
    kicker="ERST MAL KURZ ERKLÄRT", box="Die Updates gibt es schon. Sie müssen nur installiert sein.", boxcls="o"),
  slide(3, n, 'Bin ich <em>betroffen</em>?',
    '<div style="display:flex;flex-direction:column;gap:26px;width:880px">' + ''.join(
@@ -33,11 +33,11 @@ PHP = [
      for a,b,c in [("WordPress-Seite","prüfen",RED),("Online-Shop mit PHP","prüfen",RED),("Website-Baukasten","kurz nachfragen",G)]) + '</div>',
    kicker="BETROFFEN? · 3 FÄLLE", box="Bei Baukästen kümmert sich meist der Anbieter. Fragen schadet nicht."),
  slide(4, n, '„Ist das <em>Update</em> installiert?“',
-   bignum("01", bubble("Hallo, ist auf meinem Server das Notfall-Update gegen PHP2Shell schon installiert?")),
+   bignum("01", bubble("Hallo, ist auf meinem Server das Notfall-Update gegen PHP2Shell installiert? Also z. B. PHP 8.4.27 oder 8.3.36?")),
    kicker="FRAGE 1 VON 2 · AN IHREN HOSTER", box="Kopieren, einfügen, abschicken."),
  slide(5, n, '„Läuft es auch <em>wirklich</em>?“',
-   bignum("02", bubble("Welche PHP-Version läuft jetzt aktiv auf meiner Seite, und ist sie gepatcht?") + '<div class="txt" style="font-size:28px;color:#8FB19B">Rat von Thomas Boele (Check Point), laut web.de</div>'),
-   kicker="FRAGE 2 VON 2 · NACHPRÜFEN", box="„Vertrauen ist gut, Kontrolle ist besser.“"),
+   bignum("02", bubble("Welche PHP-Version läuft jetzt aktiv auf meiner Seite, und ist sie gepatcht?") + '<div class="txt" style="font-size:30px;color:#8FB19B">Wichtig: Nach dem Update muss der Dienst neu starten.</div>'),
+   kicker="FRAGE 2 VON 2 · NACHPRÜFEN", box="„Es besteht unverzüglicher Handlungsbedarf!“ · BSI"),
  cta(6, n, "CHECK", "Ich schicke Ihnen meinen 5-Punkte Website-Check als PDF.", "5-Punkte Website-Check"),
 ]
 POSTS = {"A-php2shell": PHP}
