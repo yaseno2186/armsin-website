@@ -41,3 +41,47 @@ PHP = [
  cta(6, n, "CHECK", "Ich schicke Ihnen meinen 5-Punkte Website-Check als PDF.", "5-Punkte Website-Check"),
 ]
 POSTS = {"A-php2shell": PHP}
+
+# ---------------- L: Tech-News KW 44 (Fri 30) ----------------
+n = 7
+def lg(name, w, h, pad=0, cls="logo-w"):
+    return f'<div class="{cls}" style="width:{w}px;height:{h}px;padding:{pad}px">{logo_svg(name)}</div>'
+def ms(w):
+    return f'<div style="width:{w}px;height:{w}px">{logo_svg("microsoft")}</div>'
+def ddi(s=150):
+    return f'<div style="width:{s*1.6}px;height:{s}px;border-radius:24px;border:3px solid {G};display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 40px rgba(57,217,122,.35)"><div style="font:400 {int(s*.40)}px/1 Pix;color:{G};height:{int(s*.44)}px">0,73</div><div style="font:400 {max(23,int(s*.16))}px/1 Pix;color:{LIGHT};margin-top:{int(s*.06)}px">DE · DDI</div></div>'
+def news(i, k, logos, h1, pills_, box):
+    vis = f'<div style="position:relative;width:920px;height:100%;display:flex;align-items:center;justify-content:center"><div class="tile" style="width:440px;height:300px;gap:30px">{logos}</div>' + pills(pills_) + '</div>'
+    return slide(i, n, h1, vis, kicker=k, box=box, boxcls="o")
+def flo(inner, x, y, r, c):
+    return f'<div style="position:absolute;left:{x}px;top:{y}%;transform:rotate({r}deg);filter:drop-shadow(0 0 28px {c}88)">{inner}</div>'
+L44 = [
+ slide(1, n, f'Tech-News der <em><span class="s">Woche</span>{und()}</em>',
+   '<div style="position:relative;width:920px;height:100%">'
+   + flo(ms(150), 60, 6, -8, "#00A4EF")
+   + flo(f'<div class="logo-c" style="width:290px;height:78px;--c:#FFFFFF">{logo_svg("openai")}</div>', 560, 8, 6, "#FFFFFF")
+   + flo(f'<div class="logo-c" style="width:130px;height:160px;--c:#F5F5F7">{logo_svg("apple")}</div>', 390, 34, -4, "#F5F5F7")
+   + flo(f'<div class="logo-c" style="width:150px;height:150px;--c:#D97757">{logo_svg("anthropic")}</div>', 700, 50, 6, "#D97757")
+   + flo(ddi(150), 40, 58, 0, "#39D97A") + '</div>',
+   kicker="KW 44 · 5 NEWS · 2 MINUTEN", box="Und was sie für kleine Betriebe bedeuten.", cover=True),
+ news(2, "NEWS 1 VON 5 · DEUTSCHLAND", ddi(170), 'Deutschland wird digital <em>abhängiger</em>',
+   [("Studie Uni Bonn · 28.10.","left:14px;top:6%",-3),("Index 0,73 · 1 = ganz abhängig","right:10px;top:24%",3),("Platz 25 von 51 Ländern","left:10px;bottom:6%",2)],
+   "Für Sie: Wo liegen Ihre Daten? Ein Blick lohnt sich."),
+ news(3, "NEWS 2 VON 5 · MICROSOFT", ms(170), 'Microsoft: <em>60.000</em> Abfindungs-Angebote',
+   [("seit 26.10.2026","left:14px;top:8%",-3),("rund ein Viertel der Belegschaft","right:14px;top:28%",3),("Grund: hohe KI-Kosten","left:20px;bottom:8%",2)],
+   "Für Sie: KI kostet auch Konzerne viel. Klein anfangen lohnt sich."),
+ news(4, "NEWS 3 VON 5 · OPENAI", lg("openai",300,80,cls="logo-c").replace('style="','style="--c:#FFFFFF;'), 'GPT-6.1 Terra: <em>halber Preis</em>',
+   [("seit 26.10.2026","left:14px;top:8%",-3),("1 $ / 5 $ pro Mio. Tokens","right:14px;top:28%",3),("kann den Computer bedienen","left:20px;bottom:8%",2)],
+   "Für Sie: Gute KI wird billiger. Auch für kleine Projekte."),
+ news(5, "NEWS 4 VON 5 · APPLE", lg("apple",150,180), 'MacBook Pro jetzt mit <em>Touchscreen</em>',
+   [("vorgestellt 28.10.2026","left:14px;top:8%",-3),("OLED, M5 Pro / Max","right:14px;top:28%",3),("ab 2.899 $ · ab 6.11.","left:20px;bottom:8%",2)],
+   "Für Sie: Websites müssen jetzt auch am Laptop per Finger gut gehen."),
+ news(6, "NEWS 5 VON 5 · ANTHROPIC", lg("anthropic",170,170), 'Anthropic will an die <em>Börse</em>',
+   [("Börsenprospekt seit 26.10.","left:14px;top:8%",-3),("Kürzel: ANT (geplant)","right:14px;top:28%",3),("Start evtl. ab 9.11. (Bloomberg)","left:10px;bottom:8%",2)],
+   "Für Sie: KI wird Großkonzern-Sache. Prüfen Sie, wem Sie Daten geben."),
+ slide(7, n, 'Welche News betrifft <em>Sie</em> am meisten?',
+   '<div style="display:flex;gap:18px">' + ''.join(f'<div class="tile" style="width:160px;height:210px;flex-direction:column;gap:16px"><div style="font:400 76px/1 Outfit">{k}</div>{v}</div>' for k,v in [
+     ("🌍", f'<div style="font:400 30px Pix;color:{G}">DE</div>'), ("💼", ms(50)), ("🤖", f'<div class="logo-c" style="width:110px;height:30px;--c:#FFFFFF">{logo_svg("openai")}</div>'), ("💻", lg("apple",50,60)), ("📈", lg("anthropic",50,50))]) + '</div>',
+   kicker="IHRE MEINUNG", box="Antworten Sie mit dem Emoji in den Kommentaren.", last=True),
+]
+POSTS["L-tech-news-kw44"] = L44
