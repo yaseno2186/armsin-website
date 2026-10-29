@@ -93,6 +93,8 @@ body.p .hint{{color:#2E8F55;text-shadow:none}} body.p .hint .mk{{color:#6E675B}}
 /* editorial */
 body.e .bg{{background:radial-gradient(ellipse 800px 600px at 70% 30%,rgba(233,185,73,.10),transparent 70%),radial-gradient(ellipse 900px 380px at 50% 100%,rgba(57,217,122,.22),transparent 70%),linear-gradient(180deg,#0E1712,#050A07)}}
 body.e h1 em{{color:#E9B949;text-shadow:none}} body.e .txt{{font-size:38px}} body.e h1 .s{{color:#F3EBDD}}
+body.e .kicker{{color:#E9B949;text-shadow:0 0 18px rgba(233,185,73,.5)}} body.e .box.o{{border-color:#E9B949;background:rgba(233,185,73,.08)}} body.e .hint{{color:#E9B949;text-shadow:none}}
+body.p .box.n{{color:#3A352D;font:600 32px/1.3 Inter}}
 """
 
 IG_SVG = '<svg viewBox="0 0 32 32" fill="none" stroke="#B9C9BF" stroke-width="2.4"><rect x="3" y="3" width="26" height="26" rx="8"/><circle cx="16" cy="16" r="6.2"/><circle cx="23.4" cy="8.6" r="1.4" fill="#B9C9BF" stroke="none"/></svg>'
