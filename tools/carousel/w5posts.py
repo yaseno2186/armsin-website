@@ -109,3 +109,59 @@ KIS = [
    kicker="IHRE MEINUNG", box="Antworten Sie mit dem Emoji. Quelle: DIHK-Digitalisierungsumfrage 2026.", boxcls="n", last=True, variant="q"),
 ]
 POSTS["B-ki-studie"] = KIS
+
+# ================= D: Vorher / Nachher Kontaktseite =================
+def mark(k, x, y, c=RED):
+    return f'<div style="position:absolute;left:{x}px;top:{y}px;width:52px;height:52px;border-radius:50%;background:{c};color:#0A0503;font:700 30px/52px Outfit;text-align:center;box-shadow:0 0 20px {c}">{k}</div>'
+def ph_before(marks=True):
+    inner = f'''<div style="font:700 30px/1.1 Outfit;color:#DCE7DF">Kontakt</div>
+<div style="font:400 22px/1.3 Outfit;color:#8FB19B">Sie haben Fragen zu Bestellungen, Torten oder Catering? Nutzen Sie bitte unser Formular.</div>
+<div style="height:28px;border-radius:4px;background:repeating-linear-gradient(90deg,rgba(234,246,238,.35) 0 6px,transparent 6px 9px);width:70%;opacity:.6"></div>
+''' + ''.join('<div style="height:24px;flex:none;border:1px solid rgba(234,246,238,.25);border-radius:4px"></div>' for _ in range(6)) + '''
+<div style="align-self:flex-start;background:rgba(234,246,238,.15);color:#8FB19B;font:400 22px/1 Outfit;padding:8px 14px;border-radius:4px">Absenden</div>
+<div style="font:400 22px/1.2 Outfit;color:#5E7466">Hauptstr. 12, Freiberg</div>'''
+    m = (mark(1, 340, 150) + mark(2, -26, 230) + mark(3, 340, 20) + mark(4, -26, 470)) if marks else ''
+    return f'<div style="position:relative;width:380px;height:540px"><div class="phone bad" style="width:380px;height:540px;opacity:.85;gap:10px;padding:28px 24px">{inner}</div>{m}</div>'
+def ph_after():
+    fld = lambda t: f'<div style="height:44px;flex:none;border:2px solid rgba(234,246,238,.25);border-radius:10px;font:400 22px/40px Outfit;color:#8FB19B;padding-left:12px">{t}</div>'
+    return f'''<div class="phone good" style="width:380px;height:540px;gap:14px;padding:28px 24px">
+<div style="font:700 32px/1.1 Outfit;color:{LIGHT}">Bäckerei Beispiel</div>
+<div style="display:flex;align-items:center;gap:10px;font:700 22px/1 Outfit;color:{G}"><div style="width:14px;height:14px;border-radius:50%;background:{G};box-shadow:0 0 10px {G}"></div>Heute offen bis 18:00</div>
+<div class="btn" style="font-size:26px;padding:16px">📞 Jetzt anrufen</div>
+<div class="btn o" style="font-size:24px;padding:14px">📍 Route planen</div>
+<div style="border-top:2px solid rgba(234,246,238,.12);padding-top:12px;display:flex;flex-direction:column;gap:10px">
+<div style="font:400 22px/1 Pix;color:#8FB19B">ODER SCHREIBEN</div>{fld("Name")}{fld("Telefon oder E-Mail")}{fld("Nachricht")}</div></div>'''
+def sc(html, k=.8, w=380, h=540):
+    return f'<div style="width:{int(w*k)}px;height:{int(h*k)}px;flex:none"><div style="transform:scale({k});transform-origin:top left;width:{w}px">{html}</div></div>'
+def fix(items):
+    return '<div style="display:flex;flex-direction:column;gap:24px;width:880px">' + ''.join(
+      f'''<div class="card" style="padding:36px 36px"><div style="display:flex;align-items:center;gap:20px"><div style="flex:none;width:62px;height:62px;border-radius:50%;background:{RED};color:#0A0503;font:700 36px/62px Outfit;text-align:center">{k}</div><div class="big" style="font-size:48px">{t}</div></div>
+<div style="display:flex;gap:18px;margin-top:22px;align-items:flex-start"><div style="font:400 30px/1.35 Pix;color:{G};flex:none">FIX</div><div class="txt" style="font-size:38px;color:#DCE7DF">{f}</div></div></div>''' for k, t, f in items) + '</div>'
+n = 7
+VN = [
+ slide(1, n, 'Vorher / <em>Nachher</em>: eine Kontaktseite',
+   '<div style="display:flex;align-items:center;gap:30px">' + f'<div style="display:flex;flex-direction:column;align-items:center;gap:14px">{sc(ph_before(False))}<div class="cap" style="color:{RED}">VORHER</div></div>' + arrow(G, 100)
+   + f'<div style="display:flex;flex-direction:column;align-items:center;gap:14px">{sc(ph_after())}<div class="cap g">NACHHER</div></div></div>',
+   kicker="BEISPIEL · REDESIGN AM HANDY", box="Gleicher Betrieb, gleiche Infos. Nur fürs Handy gedacht.", cover=True),
+ slide(2, n, 'Vorher: <em>4 Stolpersteine</em>', ph_before(),
+   kicker="SO SIEHT ES OFT AUS", box="Ein Beispiel, kein echter Kunde. Aber Sie kennen solche Seiten.", boxcls="o"),
+ slide(3, n, 'Stolperstein <em>1 + 2</em>',
+   fix([("1", "Telefonnummer als Bild", "Echte Nummer als Button. Ein Tipp, und es klingelt."), ("2", "Formular mit 6 Pflichtfeldern", "Drei Felder reichen: Name, Kontakt, Nachricht.")]),
+   kicker="ANRUFEN · SCHREIBEN", box="Am Handy zählt jeder Tipp weniger.", boxcls="o"),
+ slide(4, n, 'Stolperstein <em>3 + 4</em>',
+   fix([("3", "Keine Öffnungszeiten", "„Heute offen bis 18:00“ ganz oben. Die häufigste Frage."), ("4", "Adresse nur als Text", "Button „Route planen“, der Google Maps öffnet.")]),
+   kicker="FINDEN · HINKOMMEN", box="Oft wollen Kunden nur wissen: Ist offen? Wie komme ich hin?", boxcls="o"),
+ slide(5, n, 'Nachher: <em>alles auf einen Blick</em>', ph_after(),
+   kicker="DAS ERGEBNIS", box="Wer anrufen will, ruft an. Wer schreiben will, schreibt. Ohne Suchen.", boxcls="o"),
+ slide(6, n, 'Der <em>Unterschied</em>',
+   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;width:860px;text-align:left">'
+   + f'<div class="lab" style="color:{RED};margin:0 0 0 8px">VORHER</div><div class="lab g" style="margin:0 0 0 8px">NACHHER</div>' + ''.join(
+     f'<div class="card" style="padding:20px 24px;border-color:rgba(224,106,78,.45)"><div class="txt" style="font-size:32px">{a}</div></div><div class="card" style="padding:20px 24px"><div class="txt" style="font-size:32px;color:{LIGHT}">{b}</div></div>'
+     for a, b in [("Nummer abtippen", "1 Tipp: anrufen"), ("6 Pflichtfelder", "3 Felder"), ("Zeiten suchen", "Steht ganz oben"), ("Adresse kopieren", "Route per Klick")]) + '</div>',
+   kicker="AUF EINEN BLICK", box="Kleine Änderungen. Für Kunden ein großer Unterschied.", boxcls="o"),
+ slide(7, n, 'Wie sieht <em>Ihre</em> Kontaktseite aus?',
+   '<div style="display:flex;flex-direction:column;align-items:center;gap:30px">' + f'<div class="tile" style="width:300px;height:300px;flex-direction:column;gap:18px"><div style="font:400 110px/1 Outfit">📱</div><div class="lab g" style="margin:0">SCREENSHOT</div></div>'
+   + '<div class="txt" style="font-size:38px;max-width:780px;color:#DCE7DF">Schicken Sie mir einen Screenshot per DM. Ich sage Ihnen ehrlich, was ich ändern würde.</div></div>',
+   kicker="KOSTENLOS · PER DM", box="Öffnen Sie Ihre Seite am Handy und testen Sie die 4 Punkte selbst.", last=True),
+]
+POSTS["D-vorher-nachher"] = VN
