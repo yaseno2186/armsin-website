@@ -239,7 +239,7 @@ def shop_browser():
     return f"""<div style="position:relative"><div class="brow" style="width:780px"><div class="bar"><i></i><i></i><i></i><span>online-shop.example</span></div>
 <div style="display:flex;gap:18px;padding:24px"><div style="flex:1;display:flex;flex-direction:column;gap:14px"><div style="display:flex;align-items:center;gap:12px;font:700 28px/1 Outfit;color:{G2}">🔒 Hauptseite</div><div style="height:150px;border-radius:12px;background:rgba(234,246,238,.08)"></div><div class="ln" style="width:80%"></div><div class="ln" style="width:60%"></div><div style="display:flex;gap:10px"><div style="flex:1;height:70px;border-radius:10px;background:rgba(234,246,238,.08)"></div><div style="flex:1;height:70px;border-radius:10px;background:rgba(234,246,238,.08)"></div></div></div>
 <div style="flex:none;width:220px;border-radius:14px;border:3px solid {R2};background:rgba(224,106,78,.1);box-shadow:0 0 40px rgba(224,106,78,.45);padding:16px;display:flex;flex-direction:column;gap:10px"><div style="font:400 22px/1.2 MonoR;color:{R2}">/admin-alt</div><div style="font:700 24px/1.2 Outfit;color:{LIGHT}">Login-Panel</div><div style="height:34px;border-radius:8px;border:2px solid rgba(234,246,238,.25)"></div><div style="height:34px;border-radius:8px;border:2px solid rgba(234,246,238,.25)"></div><div style="font:400 22px/1.2 Inter;color:#8FB19B">zuletzt 2021 genutzt</div></div></div></div></div>"""
-n = 8
+n = 7
 HACK = [
  slide(1, n, '1 Hacker. Viele Agenten. <em style="color:#E06A4E;text-shadow:0 0 30px rgba(224,106,78,.55)">100 Websites.</em>',
    '<div style="position:relative;width:920px;height:100%;display:flex;align-items:center;justify-content:center">' + laptop(agentlog(), 620)
@@ -271,7 +271,6 @@ HACK = [
    '<div style="display:flex;flex-direction:column;gap:12px;width:860px">' + ''.join(
      f'<div class="card" style="display:flex;align-items:center;gap:22px;padding:14px 26px"><div style="flex:none;width:54px;height:54px;border-radius:16px;background:rgba(57,217,122,.12);border:2px solid {G2};display:flex;align-items:center;justify-content:center;font:400 32px/1 Outfit">{i}</div><div class="big" style="font-size:34px">{t}</div></div>'
      for i, t in [("🔄","Updates für System, Plugins, PHP"),("🚪","Admin-Bereiche nicht offen im Netz"),("🧹","Alte Testseiten löschen"),("🔐","Zwei-Faktor-Login überall"),("💾","Backups, die funktionieren")]) + '</div>',
-   kicker="WAS SIE TUN KÖNNEN", box="Speichern und Ihren Webdienstleister danach fragen.", boxcls="o"),
- cta(8, n, "CHECK", "Ich schicke Ihnen meinen 5-Punkte Website-Check als PDF.", "5-Punkte Website-Check"),
+   kicker="WAS SIE TUN KÖNNEN", box="Speichern und Ihren Webdienstleister danach fragen.", boxcls="o", last=True),
 ]
 POSTS["F-hacker-ki"] = HACK
