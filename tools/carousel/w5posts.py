@@ -71,3 +71,41 @@ BUB = [
    kicker="IHRE MEINUNG", box="Antworten Sie mit dem Emoji. Ehrlich.", last=True),
 ]
 POSTS["E-ki-daten"] = BUB
+
+# ================= B: KI-Studie DIHK (paper report) =================
+def pbig(num, txt, c=PG):
+    return f'<div style="display:flex;flex-direction:column;align-items:center;gap:60px"><div style="font:700 230px/1 Outfit;letter-spacing:-6px;color:{c}">{num}</div><div style="font:400 40px/1.3 Outfit;color:{INK2};max-width:800px;text-align:center">{txt}</div></div>'
+def pbars(rows, w=860):
+    r = ''.join(f'''<div style="display:flex;flex-direction:column;gap:10px"><div style="display:flex;justify-content:space-between;font:700 36px/1.1 Outfit;color:{INK}"><span>{t}</span><span style="color:{c}">{v} %</span></div>
+<div style="height:34px;border-radius:17px;background:rgba(30,27,22,.1);overflow:hidden"><div style="width:{v}%;height:100%;border-radius:17px;background:{c}"></div></div></div>''' for t, v, c in rows)
+    return f'<div style="display:flex;flex-direction:column;gap:30px;width:{w}px;background:#FBF8F1;border-radius:14px;padding:38px 44px;box-shadow:0 18px 40px rgba(60,45,20,.16);text-align:left">{r}</div>'
+def pcard(items):
+    return '<div style="display:flex;flex-direction:column;gap:20px;width:860px">' + ''.join(
+      f'<div class="step" style="flex:none;padding:24px 30px"><div class="n">{k}</div><p style="font-size:36px;color:{INK}">{t}</p></div>' for k, t in items) + '</div>'
+n = 7
+KIS = [
+ slide(1, n, 'Lohnt sich KI für Ihren <em>Betrieb</em>?',
+   '<div style="position:relative;width:900px;height:100%;display:flex;align-items:center;justify-content:center">'
+   + f'<div style="background:#FBF8F1;border-radius:14px;padding:40px 56px;box-shadow:0 18px 40px rgba(60,45,20,.18);transform:rotate(-1.5deg);text-align:center"><div style="font:400 24px/1 Pix;color:{PG};letter-spacing:2px">DIHK · UMFRAGE 2026</div><div style="font:700 190px/1 Outfit;letter-spacing:-6px;color:{PG};margin:44px 0 40px">41 %</div><div style="font:400 36px/1.25 Outfit;color:{INK2};max-width:560px">der Firmen mit KI sehen einen hohen Nutzen</div></div>'
+   + pnote("echte Zahlen!", "right:10px", "bottom:6%", 4) + '</div>',
+   kicker="STUDIE · 5.000 UNTERNEHMEN", box="Was die Zahlen sagen. Und was das für kleine Betriebe heißt.", boxcls="n", cover=True, variant="q"),
+ slide(2, n, 'Die <em>Studie</em> in 20 Sekunden',
+   pcard([("WER", "Deutsche Industrie- und Handelskammer (DIHK)"), ("WIE VIELE", "Rund 5.000 Unternehmen aus fast allen Branchen"), ("WANN", "Befragt Ende 2025, veröffentlicht 2026")]),
+   kicker="DIGITALISIERUNGSUMFRAGE 2026", box="Keine Umfrage unter Tech-Firmen. Sondern quer durch die Wirtschaft.", boxcls="n", variant="q"),
+ slide(3, n, 'Wer KI nutzt, <em>merkt</em> es',
+   pbig("41 %", "der Betriebe, die KI schon im Alltag nutzen, bewerten den Effekt auf ihre Produktivität als hoch."),
+   kicker="ZAHL 1", box="Nicht „etwas“. Sondern hoch.", boxcls="n", variant="q"),
+ slide(4, n, 'Wofür KI <em>genutzt</em> wird',
+   pbars([("Texte, Bilder, Code erstellen", 78, PG), ("Kundenkontakt und Service", 43, OR2), ("Qualität prüfen", 38, INK2)]),
+   kicker="ZAHL 2 · EINSATZFELDER", box="Platz 1 ist das, was jeder sofort ausprobieren kann: Texte.", boxcls="n", variant="q"),
+ slide(5, n, 'Gastro und Handel <em>vorne</em>',
+   pbars([("Gastgewerbe", 62, PG), ("Handel", 53, OR2)]) + '',
+   kicker="ZAHL 3 · KI IM KUNDENKONTAKT", box="Gerade lokale Betriebe nutzen KI, um schneller auf Kunden zu antworten.", boxcls="n", variant="q"),
+ slide(6, n, 'Aber: <em>ein Drittel</em> wartet',
+   pcard([("ZAHL 4", "Rund ein Drittel der Firmen nutzt keine KI und plant es auch nicht."), ("GRÖSSTE BREMSE", "Rechtliche Unsicherheit und Datenschutz.")]),
+   kicker="DIE ANDERE SEITE", box="Verständlich. Ein kleiner, sicherer Start ist trotzdem möglich.", boxcls="n", variant="q"),
+ slide(7, n, 'Und <em>Sie</em>?',
+   '<div style="display:flex;gap:28px">' + ''.join(f'<div style="width:250px;height:270px;border-radius:22px;background:#FBF8F1;box-shadow:0 14px 30px rgba(60,45,20,.16);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px"><div style="font:400 90px/1 Outfit">{e}</div><div style="font:700 34px/1.1 Outfit;color:{INK};text-align:center">{t}</div></div>' for e, t in [("✅", "nutze ich"), ("🕐", "bald"), ("❌", "nein")]) + '</div>',
+   kicker="IHRE MEINUNG", box="Antworten Sie mit dem Emoji. Quelle: DIHK-Digitalisierungsumfrage 2026.", boxcls="n", last=True, variant="q"),
+]
+POSTS["B-ki-studie"] = KIS
