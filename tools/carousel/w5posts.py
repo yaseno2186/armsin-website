@@ -1,37 +1,40 @@
 from w4posts import *   # helpers: pills, cta, term, bubble, bignum, RED, GOLD ...
 POSTS = {}
-# ================= A: ChatGPT schlauer machen =================
-def chatcmp(bad, good):
-    b = lambda lab, t, me, c, bg, bd: f'<div style="width:840px;text-align:left"><div class="lab" style="color:{c};margin-left:8px">{lab}</div><div style="background:{bg};border:2px solid {bd};border-radius:28px 28px 28px 8px;padding:24px 30px;font:400 34px/1.32 Outfit;color:{LIGHT if me else "#9FB3A6"}">{t}</div></div>'
-    return '<div style="display:flex;flex-direction:column;gap:26px;align-items:center">' + b("✗ STATT", bad, False, "#E06A4E", "rgba(234,246,238,.04)", "rgba(234,246,238,.15)") + b("✓ BESSER", good, True, G, "#123222", "rgba(57,217,122,.6)") + '</div>'
-n = 7
+# ================= A: 6 neue ChatGPT-Funktionen =================
+IC = {
+ "ui":'<svg viewBox="0 0 48 48" fill="none" stroke="#39D97A" stroke-width="3.2" stroke-linejoin="round"><rect x="6" y="8" width="36" height="32" rx="5"/><path d="M12 32v-8M19 32V18M26 32v-5M33 32V14"/></svg>',
+ "mail":'<svg viewBox="0 0 48 48" fill="none" stroke="#39D97A" stroke-width="3.2" stroke-linejoin="round"><rect x="5" y="10" width="26" height="20" rx="4"/><path d="M5 13l13 9 13-9"/><rect x="24" y="24" width="19" height="18" rx="4" fill="#0A140E"/><path d="M24 30h19M29 21v6M38 21v6"/></svg>',
+ "word":'<svg viewBox="0 0 48 48" fill="none" stroke="#39D97A" stroke-width="3.2" stroke-linejoin="round"><path d="M12 5h17l9 9v29H12z"/><path d="M29 5v9h9M18 24l3 12 3-8 3 8 3-12"/></svg>',
+ "audio":'<svg viewBox="0 0 48 48" fill="none" stroke="#39D97A" stroke-width="3.2" stroke-linecap="round"><path d="M6 24v0M12 18v12M18 12v24M24 20v8M30 9v30M36 16v16M42 22v4"/></svg>',
+ "scan":'<svg viewBox="0 0 48 48" fill="none" stroke="#39D97A" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"><path d="M6 14V8h6M36 8h6v6M42 34v6h-6M12 40H6v-6"/><rect x="15" y="13" width="18" height="22" rx="2"/><path d="M19 20h10M19 25h10M19 30h6"/></svg>',
+ "lock":'<svg viewBox="0 0 48 48" fill="none" stroke="#39D97A" stroke-width="3.2" stroke-linejoin="round"><rect x="9" y="21" width="30" height="21" rx="5"/><path d="M15 21v-6a9 9 0 0 1 18 0v6"/><circle cx="24" cy="31" r="3" fill="#39D97A"/></svg>'}
+def feat(icon, name, date, plan, what, use):
+    return f'''<div style="display:flex;flex-direction:column;gap:24px;width:880px">
+<div style="display:flex;align-items:center;gap:30px"><div class="tile" style="flex:none;width:170px;height:170px"><div style="width:100px;height:100px">{IC[icon]}</div></div>
+<div style="text-align:left;display:flex;flex-direction:column;gap:14px"><div class="big" style="font-size:52px">{name}</div><div style="display:flex;gap:12px"><div class="chip" style="padding:10px 18px;font-size:24px"><span>NEU</span>{date}</div><div class="chip" style="padding:10px 18px;font-size:24px">{plan}</div></div></div></div>
+<div class="card"><div class="lab g">WAS ES KANN</div><div class="txt" style="font-size:34px;color:#DCE7DF">{what}</div></div>
+<div class="card" style="border-color:{GOLD}"><div class="lab" style="color:{GOLD}">FÜR IHREN BETRIEB</div><div class="txt" style="font-size:34px;color:#DCE7DF">{use}</div></div></div>'''
+n = 8
+F = [("ui","Interaktive Antworten","07.10.","alle Tarife","Antworten mit Diagrammen, Rechnern und Buttons statt nur Text.","„Bau mir einen Preisrechner für meine Angebote.“"),
+     ("mail","Mail + Kalender","27.10.","alle Tarife","Plugins für iCloud Mail und Kalender: Mails finden, Termine prüfen und ändern.","„Was steht diese Woche an? Welche Kunden warten auf Antwort?“"),
+     ("word","ChatGPT in Word","23.09.","auch gratis","Eine Seitenleiste direkt in Microsoft Word, zum Schreiben und Überarbeiten.","Angebote und Briefe im gewohnten Word-Dokument verbessern."),
+     ("audio","Audio hochladen","06.10.","Bezahl-Tarife","Aufnahmen abtippen, zusammenfassen und Fragen dazu stellen.","Sprachnotiz vom Kundentermin hochladen, To-dos bekommen."),
+     ("scan","Mehrseitig scannen","01.10.","iPhone","Mehrere Seiten mit der Kamera zu einem PDF scannen.","Lieferschein oder Vertrag scannen und direkt erklären lassen."),
+     ("lock","Gesperrte Chats","20.10.","schrittweise","Chats mit PIN oder Face ID verstecken.","Sensible Chats vor neugierigen Blicken schützen. Ersetzt aber keinen Datenschutz.")]
+HL = ['Antworten zum <em>Anklicken</em>', 'ChatGPT liest Ihren <em>Kalender</em>', 'KI direkt in <em>Word</em>',
+      'Sprachnotiz rein, <em>To-dos</em> raus', 'Papier zu <em>PDF</em> in Sekunden', 'Chats mit <em>PIN</em> sperren']
 GPT = [
- slide(1, n, 'So machen Sie ChatGPT <em>schlauer</em>',
-   '<div style="position:relative;width:920px;height:100%;display:flex;align-items:center;justify-content:center">'
-   + f'''<div class="brow" style="width:700px"><div class="bar"><i></i><i></i><i></i><span>chat</span></div><div class="in" style="gap:18px">
-<div style="align-self:flex-end;background:#123222;border:2px solid rgba(57,217,122,.6);border-radius:24px 24px 6px 24px;padding:18px 24px;font:400 32px/1.3 Outfit">Schreib mir einen Text.</div>
-<div style="align-self:flex-start;background:rgba(234,246,238,.06);border-radius:24px 24px 24px 6px;padding:18px 24px;font:400 32px/1.3 Outfit;color:#9FB3A6">Gern! Worüber? Für wen? Wie lang? 🤷</div>
-<div style="display:flex;gap:10px;align-items:center;margin-top:6px"><div style="flex:1;height:58px;border-radius:16px;border:2px solid rgba(234,246,238,.2)"></div><div style="width:58px;height:58px;border-radius:16px;background:{G}"></div></div></div></div>'''
-   + pills([("5 Tipps","left:20px;top:4%",-4),("ohne Technik-Wissen","right:10px;bottom:6%",3)]) + '</div>',
-   kicker="KI IM ALLTAG · 5 TIPPS", box="Die KI ist nicht dumm. Sie weiß nur nichts über Sie.", cover=True),
- slide(2, n, '1. <em>Kontext</em> geben', chatcmp("Schreib einen Instagram-Post.", "Ich habe ein Café in Freiberg. Schreib einen Instagram-Post über unseren neuen Kürbiskuchen. Zielgruppe: Studierende."),
-   kicker="TIPP 1 VON 5", box="Wer, was, für wen. Drei Angaben machen den Unterschied.", boxcls="o"),
- slide(3, n, '2. Ein <em>Beispiel</em> zeigen', chatcmp("Schreib das lockerer.", "Schreib es so locker wie dieser Post von uns: „Montag? Kaffee hilft. Kuchen auch.“"),
-   kicker="TIPP 2 VON 5", box="Ein Beispiel sagt mehr als zehn Adjektive.", boxcls="o"),
- slide(4, n, '3. <em>Format</em> vorgeben', chatcmp("Gib mir Ideen für Werbung.", "Gib mir 5 Ideen als Tabelle: Idee, Kosten, Aufwand in Stunden. Maximal 1 Satz pro Idee."),
-   kicker="TIPP 3 VON 5", box="Liste, Tabelle, Länge: sagen Sie, wie es aussehen soll.", boxcls="o"),
- slide(5, n, '4. Erst <em>fragen</em> lassen', chatcmp("Plan meine Rabattaktion.", "Plan meine Rabattaktion. Stell mir vorher 3 Fragen, bevor du loslegst."),
-   kicker="TIPP 4 VON 5", box="So holt die KI sich selbst, was ihr fehlt.", boxcls="o"),
- slide(6, n, '5. <em>Einmal</em> erklären, immer nutzen',
-   f'''<div style="display:flex;flex-direction:column;gap:22px;width:860px"><div class="card"><div class="lab g">EINSTELLUNGEN → PERSONALISIERUNG</div><div class="txt" style="font-size:34px;color:#DCE7DF">„Ich führe ein Café in Freiberg. Schreib kurz, freundlich, per Sie. Keine Emojis in E-Mails.“</div></div>
-<div style="display:flex;gap:16px;justify-content:center"><div class="chip"><span>✓</span>gilt für jeden Chat</div><div class="chip"><span>✓</span>jederzeit änderbar</div></div></div>''',
-   kicker="TIPP 5 VON 5", box="Dann müssen Sie sich nicht jedes Mal neu vorstellen.", boxcls="o"),
- slide(7, n, 'Die Vorlage zum <em>Speichern</em>',
-   f'''<div class="brow" style="width:840px"><div class="bar"><i></i><i></i><i></i><span>vorlage.txt</span></div><div class="in" style="gap:10px">''' + ''.join(
-     f'<div style="font:400 30px/1.4 MonoR;color:{LIGHT};text-align:left"><span style="color:{G}">{k}</span> {v}</div>' for k, v in [("Ich bin:", "[Ihr Betrieb, Ort]"), ("Ich brauche:", "[Text, Plan, Idee]"), ("Für:", "[Zielgruppe]"), ("So soll es klingen:", "[Beispiel]"), ("Format:", "[Liste, Länge]"), ("Vorher:", "Stell mir 3 Fragen.")]) + '</div></div>',
-   kicker="ZUM KOPIEREN", box="Wichtig: Ergebnisse immer gegenlesen. Und keine Kundendaten eingeben.", last=True),
-]
-POSTS["A-chatgpt-schlauer"] = GPT
+ slide(1, n, '6 neue <em>ChatGPT</em>-Funktionen, die kaum jemand kennt',
+   '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px;width:780px">' + ''.join(
+     f'<div class="tile" style="height:200px;flex-direction:column;gap:14px"><div style="width:84px;height:84px">{IC[k]}</div><div style="font:400 22px/1 Pix;color:#8FB19B">NEU</div></div>' for k in IC) + '</div>',
+   kicker="KI-UPDATE · HERBST 2026", box="Stand Oktober 2026. Mit einer Idee je Funktion für Ihren Betrieb.", cover=True)]
+for i, f in enumerate(F, 2):
+    GPT.append(slide(i, n, HL[i-2], feat(*f), kicker=f"FUNKTION {i-1} VON 6"))
+GPT.append(slide(8, n, 'Welche probieren Sie <em>zuerst</em>?',
+   '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;width:820px">' + ''.join(
+     f'<div class="tile" style="height:190px;flex-direction:column;gap:12px"><div style="font:400 40px/1 Pix;color:{G}">{j}</div><div class="big" style="font-size:30px">{f[1]}</div></div>' for j, f in enumerate(F, 1)) + '</div>',
+   kicker="IHRE MEINUNG", box="Antworten Sie mit der Zahl. Verfügbarkeit kann je nach Land und Tarif abweichen.", last=True))
+POSTS["A-chatgpt-neu"] = GPT
 
 # ================= E: KI-Blase / Character.AI (Daten) =================
 def leak():
