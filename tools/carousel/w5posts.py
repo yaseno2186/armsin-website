@@ -202,32 +202,40 @@ def sheet(inner, w=860, r=0, tab=""):
     return f'<div style="position:relative;width:{w}px;background:rgba(10,25,16,.92);border:2px solid rgba(57,217,122,.45);border-radius:18px;padding:34px 40px;box-shadow:0 0 50px rgba(57,217,122,.18);transform:rotate({r}deg);text-align:left">{t}{inner}</div>'
 def field(k, v):
     return f'<div style="display:flex;gap:20px;padding:14px 0;border-bottom:2px dashed rgba(234,246,238,.14)"><div style="flex:none;width:230px;font:400 26px/1.35 Pix;color:#39D97A">{k}</div><div style="{TW};font-size:32px;line-height:1.35;color:{LIGHT}">{v}</div></div>'
-n = 7
+n = 8
 HACK = [
  slide(1, n, '1 Hacker. Viele Agenten. <em style="color:#E06A4E;text-shadow:0 0 30px rgba(224,106,78,.55)">100 Websites.</em>',
    '<div style="position:relative;width:900px;height:100%;display:flex;align-items:center;justify-content:center">'
    + sheet(f'<div style="{TW};font-size:30px;line-height:1.6;color:{LIGHT}">BETREFF: Angriffswelle auf Websites<br>TÄTER: 1 Person<br>WERKZEUG: autonome KI-Agenten<br>OPFER: über 100 Firmen<br>KOSTEN: {red(160)} pro Einbruch</div>', 760, -2, "FALL · OKT 2026")
    + stamp("ECHTER FALL", "right:20px", "bottom:6%", -12, 44) + '</div>',
    kicker="REUTERS · 19.10.2026", box="Was passiert ist. Und was Ihre Website schützt.", cover=True),
- slide(2, n, 'Die <em>Akte</em>',
+ slide(2, n, 'Die <em>Quelle</em>',
+   f"""<div class="brow" style="width:860px"><div class="bar"><i></i><i></i><i></i><span>reuters.com · technology · cybersecurity</span></div>
+<div style="padding:34px 40px;display:flex;flex-direction:column;gap:22px;text-align:left">
+<div style="display:flex;align-items:center;gap:14px"><div style="font:700 40px/1 Outfit;color:#FF8000;letter-spacing:1px">REUTERS</div><div style="font:400 24px/1 Pix;color:#8FB19B">· CYBERSECURITY</div></div>
+<div style="font:700 50px/1.15 Outfit;color:{LIGHT}">How one hacker used AI agents to break into over 100 company websites</div>
+<div style="display:flex;gap:14px;flex-wrap:wrap"><div class="chip" style="padding:10px 18px;font-size:26px">Raphael Satter</div><div class="chip" style="padding:10px 18px;font-size:26px"><span>DATUM</span>19.10.2026</div></div>
+<div style="border-top:2px solid rgba(234,246,238,.12);padding-top:18px;font:400 30px/1.35 Outfit;color:#C9DBCF">Entdeckt von Sicherheitsforscher Snorre Fagerland (NorForge).</div></div></div>""",
+   kicker="ECHTE NACHRICHT · NICHT AUSGEDACHT", box="Die Überschrift im Original. Alles Weitere auf den nächsten Folien.", boxcls="o"),
+ slide(3, n, 'Die <em>Akte</em>',
    sheet(field("TÄTER", "Eine chinesischsprachige Person, laut Sicherheitsforscher") + field("METHODE", "KI-Agenten suchen selbstständig nach Lücken") + field("VERSUCHE", "über 1.200 Websites") + field("ERFOLG", "über 100 Firmen")), kicker="BEWEISSTÜCK 1", box="Ein Mensch gibt Befehle. Die Maschinen machen die Arbeit.", boxcls="o"),
- slide(3, n, '<em>50 $</em> pro Einbruch',
+ slide(4, n, '<em>50 $</em> pro Einbruch',
    '<div style="position:relative;width:900px;height:100%;display:flex;align-items:center;justify-content:center">'
    + sheet(f'<div style="display:flex;flex-direction:column;gap:24px;align-items:center;text-align:center"><div style="font:400 26px/1 Pix;color:#39D97A">KOSTEN DER KI LAUT FORSCHER</div><div style="font:700 130px/1 Outfit;color:{LIGHT};letter-spacing:-4px;margin:14px 0">≈ 5.000 $</div><div style="{TW};font-size:34px;color:#8FB19B">÷ über 100 Einbrüche</div><div style="font:700 90px/1 Outfit;color:{STAMP}">≈ 50 $ / Stück</div></div>', 760, 1.5)
    + '</div>',
    kicker="BEWEISSTÜCK 2 · DIE RECHNUNG", box="Wenn ein Einbruch so wenig kostet, lohnen sich auch kleine Seiten.", boxcls="o"),
- slide(4, n, 'Wen es <em>getroffen</em> hat',
+ slide(5, n, 'Wen es <em>getroffen</em> hat',
    sheet(field("MEISTENS", "Online-Shops") + field("LÄNDER", "USA, Kanada, Australien, Japan") + field("AUCH", "große Namen wie John Deere, SharkNinja, Cummins")), kicker="BEWEISSTÜCK 3", box="Nicht nur Konzerne. Vor allem ganz normale Shops.", boxcls="o"),
- slide(5, n, 'Wie sie <em>reinkamen</em>',
+ slide(6, n, 'Wie sie <em>reinkamen</em>',
    '<div style="display:flex;flex-direction:column;gap:20px;width:860px">' + ''.join(
      sheet(f'<div style="display:flex;gap:26px;align-items:center"><div style="flex:none;font:700 64px/1 Outfit;color:{STAMP}">{k}</div><div style="{TW};font-size:32px;line-height:1.35;color:{LIGHT}">{t}</div></div>', 860, r)
      for k, t, r in [("1", "Hauptseite geprüft: keine Lücke gefunden.", -0.6), ("2", "Weitergesucht: ein vergessenes Admin-Panel, öffentlich erreichbar.", 0.5), ("3", "Kleiner Fehler darin. Stundenlang probiert. Server übernommen.", -0.4)]) + '</div>',
    kicker="BEWEISSTÜCK 4 · DER WEG", box="Die Lücke war nicht vorne. Sondern in einer Ecke, die keiner mehr im Blick hatte.", boxcls="o"),
- slide(6, n, '5 Dinge, die Ihre Seite <em>schützen</em>',
+ slide(7, n, '5 Dinge, die Ihre Seite <em>schützen</em>',
    sheet(''.join(f'<div style="display:flex;gap:22px;align-items:center;padding:13px 0;border-bottom:2px dashed rgba(234,246,238,.14)"><div style="flex:none;width:44px;height:44px;border:4px solid {G};border-radius:8px"></div><div style="font:700 36px/1.2 Outfit;color:{LIGHT}">{t}</div></div>' for t in
      ["Updates für System, Plugins und PHP", "Admin-Bereiche nicht offen im Netz", "Alte Testseiten und Subdomains löschen", "Zwei-Faktor-Login überall", "Backups, die wirklich funktionieren"]), 860, -1, "CHECKLISTE"),
    kicker="WAS SIE TUN KÖNNEN", box="Speichern Sie die Liste und fragen Sie Ihren Webdienstleister danach.", boxcls="o"),
- slide(7, n, 'Kommentieren Sie <em>CHECK</em>',
+ slide(8, n, 'Kommentieren Sie <em>CHECK</em>',
    '<div style="position:relative;width:900px;height:100%;display:flex;align-items:center;justify-content:center">'
    + sheet(f'<div style="display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center"><div style="font:400 26px/1 Pix;color:#39D97A">GRATIS · PER DM · PDF</div><div style="font:700 150px/1 Outfit;color:{LIGHT};letter-spacing:-4px;margin:18px 0">CHECK</div><div style="{TW};font-size:32px;color:#8FB19B">5-Punkte Website-Check</div></div>', 700, -1.5)
    + stamp("GRATIS", "right:40px", "top:8%", 12, 46) + '</div>',
