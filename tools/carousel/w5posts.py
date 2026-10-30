@@ -110,58 +110,82 @@ KIS = [
 ]
 POSTS["B-ki-studie"] = KIS
 
-# ================= D: Vorher / Nachher Kontaktseite =================
-def mark(k, x, y, c=RED):
-    return f'<div style="position:absolute;left:{x}px;top:{y}px;width:52px;height:52px;border-radius:50%;background:{c};color:#0A0503;font:700 30px/52px Outfit;text-align:center;box-shadow:0 0 20px {c}">{k}</div>'
-def ph_before(marks=True):
-    inner = f'''<div style="font:700 30px/1.1 Outfit;color:#DCE7DF">Kontakt</div>
-<div style="font:400 22px/1.3 Outfit;color:#8FB19B">Sie haben Fragen zu Bestellungen, Torten oder Catering? Nutzen Sie bitte unser Formular.</div>
-<div style="height:28px;border-radius:4px;background:repeating-linear-gradient(90deg,rgba(234,246,238,.35) 0 6px,transparent 6px 9px);width:70%;opacity:.6"></div>
-''' + ''.join('<div style="height:24px;flex:none;border:1px solid rgba(234,246,238,.25);border-radius:4px"></div>' for _ in range(6)) + '''
-<div style="align-self:flex-start;background:rgba(234,246,238,.15);color:#8FB19B;font:400 22px/1 Outfit;padding:8px 14px;border-radius:4px">Absenden</div>
-<div style="font:400 22px/1.2 Outfit;color:#5E7466">Hauptstr. 12, Freiberg</div>'''
-    m = (mark(1, 340, 150) + mark(2, -26, 230) + mark(3, 340, 20) + mark(4, -26, 470)) if marks else ''
-    return f'<div style="position:relative;width:380px;height:540px"><div class="phone bad" style="width:380px;height:540px;opacity:.85;gap:10px;padding:28px 24px">{inner}</div>{m}</div>'
-def ph_after():
-    fld = lambda t: f'<div style="height:44px;flex:none;border:2px solid rgba(234,246,238,.25);border-radius:10px;font:400 22px/40px Outfit;color:#8FB19B;padding-left:12px">{t}</div>'
-    return f'''<div class="phone good" style="width:380px;height:540px;gap:14px;padding:28px 24px">
-<div style="font:700 32px/1.1 Outfit;color:{LIGHT}">Bäckerei Beispiel</div>
-<div style="display:flex;align-items:center;gap:10px;font:700 22px/1 Outfit;color:{G}"><div style="width:14px;height:14px;border-radius:50%;background:{G};box-shadow:0 0 10px {G}"></div>Heute offen bis 18:00</div>
-<div class="btn" style="font-size:26px;padding:16px">📞 Jetzt anrufen</div>
-<div class="btn o" style="font-size:24px;padding:14px">📍 Route planen</div>
-<div style="border-top:2px solid rgba(234,246,238,.12);padding-top:12px;display:flex;flex-direction:column;gap:10px">
-<div style="font:400 22px/1 Pix;color:#8FB19B">ODER SCHREIBEN</div>{fld("Name")}{fld("Telefon oder E-Mail")}{fld("Nachricht")}</div></div>'''
-def sc(html, k=.8, w=380, h=540):
-    return f'<div style="width:{int(w*k)}px;height:{int(h*k)}px;flex:none"><div style="transform:scale({k});transform-origin:top left;width:{w}px">{html}</div></div>'
-def fix(items):
-    return '<div style="display:flex;flex-direction:column;gap:24px;width:880px">' + ''.join(
-      f'''<div class="card" style="padding:36px 36px"><div style="display:flex;align-items:center;gap:20px"><div style="flex:none;width:62px;height:62px;border-radius:50%;background:{RED};color:#0A0503;font:700 36px/62px Outfit;text-align:center">{k}</div><div class="big" style="font-size:48px">{t}</div></div>
-<div style="display:flex;gap:18px;margin-top:22px;align-items:flex-start"><div style="font:400 30px/1.35 Pix;color:{G};flex:none">FIX</div><div class="txt" style="font-size:38px;color:#DCE7DF">{f}</div></div></div>''' for k, t, f in items) + '</div>'
-n = 7
+# ================= D: Vorher / Nachher Kontaktseite (design critique canvas) =================
+SERIF_OLD = "font-family:'Times New Roman',Times,serif"
+def old_page():
+    lab = lambda t: f'<div style="font:400 22px/1 Arial;color:#333;margin-top:8px">{t}<span style="color:#c00">*</span></div><div style="height:30px;flex:none;border:1px solid #999;background:#fff"></div>'
+    return f"""<div style="background:#e9e9e9;height:100%;display:flex;flex-direction:column">
+<div style="background:#6d6d6d;padding:58px 16px 14px;display:flex;justify-content:space-between;align-items:center"><div style="{SERIF_OLD};font-size:28px;color:#fff;font-style:italic">Bäckerei Beispiel</div><div style="font:400 22px/1 Arial;color:#ddd">☰</div></div>
+<div style="padding:16px 18px;display:flex;flex-direction:column;gap:4px">
+<div style="{SERIF_OLD};font-size:34px;color:#222">Kontakt</div>
+<div style="font:400 22px/1.3 Arial;color:#555">Für Anfragen nutzen Sie bitte das folgende Formular.</div>
+<div style="margin:8px 0;width:230px;height:30px;background:#cfcfcf;display:flex;align-items:center;justify-content:center;font:italic 22px/1 Arial;color:#888">[bild: tel.jpg]</div>
+{lab("Anrede")}{lab("Vorname")}{lab("Nachname")}{lab("E-Mail")}{lab("Betreff")}
+<div style="margin-top:12px;align-self:flex-start;background:#ddd;border:1px solid #999;padding:6px 14px;font:400 22px/1 Arial;color:#333">Absenden</div>
+<div style="margin-top:10px;font:400 22px/1.2 Arial;color:#777">Hauptstr. 12, 09599 Freiberg</div></div></div>"""
+def new_page():
+    fld = lambda t: f'<div style="height:52px;flex:none;border:2px solid #E2D6C4;border-radius:14px;background:#fff;font:400 24px/48px Inter;color:#9A8F80;padding-left:16px">{t}</div>'
+    return f"""<div style="background:#FFFBF4;height:100%;display:flex;flex-direction:column">
+<div style="height:280px;flex:none;background:radial-gradient(circle at 75% 40%,#F9D9A6,#E7A867 60%,#C9783E);position:relative;padding:22px 24px;display:flex;flex-direction:column;justify-content:flex-end">
+<div style="position:absolute;right:26px;top:58px;font:400 100px/1 Outfit">🥐</div>
+<div style="font:italic 400 46px/1 Serif;color:#2B1A0C">Bäckerei Beispiel</div>
+<div style="margin-top:12px;align-self:flex-start;display:flex;align-items:center;gap:10px;background:#FFFBF4;border-radius:999px;padding:8px 16px;font:700 22px/1 Inter;color:#2E8F55"><span style="width:12px;height:12px;border-radius:50%;background:#2E8F55;display:inline-block"></span>Heute offen bis 18:00</div></div>
+<div style="padding:20px 22px;display:flex;flex-direction:column;gap:14px">
+<div style="background:#2B1A0C;color:#FFFBF4;border-radius:16px;padding:20px;text-align:center;font:700 30px/1 Outfit">📞 Jetzt anrufen</div>
+<div style="border:2px solid #2B1A0C;color:#2B1A0C;border-radius:16px;padding:16px;text-align:center;font:700 26px/1 Outfit">📍 Route planen</div>
+<div style="font:700 22px/1 Inter;color:#9A8F80;margin-top:6px;letter-spacing:1px">ODER SCHREIBEN SIE UNS</div>
+{fld("Name")}{fld("Telefon oder E-Mail")}{fld("Ihre Nachricht")}</div></div>"""
+def iphone(page, k=.8, w=390, h=800):
+    return f"""<div style="width:{int(w*k)}px;height:{int(h*k)}px;flex:none;position:relative"><div style="transform:scale({k});transform-origin:top left;width:{w}px;height:{h}px;border-radius:58px;background:#111;padding:14px;box-shadow:0 30px 60px rgba(40,30,15,.28),0 0 0 2px #3a3a3a inset">
+<div style="width:100%;height:100%;border-radius:46px;overflow:hidden;position:relative">{page}<div style="position:absolute;left:50%;top:10px;transform:translateX(-50%);width:120px;height:34px;border-radius:20px;background:#111"></div></div></div></div>"""
+def split_phone(k=.8, w=390, h=800):
+    half = lambda page, side: f'<div style="position:absolute;inset:0;clip-path:inset(0 {"50%" if side=="l" else "0"} 0 {"50%" if side=="r" else "0"})">{page}</div>'
+    inner = half(old_page(), "l") + half(new_page(), "r") + f'<div style="position:absolute;left:50%;top:0;bottom:0;width:6px;margin-left:-3px;background:#fff;box-shadow:0 0 12px rgba(0,0,0,.4)"></div><div style="position:absolute;left:50%;top:50%;width:76px;height:76px;margin:-38px 0 0 -38px;border-radius:50%;background:#fff;box-shadow:0 6px 20px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;font:700 34px/1 Outfit;color:#1E1B16">‹ ›</div>'
+    return iphone(inner, k, w, h)
+def note(t, x, y, c, r=0, ax=None, w=260, flip=False):
+    arr = ""
+    if ax:
+        d = "M4 20 C40 4 80 6 116 22" if not flip else "M116 20 C80 4 40 6 4 22"
+        hd = "M100 10 L118 23 L100 34" if not flip else "M20 10 L2 23 L20 34"
+        arr = f'<svg width="120" height="44" viewBox="0 0 120 44" style="position:absolute;{ax}"><path d="{d}" fill="none" stroke="{c}" stroke-width="4.5" stroke-linecap="round"/><path d="{hd}" fill="none" stroke="{c}" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+    return f'<div style="position:absolute;left:{x}px;top:{y}px;width:{w}px;transform:rotate({r}deg)"><div style="font:400 40px/1.08 Hand;color:{c};text-align:{"right" if not flip else "left"}">{t}</div>{arr}</div>'
+RD, GN = "#D2452B", "#2E8F55"
+n = 6
 VN = [
- slide(1, n, 'Vorher / <em>Nachher</em>: eine Kontaktseite',
-   '<div style="display:flex;align-items:center;gap:30px">' + f'<div style="display:flex;flex-direction:column;align-items:center;gap:14px">{sc(ph_before(False))}<div class="cap" style="color:{RED}">VORHER</div></div>' + arrow(G, 100)
-   + f'<div style="display:flex;flex-direction:column;align-items:center;gap:14px">{sc(ph_after())}<div class="cap g">NACHHER</div></div></div>',
-   kicker="BEISPIEL · REDESIGN AM HANDY", box="Gleicher Betrieb, gleiche Infos. Nur fürs Handy gedacht.", cover=True),
- slide(2, n, 'Vorher: <em>4 Stolpersteine</em>', ph_before(),
-   kicker="SO SIEHT ES OFT AUS", box="Ein Beispiel, kein echter Kunde. Aber Sie kennen solche Seiten.", boxcls="o"),
- slide(3, n, 'Stolperstein <em>1 + 2</em>',
-   fix([("1", "Telefonnummer als Bild", "Echte Nummer als Button. Ein Tipp, und es klingelt."), ("2", "Formular mit 6 Pflichtfeldern", "Drei Felder reichen: Name, Kontakt, Nachricht.")]),
-   kicker="ANRUFEN · SCHREIBEN", box="Am Handy zählt jeder Tipp weniger.", boxcls="o"),
- slide(4, n, 'Stolperstein <em>3 + 4</em>',
-   fix([("3", "Keine Öffnungszeiten", "„Heute offen bis 18:00“ ganz oben. Die häufigste Frage."), ("4", "Adresse nur als Text", "Button „Route planen“, der Google Maps öffnet.")]),
-   kicker="FINDEN · HINKOMMEN", box="Oft wollen Kunden nur wissen: Ist offen? Wie komme ich hin?", boxcls="o"),
- slide(5, n, 'Nachher: <em>alles auf einen Blick</em>', ph_after(),
-   kicker="DAS ERGEBNIS", box="Wer anrufen will, ruft an. Wer schreiben will, schreibt. Ohne Suchen.", boxcls="o"),
- slide(6, n, 'Der <em>Unterschied</em>',
-   '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;width:860px;text-align:left">'
-   + f'<div class="lab" style="color:{RED};margin:0 0 0 8px">VORHER</div><div class="lab g" style="margin:0 0 0 8px">NACHHER</div>' + ''.join(
-     f'<div class="card" style="padding:20px 24px;border-color:rgba(224,106,78,.45)"><div class="txt" style="font-size:32px">{a}</div></div><div class="card" style="padding:20px 24px"><div class="txt" style="font-size:32px;color:{LIGHT}">{b}</div></div>'
-     for a, b in [("Nummer abtippen", "1 Tipp: anrufen"), ("6 Pflichtfelder", "3 Felder"), ("Zeiten suchen", "Steht ganz oben"), ("Adresse kopieren", "Route per Klick")]) + '</div>',
-   kicker="AUF EINEN BLICK", box="Kleine Änderungen. Für Kunden ein großer Unterschied.", boxcls="o"),
- slide(7, n, 'Wie sieht <em>Ihre</em> Kontaktseite aus?',
-   '<div style="display:flex;flex-direction:column;align-items:center;gap:30px">' + f'<div class="tile" style="width:300px;height:300px;flex-direction:column;gap:18px"><div style="font:400 110px/1 Outfit">📱</div><div class="lab g" style="margin:0">SCREENSHOT</div></div>'
-   + '<div class="txt" style="font-size:38px;max-width:780px;color:#DCE7DF">Schicken Sie mir einen Screenshot per DM. Ich sage Ihnen ehrlich, was ich ändern würde.</div></div>',
-   kicker="KOSTENLOS · PER DM", box="Öffnen Sie Ihre Seite am Handy und testen Sie die 4 Punkte selbst.", last=True),
+ slide(1, n, 'Gleiche Bäckerei. <em>Neue</em> Seite.',
+   '<div style="position:relative;width:920px;height:100%;display:flex;align-items:center;justify-content:center">' + split_phone(.8)
+   + note("vorher", 70, 230, RD, -6, "left:150px;top:46px", 200)
+   + note("nachher", 650, 230, GN, 5, "left:-30px;top:46px", 200, flip=True) + '</div>',
+   kicker="VORHER / NACHHER · BEISPIEL", box="Ein ausgedachtes Beispiel. Aber solche Seiten gibt es überall.", boxcls="n", cover=True, variant="c"),
+ slide(2, n, 'Vorher: <em>4 Stolpersteine</em>',
+   '<div style="position:relative;width:920px;height:100%;display:flex;align-items:center;justify-content:center">' + iphone(old_page(), .8)
+   + note("Nummer ist<br>ein Bild?!", 0, 120, RD, -4, "left:150px;top:100px")
+   + note("6 Pflicht-<br>felder ...", 0, 330, RD, 3, "left:150px;top:100px")
+   + note("Wann ist<br>offen??", 645, 40, RD, 4, "left:-40px;top:100px", flip=True)
+   + note("Wo genau?<br>Kein Link.", 645, 450, RD, -3, "left:-40px;top:100px", flip=True) + '</div>',
+   kicker="SO SIEHT ES OFT AUS", box="Am Computer okay. Am Handy mühsam.", boxcls="n", variant="c"),
+ slide(3, n, 'Nachher: <em>alles auf einen Blick</em>',
+   '<div style="position:relative;width:920px;height:100%;display:flex;align-items:center;justify-content:center">' + iphone(new_page(), .8)
+   + note("Offen? Steht<br>ganz oben.", 0, 140, GN, -4, "left:150px;top:100px")
+   + note("1 Tipp =<br>Anruf", 0, 330, GN, 3, "left:150px;top:100px")
+   + note("Route per<br>Klick", 645, 300, GN, 4, "left:-40px;top:100px", flip=True)
+   + note("nur 3<br>Felder", 645, 470, GN, -3, "left:-40px;top:100px", flip=True) + '</div>',
+   kicker="DAS ERGEBNIS", box="Wer anrufen will, ruft an. Wer schreiben will, schreibt.", boxcls="n", variant="c"),
+ slide(4, n, 'Der wichtigste <em>Button</em>',
+   f"""<div style="display:flex;flex-direction:column;align-items:center;gap:40px;width:880px">
+<div style="position:relative"><div style="background:#2B1A0C;color:#FFFBF4;border-radius:26px;padding:34px 70px;font:700 56px/1 Outfit;box-shadow:0 24px 50px rgba(40,30,15,.25)">📞 Jetzt anrufen</div>
+<div style="position:absolute;right:-70px;bottom:-56px;width:100px;height:100px;border-radius:50%;border:5px solid {GN};background:rgba(46,143,85,.12)"></div></div>
+<div style="background:#1E1B16;border-radius:20px;padding:26px 34px;font:400 28px/1.5 MonoR;color:#EAF6EE;text-align:left;width:860px;white-space:nowrap"><span style="color:#8FB19B">&lt;a href=</span><span style="color:#39D97A">"tel:+49 3731 ..."</span><span style="color:#8FB19B">&gt;</span>Jetzt anrufen<span style="color:#8FB19B">&lt;/a&gt;</span></div></div>""",
+   kicker="KLEINES DETAIL · GROSSE WIRKUNG", box="Eine Zeile Code. Danach ruft man mit einem Tipp an statt abzutippen.", boxcls="n", variant="c"),
+ slide(5, n, 'Ihr <em>Handy-Test</em> in 1 Minute',
+   '<div style="display:flex;flex-direction:column;gap:18px;width:860px">' + ''.join(
+     f'<div style="display:flex;align-items:center;gap:26px;background:#FFFDF8;border-radius:18px;padding:24px 30px;box-shadow:0 10px 24px rgba(40,30,15,.1)"><div style="flex:none;width:52px;height:52px;border-radius:12px;border:4px solid {INK}"></div><div style="font:700 40px/1.15 Outfit;color:{INK};text-align:left">{t}</div></div>'
+     for t in ["Nummer mit einem Tipp anrufbar?", "Öffnungszeiten ohne Scrollen sichtbar?", "Adresse öffnet Google Maps?", "Formular mit 3 bis 4 Feldern?"]) + '</div>',
+   kicker="ZUM SPEICHERN", box="Nehmen Sie Ihr Handy und haken Sie ab.", boxcls="n", variant="c"),
+ slide(6, n, 'Wie sieht <em>Ihre</em> Seite aus?',
+   '<div style="position:relative;width:920px;height:100%;display:flex;align-items:center;justify-content:center">' + iphone('<div style="height:100%;background:linear-gradient(180deg,#F6F4EF,#E4DED2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px"><div style="font:400 120px/1 Outfit">📸</div><div style="font:700 34px/1.2 Outfit;color:#1E1B16;text-align:center;padding:0 30px">Ihr Screenshot</div></div>', .62)
+   + note("per DM<br>an mich", 640, 120, GN, 4, "left:-40px;top:100px", flip=True)
+   + note("ehrliche<br>Meinung", 30, 300, GN, -4, "left:150px;top:100px") + '</div>',
+   kicker="KOSTENLOS · PER DM", box="Schicken Sie mir einen Screenshot Ihrer Kontaktseite. Ich sage Ihnen, was ich ändern würde.", boxcls="n", last=True, variant="c"),
 ]
 POSTS["D-vorher-nachher"] = VN
