@@ -190,55 +190,88 @@ VN = [
 ]
 POSTS["D-vorher-nachher"] = VN
 
-# ================= F: Hacker + KI-Agenten (case file) =================
-TW = "font-family:MonoR"
-STAMP = "#E06A4E"
+# ================= F: Hacker + KI-Agenten (rich, dark brand) =================
+def rlogo(w, light=True):
+    sv = logo_svg("reuters")
+    if light: sv = sv.replace('#212223', '#EAF6EE')
+    return f'<div style="width:{w}px;height:{int(w*260.2/950)}px;flex:none">{sv.replace("width=\"950\" height=\"260.203\"", "width=\"100%\" height=\"100%\"")}</div>'
+R2, G2 = "#E06A4E", "#39D97A"
 def stamp(t, x, y, r=-10, size=40):
-    return f'<div style="position:absolute;{x};{y};transform:rotate({r}deg);border:5px solid {STAMP};color:{STAMP};font:700 {size}px/1 Mono;letter-spacing:3px;padding:12px 20px;border-radius:8px;opacity:.88;box-shadow:0 0 30px rgba(224,106,78,.35);background:rgba(26,10,8,.85)">{t}</div>'
-def red(w):
-    return f'<span style="display:inline-block;width:{w}px;height:.9em;background:#E06A4E;vertical-align:-0.1em;border-radius:2px"></span>'
-def sheet(inner, w=860, r=0, tab=""):
-    t = f'<div style="position:absolute;left:40px;top:-46px;background:#123222;border:2px solid rgba(57,217,122,.5);border-bottom:none;border-radius:14px 14px 0 0;padding:10px 26px;font:400 24px/1 Pix;color:#39D97A;letter-spacing:2px">{tab}</div>' if tab else ''
-    return f'<div style="position:relative;width:{w}px;background:rgba(10,25,16,.92);border:2px solid rgba(57,217,122,.45);border-radius:18px;padding:34px 40px;box-shadow:0 0 50px rgba(57,217,122,.18);transform:rotate({r}deg);text-align:left">{t}{inner}</div>'
-def field(k, v):
-    return f'<div style="display:flex;gap:20px;padding:14px 0;border-bottom:2px dashed rgba(234,246,238,.14)"><div style="flex:none;width:230px;font:400 26px/1.35 Pix;color:#39D97A">{k}</div><div style="{TW};font-size:32px;line-height:1.35;color:{LIGHT}">{v}</div></div>'
+    return f'<div style="position:absolute;{x};{y};transform:rotate({r}deg);border:5px solid {R2};color:{R2};font:700 {size}px/1 Mono;letter-spacing:3px;padding:12px 20px;border-radius:8px;box-shadow:0 0 30px rgba(224,106,78,.35);background:rgba(26,10,8,.88)">{t}</div>'
+def laptop(screen, w=760):
+    h = int(w*0.62)
+    return f"""<div style="display:flex;flex-direction:column;align-items:center"><div style="width:{w}px;height:{h}px;border-radius:22px 22px 6px 6px;background:#0b0f0c;border:10px solid #1d2420;box-shadow:0 0 60px rgba(57,217,122,.25);overflow:hidden;position:relative">{screen}</div>
+<div style="width:{int(w*1.18)}px;height:22px;border-radius:0 0 20px 20px;background:linear-gradient(180deg,#2a322d,#151a17)"></div></div>"""
+def agentlog():
+    rows = [("agent-07", "shop-…ca", "✓", G2), ("agent-12", "store-…jp", "✗", "#5E7466"), ("agent-03", "admin-…au", "✓", G2), ("agent-19", "shop-…us", "…", "#8FB19B"), ("agent-21", "panel-…us", "✓", G2), ("agent-02", "store-…ca", "✗", "#5E7466")]
+    r = ''.join(f'<div style="display:flex;justify-content:space-between;font:400 26px/1.65 MonoR;color:#C9DBCF"><span><span style="color:{G2}">{a}</span> → {b}</span><span style="color:{c}">{k}</span></div>' for a, b, k, c in rows)
+    return f"""<div style="padding:22px 28px;height:100%;display:flex;flex-direction:column"><div style="display:flex;justify-content:space-between;font:400 22px/1 Pix;color:#8FB19B;margin-bottom:10px"><span>KI-AGENTEN · LIVE</span><span style="color:{R2}">● REC</span></div>{r}
+<div style="margin-top:auto;display:flex;justify-content:space-between;align-items:center;border-top:2px solid rgba(234,246,238,.12);padding-top:12px"><span style="font:400 22px/1 Pix;color:#8FB19B">GEKNACKT</span><span style="font:700 40px/1 Outfit;color:{R2}">100+ / 1.200</span></div></div>"""
+def dnote(t, x, y, c, r=0, ax=None, w=260, flip=False):
+    return note(t, x, y, c, r, ax, w, flip)
+def news_phone():
+    page = f"""<div style="background:#0E1310;height:100%;padding:62px 26px 26px;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid rgba(234,246,238,.12);padding-bottom:16px">{rlogo(210)}<div style="font:400 30px/1 Outfit;color:#8FB19B">☰</div></div>
+<div style="font:700 22px/1 Inter;color:#FF8000;letter-spacing:1px">CYBERSECURITY</div>
+<div style="font:700 40px/1.15 Outfit;color:#EAF6EE">How one hacker used AI agents to break into over 100 company websites</div>
+<div style="font:400 22px/1.3 Inter;color:#8FB19B">By Raphael Satter · October 19, 2026</div>
+<div style="height:170px;border-radius:14px;background:radial-gradient(circle at 30% 40%,rgba(57,217,122,.25),rgba(10,20,14,1) 70%);display:flex;align-items:center;justify-content:center;font:400 70px/1 Outfit">🤖</div>
+<div class="ln" style="width:95%"></div><div class="ln" style="width:80%"></div><div class="ln" style="width:88%"></div></div>"""
+    return iphone(page, .8)
+def flow():
+    agents = ''.join('<div style="width:76px;height:76px;border-radius:18px;border:2px solid rgba(57,217,122,.6);background:rgba(57,217,122,.1);display:flex;align-items:center;justify-content:center;font:400 42px/1 Outfit;box-shadow:0 0 18px rgba(57,217,122,.25)">🤖</div>' for _ in range(9))
+    col = lambda big, lab, c, inner="": f'<div style="display:flex;flex-direction:column;align-items:center;gap:14px">{inner or ('<div style="font:700 84px/1 Outfit;color:'+c+'">'+big+'</div>')}<div class="lab" style="margin:0;color:{c};text-align:center">{lab}</div></div>'
+    return ('<div style="display:flex;align-items:center;justify-content:center;gap:14px;width:920px">'
+      + col("", "1 MENSCH", LIGHT, '<div class="tile" style="width:130px;height:130px;font:400 76px/1 Outfit">👤</div>')
+      + arrow(G2, 70)
+      + col("", "KI-AGENTEN", G2, f'<div style="display:grid;grid-template-columns:repeat(3,76px);gap:12px">{agents}</div>')
+      + arrow(G2, 70)
+      + '<div style="display:flex;flex-direction:column;gap:22px">' + col("1.200", "WEBSITES GETESTET", LIGHT) + col("100+", "GEKNACKT", R2) + '</div></div>')
+def receipt():
+    zig = "linear-gradient(135deg,transparent 12px,#F4F1EA 0) 0 0/24px 24px repeat-x, linear-gradient(225deg,transparent 12px,#F4F1EA 0) 0 0/24px 24px repeat-x"
+    row = lambda a, b, bold=False, c="#1E1B16": f'<div style="display:flex;justify-content:space-between;font:{"700" if bold else "400"} 36px/1.6 MonoR;color:{c}"><span>{a}</span><span>{b}</span></div>'
+    return f"""<div style="width:600px;margin-left:200px;transform:rotate(3deg);filter:drop-shadow(0 20px 40px rgba(0,0,0,.5))"><div style="height:16px;background:{zig};transform:scaleY(-1)"></div>
+<div style="background:#F4F1EA;padding:20px 40px 30px;text-align:left"><div style="font:700 34px/1.2 Mono;color:#1E1B16;text-align:center;margin-bottom:10px">BELEG · KI-ANGRIFF</div><div style="font:400 22px/1.4 MonoR;color:#6E675B;text-align:center;margin-bottom:12px">Beleg · Okt 2026 · laut Forscher</div>
+<div style="border-top:3px dashed #9A9488;margin:8px 0"></div>{row("KI-Rechenzeit", "5.000 $")}{row("Einbrüche", "100+")}
+<div style="border-top:3px dashed #9A9488;margin:8px 0"></div>{row("PRO EINBRUCH", "≈ 50 $", True, "#B3261E")}
+<div style="font:400 22px/1.4 MonoR;color:#6E675B;text-align:center;margin-top:14px">*** VIELEN DANK ***</div></div><div style="height:16px;background:{zig}"></div></div>"""
+def shop_browser():
+    return f"""<div style="position:relative"><div class="brow" style="width:780px"><div class="bar"><i></i><i></i><i></i><span>online-shop.example</span></div>
+<div style="display:flex;gap:18px;padding:24px"><div style="flex:1;display:flex;flex-direction:column;gap:14px"><div style="display:flex;align-items:center;gap:12px;font:700 28px/1 Outfit;color:{G2}">🔒 Hauptseite</div><div style="height:150px;border-radius:12px;background:rgba(234,246,238,.08)"></div><div class="ln" style="width:80%"></div><div class="ln" style="width:60%"></div><div style="display:flex;gap:10px"><div style="flex:1;height:70px;border-radius:10px;background:rgba(234,246,238,.08)"></div><div style="flex:1;height:70px;border-radius:10px;background:rgba(234,246,238,.08)"></div></div></div>
+<div style="flex:none;width:220px;border-radius:14px;border:3px solid {R2};background:rgba(224,106,78,.1);box-shadow:0 0 40px rgba(224,106,78,.45);padding:16px;display:flex;flex-direction:column;gap:10px"><div style="font:400 22px/1.2 MonoR;color:{R2}">/admin-alt</div><div style="font:700 24px/1.2 Outfit;color:{LIGHT}">Login-Panel</div><div style="height:34px;border-radius:8px;border:2px solid rgba(234,246,238,.25)"></div><div style="height:34px;border-radius:8px;border:2px solid rgba(234,246,238,.25)"></div><div style="font:400 22px/1.2 Inter;color:#8FB19B">zuletzt 2021 genutzt</div></div></div></div></div>"""
 n = 8
 HACK = [
  slide(1, n, '1 Hacker. Viele Agenten. <em style="color:#E06A4E;text-shadow:0 0 30px rgba(224,106,78,.55)">100 Websites.</em>',
-   '<div style="position:relative;width:900px;height:100%;display:flex;align-items:center;justify-content:center">'
-   + sheet(f'<div style="{TW};font-size:30px;line-height:1.6;color:{LIGHT}">BETREFF: Angriffswelle auf Websites<br>TÄTER: 1 Person<br>WERKZEUG: autonome KI-Agenten<br>OPFER: über 100 Firmen<br>KOSTEN: {red(160)} pro Einbruch</div>', 760, -2, "FALL · OKT 2026")
-   + stamp("ECHTER FALL", "right:20px", "bottom:6%", -12, 44) + '</div>',
-   kicker="REUTERS · 19.10.2026", box="Was passiert ist. Und was Ihre Website schützt.", cover=True),
+   '<div style="position:relative;width:920px;height:100%;display:flex;align-items:center;justify-content:center">' + laptop(agentlog(), 620)
+   + f'<div style="position:absolute;left:0;top:2%;display:flex;align-items:center;gap:12px;background:rgba(4,12,7,.9);border:2px solid rgba(234,246,238,.2);border-radius:14px;padding:12px 18px">{rlogo(170)}<span style="font:400 22px/1 Pix;color:#8FB19B">19.10.</span></div>'
+   + stamp("ECHTER FALL", "right:30px", "bottom:6%", -10, 36) + '</div>',
+   kicker="NEWS · KI-HACKING", box="Was passiert ist. Und was Ihre Website schützt.", cover=True),
  slide(2, n, 'Die <em>Quelle</em>',
-   f"""<div class="brow" style="width:860px"><div class="bar"><i></i><i></i><i></i><span>reuters.com · technology · cybersecurity</span></div>
-<div style="padding:34px 40px;display:flex;flex-direction:column;gap:22px;text-align:left">
-<div style="display:flex;align-items:center;gap:14px"><div style="font:700 40px/1 Outfit;color:#FF8000;letter-spacing:1px">REUTERS</div><div style="font:400 24px/1 Pix;color:#8FB19B">· CYBERSECURITY</div></div>
-<div style="font:700 50px/1.15 Outfit;color:{LIGHT}">How one hacker used AI agents to break into over 100 company websites</div>
-<div style="display:flex;gap:14px;flex-wrap:wrap"><div class="chip" style="padding:10px 18px;font-size:26px">Raphael Satter</div><div class="chip" style="padding:10px 18px;font-size:26px"><span>DATUM</span>19.10.2026</div></div>
-<div style="border-top:2px solid rgba(234,246,238,.12);padding-top:18px;font:400 30px/1.35 Outfit;color:#C9DBCF">Entdeckt von Sicherheitsforscher Snorre Fagerland (NorForge).</div></div></div>""",
-   kicker="ECHTE NACHRICHT · NICHT AUSGEDACHT", box="Die Überschrift im Original. Alles Weitere auf den nächsten Folien.", boxcls="o"),
- slide(3, n, 'Die <em>Akte</em>',
-   sheet(field("TÄTER", "Eine chinesischsprachige Person, laut Sicherheitsforscher") + field("METHODE", "KI-Agenten suchen selbstständig nach Lücken") + field("VERSUCHE", "über 1.200 Websites") + field("ERFOLG", "über 100 Firmen")), kicker="BEWEISSTÜCK 1", box="Ein Mensch gibt Befehle. Die Maschinen machen die Arbeit.", boxcls="o"),
+   '<div style="position:relative;width:920px;height:100%;display:flex;align-items:center;justify-content:center">' + news_phone()
+   + note("Original-<br>Schlagzeile", 0, 160, G2, -4, "left:150px;top:100px")
+   + note("Reuters,<br>19.10.2026", 640, 380, G2, 4, "left:-40px;top:100px", flip=True) + '</div>',
+   kicker="ECHTE NACHRICHT · NICHT AUSGEDACHT", box="Recherche: Sicherheitsforscher Snorre Fagerland (NorForge).", boxcls="o"),
+ slide(3, n, 'So lief der <em>Angriff</em>', flow(),
+   kicker="1 PERSON · DUTZENDE AGENTEN", box="Ein Mensch gibt Befehle. Die Maschinen machen die Arbeit.", boxcls="o"),
  slide(4, n, '<em>50 $</em> pro Einbruch',
-   '<div style="position:relative;width:900px;height:100%;display:flex;align-items:center;justify-content:center">'
-   + sheet(f'<div style="display:flex;flex-direction:column;gap:24px;align-items:center;text-align:center"><div style="font:400 26px/1 Pix;color:#39D97A">KOSTEN DER KI LAUT FORSCHER</div><div style="font:700 130px/1 Outfit;color:{LIGHT};letter-spacing:-4px;margin:14px 0">≈ 5.000 $</div><div style="{TW};font-size:34px;color:#8FB19B">÷ über 100 Einbrüche</div><div style="font:700 90px/1 Outfit;color:{STAMP}">≈ 50 $ / Stück</div></div>', 760, 1.5)
-   + '</div>',
-   kicker="BEWEISSTÜCK 2 · DIE RECHNUNG", box="Wenn ein Einbruch so wenig kostet, lohnen sich auch kleine Seiten.", boxcls="o"),
+   '<div style="position:relative;width:920px;height:100%;display:flex;align-items:center;justify-content:center">' + receipt()
+   + note("lohnt sich<br>auch bei<br>kleinen Seiten", 0, 40, R2, -5, None, 240) + '</div>',
+   kicker="DIE RECHNUNG", box="Wenn ein Einbruch so wenig kostet, ist keine Seite zu klein.", boxcls="o"),
  slide(5, n, 'Wen es <em>getroffen</em> hat',
-   sheet(field("MEISTENS", "Online-Shops") + field("LÄNDER", "USA, Kanada, Australien, Japan") + field("AUCH", "große Namen wie John Deere, SharkNinja, Cummins")), kicker="BEWEISSTÜCK 3", box="Nicht nur Konzerne. Vor allem ganz normale Shops.", boxcls="o"),
+   '<div style="display:flex;flex-direction:column;align-items:center;gap:26px">'
+   + '<div style="display:flex;gap:20px">' + ''.join(f'<div class="tile" style="width:190px;height:200px;flex-direction:column;gap:14px"><div style="font:400 84px/1 Outfit">{f}</div><div class="lab" style="margin:0">{c}</div></div>' for f, c in [("🇺🇸","USA"),("🇨🇦","KANADA"),("🇦🇺","AUSTRALIEN"),("🇯🇵","JAPAN")]) + '</div>'
+   + f'<div class="card" style="display:flex;align-items:center;gap:22px;width:840px"><div style="font:400 60px/1 Outfit">🛒</div><div><div class="big" style="font-size:42px">Meistens <em>Online-Shops</em></div><div class="txt" style="font-size:30px">Aber auch John Deere, SharkNinja, Cummins</div></div></div></div>',
+   kicker="DIE OPFER", box="Nicht nur Konzerne. Vor allem ganz normale Shops.", boxcls="o"),
  slide(6, n, 'Wie sie <em>reinkamen</em>',
-   '<div style="display:flex;flex-direction:column;gap:20px;width:860px">' + ''.join(
-     sheet(f'<div style="display:flex;gap:26px;align-items:center"><div style="flex:none;font:700 64px/1 Outfit;color:{STAMP}">{k}</div><div style="{TW};font-size:32px;line-height:1.35;color:{LIGHT}">{t}</div></div>', 860, r)
-     for k, t, r in [("1", "Hauptseite geprüft: keine Lücke gefunden.", -0.6), ("2", "Weitergesucht: ein vergessenes Admin-Panel, öffentlich erreichbar.", 0.5), ("3", "Kleiner Fehler darin. Stundenlang probiert. Server übernommen.", -0.4)]) + '</div>',
-   kicker="BEWEISSTÜCK 4 · DER WEG", box="Die Lücke war nicht vorne. Sondern in einer Ecke, die keiner mehr im Blick hatte.", boxcls="o"),
+   '<div style="position:relative;width:920px;height:100%;display:flex;align-items:center;justify-content:center">' + shop_browser()
+   + note("vorne: zu ✓", 40, 60, G2, -4, None, 260)
+   + note("hinten:<br>vergessen!", 600, 30, R2, 4, None, 300) + '</div>',
+   kicker="DER WEG REIN", box="Keine Lücke auf der Hauptseite. Aber ein altes Admin-Panel, öffentlich erreichbar.", boxcls="o"),
  slide(7, n, '5 Dinge, die Ihre Seite <em>schützen</em>',
-   sheet(''.join(f'<div style="display:flex;gap:22px;align-items:center;padding:13px 0;border-bottom:2px dashed rgba(234,246,238,.14)"><div style="flex:none;width:44px;height:44px;border:4px solid {G};border-radius:8px"></div><div style="font:700 36px/1.2 Outfit;color:{LIGHT}">{t}</div></div>' for t in
-     ["Updates für System, Plugins und PHP", "Admin-Bereiche nicht offen im Netz", "Alte Testseiten und Subdomains löschen", "Zwei-Faktor-Login überall", "Backups, die wirklich funktionieren"]), 860, -1, "CHECKLISTE"),
-   kicker="WAS SIE TUN KÖNNEN", box="Speichern Sie die Liste und fragen Sie Ihren Webdienstleister danach.", boxcls="o"),
- slide(8, n, 'Kommentieren Sie <em>CHECK</em>',
-   '<div style="position:relative;width:900px;height:100%;display:flex;align-items:center;justify-content:center">'
-   + sheet(f'<div style="display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center"><div style="font:400 26px/1 Pix;color:#39D97A">GRATIS · PER DM · PDF</div><div style="font:700 150px/1 Outfit;color:{LIGHT};letter-spacing:-4px;margin:18px 0">CHECK</div><div style="{TW};font-size:32px;color:#8FB19B">5-Punkte Website-Check</div></div>', 700, -1.5)
-   + stamp("GRATIS", "right:40px", "top:8%", 12, 46) + '</div>',
-   kicker="IHR NÄCHSTER SCHRITT", box="Ich schicke Ihnen meinen 5-Punkte Website-Check als PDF.", last=True),
+   '<div style="display:flex;flex-direction:column;gap:12px;width:860px">' + ''.join(
+     f'<div class="card" style="display:flex;align-items:center;gap:22px;padding:14px 26px"><div style="flex:none;width:54px;height:54px;border-radius:16px;background:rgba(57,217,122,.12);border:2px solid {G2};display:flex;align-items:center;justify-content:center;font:400 32px/1 Outfit">{i}</div><div class="big" style="font-size:34px">{t}</div></div>'
+     for i, t in [("🔄","Updates für System, Plugins, PHP"),("🚪","Admin-Bereiche nicht offen im Netz"),("🧹","Alte Testseiten löschen"),("🔐","Zwei-Faktor-Login überall"),("💾","Backups, die funktionieren")]) + '</div>',
+   kicker="WAS SIE TUN KÖNNEN", box="Speichern und Ihren Webdienstleister danach fragen.", boxcls="o"),
+ cta(8, n, "CHECK", "Ich schicke Ihnen meinen 5-Punkte Website-Check als PDF.", "5-Punkte Website-Check"),
 ]
 POSTS["F-hacker-ki"] = HACK
