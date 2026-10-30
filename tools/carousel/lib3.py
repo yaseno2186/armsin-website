@@ -95,6 +95,9 @@ body.e .bg{{background:radial-gradient(ellipse 800px 600px at 70% 30%,rgba(233,1
 body.e h1 em{{color:#E9B949;text-shadow:none}} body.e .txt{{font-size:38px}} body.e h1 .s{{color:#F3EBDD}}
 body.e .kicker{{color:#E9B949;text-shadow:0 0 18px rgba(233,185,73,.5)}} body.e .box.o{{border-color:#E9B949;background:rgba(233,185,73,.08)}} body.e .hint{{color:#E9B949;text-shadow:none}}
 body.p .box.n{{color:#3A352D;font:600 32px/1.3 Inter}}
+.manila{{position:absolute;inset:0;background:radial-gradient(ellipse at 30% 20%,#EBDDB6,#DCC78F 70%,#CFB77C)}}
+.manila:after{{content:"";position:absolute;inset:0;opacity:.35;mix-blend-mode:multiply;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45 0 0 0 0 .35 0 0 0 0 .2 0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}}
+body.m h1 em{{color:#B3261E}} body.m .kicker{{color:#7A5A1E}} body.m .hint{{color:#7A5A1E}}
 .canvas{{position:absolute;inset:0;background:radial-gradient(circle,rgba(30,27,22,.13) 1.6px,transparent 1.8px) 0 0/34px 34px,linear-gradient(180deg,#F6F4EF,#ECE8DF)}}
 body.q h1{{font:700 96px/1.06 Outfit;font-style:normal;letter-spacing:-2px}}
 """
@@ -123,7 +126,7 @@ def slide(i, n, h1, visual, kicker="", box="", boxcls="", hand="", cover=False, 
     b = f'<div class="box {boxcls}">{box}</div>' if box else ""
     mk = f'<span class="mk">{MERK}MERKEN</span>' if (cover or last) else '<span></span>'
     hint = f'<div class="hint">{mk}<span>{"" if last else "WISCHEN &gt;"}</span></div>'
-    bgl = '<div class="canvas"></div>' if variant == "c" else '<div class="paper"></div><div class="holes"><i></i><i></i><i></i></div>' if variant in ("p","q") else '<div class="bg"></div><div class="grain"></div>'
+    bgl = '<div class="canvas"></div>' if variant == "c" else '<div class="manila"></div>' if variant == "m" else '<div class="paper"></div><div class="holes"><i></i><i></i><i></i></div>' if variant in ("p","q") else '<div class="bg"></div><div class="grain"></div>'
     return variant, f'''{bgl}<div class="wrap">{top}{k}{hd}<h1>{h1}</h1><div class="visual">{visual}</div>{b}{hint}
 <div class="foot"><div class="l">{IG_SVG}<span class="in">in</span><span>@armsin_digital_media</span></div><span>armsin.de</span></div></div>'''
 
@@ -178,7 +181,7 @@ async def render(post_dir, slides, out_root):
         pg = await b.new_page(viewport={"width":1080,"height":1350}, device_scale_factor=2)
         for i, (variant, body) in enumerate(slides, 1):
             path = d + f"{i:02d}.html"
-            cls = {"p":"p","e":"e","q":"p q","c":"p q c"}.get(variant, "")
+            cls = {"p":"p","e":"e","q":"p q","c":"p q c","m":"p q m"}.get(variant, "")
             body = re.sub(r'<div class="cnt">\d+/\d+</div>', f'<div class="cnt">{i:02d}/{len(slides):02d}</div>', body)
             open(path, "w").write(f'<!doctype html><html><head><meta charset="utf-8"><style>{CSS}</style></head><body class="{cls}">{body}</body></html>')
             await pg.goto("file://" + path)

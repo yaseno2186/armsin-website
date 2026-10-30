@@ -189,3 +189,48 @@ VN = [
    kicker="KOSTENLOS · PER DM", box="Schicken Sie mir einen Screenshot Ihrer Kontaktseite. Ich sage Ihnen, was ich ändern würde.", boxcls="n", last=True, variant="c"),
 ]
 POSTS["D-vorher-nachher"] = VN
+
+# ================= F: Hacker + KI-Agenten (case file) =================
+TW = "font-family:MonoR"
+STAMP = "#B3261E"
+def stamp(t, x, y, r=-10, size=40):
+    return f'<div style="position:absolute;{x};{y};transform:rotate({r}deg);border:5px solid {STAMP};color:{STAMP};font:700 {size}px/1 Mono;letter-spacing:3px;padding:12px 20px;border-radius:8px;opacity:.88;mix-blend-mode:multiply">{t}</div>'
+def red(w):
+    return f'<span style="display:inline-block;width:{w}px;height:.9em;background:#1E1B16;vertical-align:-0.1em;border-radius:2px"></span>'
+def sheet(inner, w=860, r=0, tab=""):
+    t = f'<div style="position:absolute;left:40px;top:-46px;background:#F3EAD3;border-radius:14px 14px 0 0;padding:10px 26px;font:400 24px/1 Pix;color:#7A5A1E;letter-spacing:2px">{tab}</div>' if tab else ''
+    return f'<div style="position:relative;width:{w}px;background:#FBF6E9;border-radius:6px;padding:34px 40px;box-shadow:0 18px 40px rgba(70,50,15,.25);transform:rotate({r}deg);text-align:left">{t}{inner}</div>'
+def field(k, v):
+    return f'<div style="display:flex;gap:20px;padding:14px 0;border-bottom:2px dashed rgba(30,27,22,.2)"><div style="flex:none;width:230px;font:400 26px/1.35 Pix;color:#7A5A1E">{k}</div><div style="{TW};font-size:32px;line-height:1.35;color:{INK}">{v}</div></div>'
+n = 7
+HACK = [
+ slide(1, n, '1 Hacker. Viele Agenten. <em>100 Websites.</em>',
+   '<div style="position:relative;width:900px;height:100%;display:flex;align-items:center;justify-content:center">'
+   + sheet(f'<div style="{TW};font-size:30px;line-height:1.6;color:{INK}">BETREFF: Angriffswelle auf Websites<br>TÄTER: 1 Person<br>WERKZEUG: autonome KI-Agenten<br>OPFER: über 100 Firmen<br>KOSTEN: {red(160)} pro Einbruch</div>', 760, -2, "FALL · OKT 2026")
+   + stamp("ECHTER FALL", "right:20px", "bottom:6%", -12, 44) + '</div>',
+   kicker="REUTERS · 19.10.2026", box="Was passiert ist. Und was Ihre Website schützt.", boxcls="n", cover=True, variant="m"),
+ slide(2, n, 'Die <em>Akte</em>',
+   sheet(field("TÄTER", "Eine chinesischsprachige Person, laut Sicherheitsforscher") + field("METHODE", "KI-Agenten suchen selbstständig nach Lücken") + field("VERSUCHE", "über 1.200 Websites") + field("ERFOLG", "über 100 Firmen")), kicker="BEWEISSTÜCK 1", box="Ein Mensch gibt Befehle. Die Maschinen machen die Arbeit.", boxcls="n", variant="m"),
+ slide(3, n, '<em>50 $</em> pro Einbruch',
+   '<div style="position:relative;width:900px;height:100%;display:flex;align-items:center;justify-content:center">'
+   + sheet(f'<div style="display:flex;flex-direction:column;gap:24px;align-items:center;text-align:center"><div style="font:400 26px/1 Pix;color:#7A5A1E">KOSTEN DER KI LAUT FORSCHER</div><div style="font:700 130px/1 Outfit;color:{INK};letter-spacing:-4px;margin:14px 0">≈ 5.000 $</div><div style="{TW};font-size:34px;color:{INK2}">÷ über 100 Einbrüche</div><div style="font:700 90px/1 Outfit;color:{STAMP}">≈ 50 $ / Stück</div></div>', 760, 1.5)
+   + '</div>',
+   kicker="BEWEISSTÜCK 2 · DIE RECHNUNG", box="Wenn ein Einbruch so wenig kostet, lohnen sich auch kleine Seiten.", boxcls="n", variant="m"),
+ slide(4, n, 'Wen es <em>getroffen</em> hat',
+   sheet(field("MEISTENS", "Online-Shops") + field("LÄNDER", "USA, Kanada, Australien, Japan") + field("AUCH", "große Namen wie John Deere, SharkNinja, Cummins")), kicker="BEWEISSTÜCK 3", box="Nicht nur Konzerne. Vor allem ganz normale Shops.", boxcls="n", variant="m"),
+ slide(5, n, 'Wie sie <em>reinkamen</em>',
+   '<div style="display:flex;flex-direction:column;gap:20px;width:860px">' + ''.join(
+     sheet(f'<div style="display:flex;gap:26px;align-items:center"><div style="flex:none;font:700 64px/1 Outfit;color:{STAMP}">{k}</div><div style="{TW};font-size:32px;line-height:1.35;color:{INK}">{t}</div></div>', 860, r)
+     for k, t, r in [("1", "Hauptseite geprüft: keine Lücke gefunden.", -0.6), ("2", "Weitergesucht: ein vergessenes Admin-Panel, öffentlich erreichbar.", 0.5), ("3", "Kleiner Fehler darin. Stundenlang probiert. Server übernommen.", -0.4)]) + '</div>',
+   kicker="BEWEISSTÜCK 4 · DER WEG", box="Die Lücke war nicht vorne. Sondern in einer Ecke, die keiner mehr im Blick hatte.", boxcls="n", variant="m"),
+ slide(6, n, '5 Dinge, die Ihre Seite <em>schützen</em>',
+   sheet(''.join(f'<div style="display:flex;gap:22px;align-items:center;padding:13px 0;border-bottom:2px dashed rgba(30,27,22,.2)"><div style="flex:none;width:44px;height:44px;border:4px solid {INK};border-radius:8px"></div><div style="font:700 36px/1.2 Outfit;color:{INK}">{t}</div></div>' for t in
+     ["Updates für System, Plugins und PHP", "Admin-Bereiche nicht offen im Netz", "Alte Testseiten und Subdomains löschen", "Zwei-Faktor-Login überall", "Backups, die wirklich funktionieren"]), 860, -1, "CHECKLISTE"),
+   kicker="WAS SIE TUN KÖNNEN", box="Speichern Sie die Liste und fragen Sie Ihren Webdienstleister danach.", boxcls="n", variant="m"),
+ slide(7, n, 'Kommentieren Sie <em>CHECK</em>',
+   '<div style="position:relative;width:900px;height:100%;display:flex;align-items:center;justify-content:center">'
+   + sheet(f'<div style="display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center"><div style="font:400 26px/1 Pix;color:#7A5A1E">GRATIS · PER DM · PDF</div><div style="font:700 150px/1 Outfit;color:{INK};letter-spacing:-4px;margin:18px 0">CHECK</div><div style="{TW};font-size:32px;color:{INK2}">5-Punkte Website-Check</div></div>', 700, -1.5)
+   + stamp("GRATIS", "right:40px", "top:8%", 12, 46) + '</div>',
+   kicker="IHR NÄCHSTER SCHRITT", box="Ich schicke Ihnen meinen 5-Punkte Website-Check als PDF.", boxcls="n", last=True, variant="m"),
+]
+POSTS["F-hacker-ki"] = HACK
