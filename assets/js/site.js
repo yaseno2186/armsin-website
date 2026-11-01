@@ -526,20 +526,31 @@ function initNeedsCheck() {
     return r ? r.value : null;
   };
 
+  var photoType = function () {
+    var r = form.querySelector('input[name="phototype"]:checked');
+    return r ? r.value : null;
+  };
+
   var buildPath = function () {
     var n = need();
+    var pt = photoType();
     path = allSteps.filter(function (step, i) {
       if (i === 0) return true;
-      return !!n && step.dataset.path.split(' ').indexOf(n) !== -1;
+      if (!n || step.dataset.path.split(' ').indexOf(n) === -1) return false;
+      // "Wie viele Bilder?" is skipped when no photos are wanted. Counted
+      // until then, so the step total only ever shrinks, never jumps up.
+      if (step.dataset.if === 'photos') return pt !== 'none';
+      return true;
     });
   };
 
   // Everything answered on the active path, in order
   var readState = function () {
-    var s = { need: need(), situation: null, picks: [], photos: 0, photosInput: null };
+    var s = { need: need(), situation: null, picks: [], photoType: null, photos: 0, photosInput: null };
     path.slice(1).forEach(function (step) {
       step.querySelectorAll('input:checked').forEach(function (input) {
         if (input.name === 'situation') s.situation = input;
+        else if (input.name === 'phototype') s.photoType = input;
         else if (input.name === 'photos') { s.photos = parseInt(input.value, 10); s.photosInput = input; }
         else s.picks.push(input);
       });
@@ -548,6 +559,7 @@ function initNeedsCheck() {
   };
 
   var pickResult = function (s) {
+    if (s.need === 'photo') return 'photo-' + (s.photoType ? s.photoType.value : 'new');
     if (s.need !== 'website') return s.need;
     var advanced = s.picks.some(function (i) { return i.dataset.tier === 'advanced'; });
     if (advanced) return 'advanced';
@@ -556,23 +568,77 @@ function initNeedsCheck() {
     return 'basic';
   };
 
-  // Price as pieces; numbers stay numbers so they can count up.
-  var photoParts = function (n) {
-    var parts = [n / 10 * 12, ' €'];
-    if (n >= 30) parts.unshift(label('from') + ' ');
-    return parts;
-  };
-  var priceParts = function (block, s) {
+  // ---- Price calculation ----
+  // The base price (data-min/-max) covers the first feature of the
+  // recommended kind; every further feature adds data-add-min/-max, and
+  // photos add data-per10 per 10 images. All numbers live in index.html.
+  var per10 = +(app.querySelector('.check-results').dataset.per10 || 12);
+
+  var calculate = function (s, key) {
+    var block = app.querySelector('[data-result="' + key + '"]');
     var mode = block.dataset.mode;
-    if (mode === 'range') return [+block.dataset.min, ' – ', +block.dataset.max, ' €'];
-    if (mode === 'from') return [label('from') + ' ', +block.dataset.min, ' €'];
-    if (mode === 'custom') return [label('custom')];
-    if (mode === 'talk') return [label('talk')];
-    if (mode === 'photo') return photoParts(s.photos || 10);
-    return [0, ' €'];
+    var lines = [];
+    if (key === 'basic' || key === 'advanced' || key === 'app') {
+      var counted = key === 'app' ? s.picks
+        : s.picks.filter(function (i) { return i.dataset.tier === key; });
+      var isFrom = mode === 'from';
+      var addMin = +(block.dataset.addMin || 0);
+      var addMax = isFrom ? addMin : +(block.dataset.addMax || addMin);
+      lines.push({
+        text: label('bdBase').replace('{feature}', counted.length ? titleOf(counted[0]) : ''),
+        min: +block.dataset.min, max: isFrom ? +block.dataset.min : +block.dataset.max, from: isFrom
+      });
+      counted.slice(1).forEach(function (i) {
+        lines.push({ text: '+ ' + titleOf(i), min: addMin, max: addMax, from: isFrom });
+      });
+      // The basics come with a website that books, reserves or sells.
+      if (key === 'advanced' && s.picks.some(function (i) { return i.dataset.tier === 'basic'; })) {
+        lines.push({ text: label('bdIncluded'), included: true });
+      }
+    }
+    if (s.photos > 0 && s.photoType) {
+      var photoText = (s.need === 'photo' ? '' : '+ ') + titleOf(s.photoType) + ', ' + titleOf(s.photosInput);
+      if (s.photoType.value === 'new') {
+        // New photos on site: travel and time on top, so no fixed number
+        lines.push({ text: photoText, agree: true });
+      } else {
+        var cost = s.photos / 10 * per10;
+        // "30 or more": the line says "ab", the total keeps its range
+        lines.push({ text: photoText, min: cost, max: cost, from: s.photos >= 30, openEnd: true });
+      }
+    }
+
+    var total;
+    if (mode === 'custom') total = [label('custom')];
+    else if (mode === 'agree') total = [label('agree')];
+    else if (mode === 'talk') total = [label('talk')];
+    else {
+      var priced = lines.filter(function (l) { return !l.included && !l.agree; });
+      var min = 0, max = 0, from = false;
+      priced.forEach(function (l) { min += l.min; max += l.max; from = from || (l.from && !l.openEnd); });
+      // Photos only, 30 or more: nothing else to give the total a range
+      if (!from && priced.length && priced.every(function (l) { return l.openEnd && l.from; })) from = true;
+      total = rangeParts(min, max, from);
+    }
+    return { lines: lines, total: total };
+  };
+
+  // Price as pieces; numbers stay numbers so they can count up.
+  var rangeParts = function (min, max, from) {
+    if (from) return [label('from') + ' ', min, ' €'];
+    if (min === max) return [min, ' €'];
+    return [min, ' – ', max, ' €'];
   };
   var partsToText = function (parts) {
     return parts.map(function (p) { return typeof p === 'number' ? fmt(p) : p; }).join('');
+  };
+  var totalLabel = function (calc) {
+    return label(calc.lines.some(function (l) { return l.agree; }) ? 'bdTotalPlus' : 'bdTotal');
+  };
+  var lineValue = function (l) {
+    if (l.included) return label('bdIncludedValue');
+    if (l.agree) return label('bdAgree');
+    return partsToText(rangeParts(l.min, l.max, l.from));
   };
 
   var renderPrice = function (el, parts, animate) {
@@ -594,15 +660,6 @@ function initNeedsCheck() {
       };
       requestAnimationFrame(tick);
     });
-  };
-
-  var photoLine = function (s, key) {
-    if (!s.photos || key === 'photo') return '';
-    var line = label('photoLine')
-      .replace('{price}', partsToText(photoParts(s.photos)))
-      .replace('{n}', s.photos >= 30 ? '30+' : String(s.photos));
-    if (key === 'basic' || key === 'advanced' || key === 'none') line += ' ' + label('photoBundle');
-    return line;
   };
 
   var stepValid = function (step) { return !!step.querySelector('input:checked'); };
@@ -643,11 +700,34 @@ function initNeedsCheck() {
     if (!block) return;
     part('title').textContent = block.querySelector('[data-part="title"]').textContent.trim();
     part('desc').textContent = block.querySelector('[data-part="desc"]').textContent.trim();
-    renderPrice(part('price'), priceParts(block, s), animate);
+    var calc = calculate(s, key);
+    renderPrice(part('price'), calc.total, animate);
+
+    // Breakdown, only when there is something to add up
+    var dl = part('breakdownList');
+    dl.textContent = '';
+    var showBreakdown = calc.lines.length > 1;
+    part('breakdown').hidden = !showBreakdown;
+    if (showBreakdown) {
+      var row = function (text, value, cls) {
+        var wrap = document.createElement('div');
+        wrap.className = 'check-breakdown-row' + (cls ? ' ' + cls : '');
+        var dt = document.createElement('dt');
+        dt.textContent = text;
+        var dd = document.createElement('dd');
+        dd.textContent = value;
+        wrap.appendChild(dt);
+        wrap.appendChild(dd);
+        dl.appendChild(wrap);
+      };
+      calc.lines.forEach(function (l) { row(l.text, lineValue(l), l.included ? 'is-included' : ''); });
+      row(totalLabel(calc), partsToText(calc.total), 'is-total');
+    }
 
     var items = [titleOf(form.querySelector('input[name="need"]:checked'))];
     if (s.situation) items.push(titleOf(s.situation));
     s.picks.forEach(function (i) { items.push(titleOf(i)); });
+    if (s.photoType && s.photoType.value !== 'none') items.push(titleOf(s.photoType));
     if (s.photosInput && s.photos > 0) items.push(titleOf(s.photosInput));
     var list = part('list');
     list.textContent = '';
@@ -658,9 +738,13 @@ function initNeedsCheck() {
       list.appendChild(li);
     });
 
-    var line = photoLine(s, key);
-    part('photo').textContent = line;
-    part('photo').hidden = !line;
+    var photoNote = '';
+    if (s.photos > 0 && s.photoType && s.need !== 'photo') {
+      if (s.photoType.value === 'new') photoNote = label('photoAgreeNote');
+      else if (key === 'basic' || key === 'advanced') photoNote = label('photoBundle');
+    }
+    part('photo').textContent = photoNote;
+    part('photo').hidden = !photoNote;
     part('note').hidden = key === 'unsure';   // nothing to estimate yet
   };
 
@@ -714,9 +798,19 @@ function initNeedsCheck() {
       '- ' + label('msgNeed') + ': ' + titleOf(form.querySelector('input[name="need"]:checked'))];
     if (s.situation) lines.push('- ' + label('msgSituation') + ': ' + titleOf(s.situation));
     if (s.picks.length) lines.push('- ' + label('msgFeatures') + ': ' + s.picks.map(titleOf).join(', '));
-    if (s.photosInput) lines.push('- ' + label('msgPhotos') + ': ' + (s.photos > 0 ? titleOf(s.photosInput) : label('photosNone')));
+    if (s.photoType) {
+      var photoText = s.photoType.value === 'none' ? label('photosNone')
+        : titleOf(s.photoType) + (s.photosInput ? ', ' + titleOf(s.photosInput) : '');
+      lines.push('- ' + label('msgPhotos') + ': ' + photoText);
+    }
+    var calc = calculate(s, key);
     lines.push('- ' + label('msgResult') + ': ' + block.querySelector('[data-part="title"]').textContent.trim() +
-      ' (' + partsToText(priceParts(block, s)) + ')');
+      ' (' + partsToText(calc.total) + ')');
+    if (calc.lines.length > 1) {
+      lines.push('');
+      calc.lines.forEach(function (l) { lines.push('  ' + l.text + ': ' + lineValue(l)); });
+      lines.push('  ' + totalLabel(calc) + ': ' + partsToText(calc.total));
+    }
     field.value = lines.join('\n');
     var contact = document.getElementById('contact');
     if (contact) contact.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
@@ -733,6 +827,12 @@ function initNeedsCheck() {
       allSteps.slice(1).forEach(function (step) {
         step.querySelectorAll('input').forEach(function (i) { i.checked = false; });
       });
+      buildPath();
+    }
+    if (input.name === 'phototype') {
+      if (input.value === 'none') {
+        form.querySelectorAll('input[name="photos"]').forEach(function (i) { i.checked = false; });
+      }
       buildPath();
     }
     markChecked();
