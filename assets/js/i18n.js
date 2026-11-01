@@ -139,7 +139,7 @@ var I18N_EN = {
   'index.check.res.none.t': "You probably don't need a new website",
   'index.check.res.none.d': "Your site works and you don't need new features. A new project would be money thrown away. In the free check I'll see whether small things like loading speed or your Google profile would help more.",
   'index.check.res.photo-new.t': 'New photos for your business',
-  'index.check.res.photo-new.d': 'I photograph your business or products with my phone and edit the images, ready for your website, menu and social media.',
+  'index.check.res.photo-new.d': 'I come to you, photograph your business or products with my phone and edit the images. Because travel and time on site come on top, we agree the price in a short call.',
   'index.check.res.photo-improve.t': 'Your images, professionally improved',
   'index.check.res.photo-improve.d': 'Your existing photos become clean images for your website, menu and social media. Edited with AI, every image checked by me.',
   'index.check.res.unsure.t': "Let's have a quick talk",
@@ -149,10 +149,14 @@ var I18N_EN = {
   'index.check.l.from': 'from',
   'index.check.l.custom': 'Priced by scope',
   'index.check.l.talk': 'Free',
+  'index.check.l.agree': 'On request',
+  'index.check.l.bdAgree': 'on request',
+  'index.check.l.photoAgreeNote': 'New on-site photos are agreed in the call, because travel and time at your place come on top.',
   'index.check.l.bdBase': 'Base price incl. {feature}',
   'index.check.l.bdIncluded': 'Basic features',
   'index.check.l.bdIncludedValue': 'included',
   'index.check.l.bdTotal': 'Total',
+  'index.check.l.bdTotalPlus': 'Total plus photos',
   'index.check.l.photoBundle': 'Together with the website the photos get cheaper. You get the exact price in the offer.',
   'index.check.l.photosNone': 'none',
   'index.check.l.msgIntro': "Hi Yass, here's my result from the needs check:",
@@ -178,6 +182,8 @@ var I18N_EN = {
   'index.check.n.3': 'Build with regular check-ins',
   'index.check.r.restart': 'Start over',
   'index.check.foot': 'Runs entirely in your browser. Nothing is stored or sent.',
+
+
 
 
 

@@ -597,19 +597,23 @@ function initNeedsCheck() {
       }
     }
     if (s.photos > 0 && s.photoType) {
-      var cost = s.photos / 10 * per10;
-      lines.push({
-        text: (s.need === 'photo' ? '' : '+ ') + titleOf(s.photoType) + ', ' + titleOf(s.photosInput),
+      var photoText = (s.need === 'photo' ? '' : '+ ') + titleOf(s.photoType) + ', ' + titleOf(s.photosInput);
+      if (s.photoType.value === 'new') {
+        // New photos on site: travel and time on top, so no fixed number
+        lines.push({ text: photoText, agree: true });
+      } else {
+        var cost = s.photos / 10 * per10;
         // "30 or more": the line says "ab", the total keeps its range
-        min: cost, max: cost, from: s.photos >= 30, openEnd: true
-      });
+        lines.push({ text: photoText, min: cost, max: cost, from: s.photos >= 30, openEnd: true });
+      }
     }
 
     var total;
     if (mode === 'custom') total = [label('custom')];
+    else if (mode === 'agree') total = [label('agree')];
     else if (mode === 'talk') total = [label('talk')];
     else {
-      var priced = lines.filter(function (l) { return !l.included; });
+      var priced = lines.filter(function (l) { return !l.included && !l.agree; });
       var min = 0, max = 0, from = false;
       priced.forEach(function (l) { min += l.min; max += l.max; from = from || (l.from && !l.openEnd); });
       // Photos only, 30 or more: nothing else to give the total a range
@@ -628,8 +632,13 @@ function initNeedsCheck() {
   var partsToText = function (parts) {
     return parts.map(function (p) { return typeof p === 'number' ? fmt(p) : p; }).join('');
   };
+  var totalLabel = function (calc) {
+    return label(calc.lines.some(function (l) { return l.agree; }) ? 'bdTotalPlus' : 'bdTotal');
+  };
   var lineValue = function (l) {
-    return l.included ? label('bdIncludedValue') : partsToText(rangeParts(l.min, l.max, l.from));
+    if (l.included) return label('bdIncludedValue');
+    if (l.agree) return label('bdAgree');
+    return partsToText(rangeParts(l.min, l.max, l.from));
   };
 
   var renderPrice = function (el, parts, animate) {
@@ -712,7 +721,7 @@ function initNeedsCheck() {
         dl.appendChild(wrap);
       };
       calc.lines.forEach(function (l) { row(l.text, lineValue(l), l.included ? 'is-included' : ''); });
-      row(label('bdTotal'), partsToText(calc.total), 'is-total');
+      row(totalLabel(calc), partsToText(calc.total), 'is-total');
     }
 
     var items = [titleOf(form.querySelector('input[name="need"]:checked'))];
@@ -729,9 +738,13 @@ function initNeedsCheck() {
       list.appendChild(li);
     });
 
-    var bundle = s.photos > 0 && (key === 'basic' || key === 'advanced');
-    part('photo').textContent = bundle ? label('photoBundle') : '';
-    part('photo').hidden = !bundle;
+    var photoNote = '';
+    if (s.photos > 0 && s.photoType && s.need !== 'photo') {
+      if (s.photoType.value === 'new') photoNote = label('photoAgreeNote');
+      else if (key === 'basic' || key === 'advanced') photoNote = label('photoBundle');
+    }
+    part('photo').textContent = photoNote;
+    part('photo').hidden = !photoNote;
     part('note').hidden = key === 'unsure';   // nothing to estimate yet
   };
 
@@ -796,7 +809,7 @@ function initNeedsCheck() {
     if (calc.lines.length > 1) {
       lines.push('');
       calc.lines.forEach(function (l) { lines.push('  ' + l.text + ': ' + lineValue(l)); });
-      lines.push('  ' + label('bdTotal') + ': ' + partsToText(calc.total));
+      lines.push('  ' + totalLabel(calc) + ': ' + partsToText(calc.total));
     }
     field.value = lines.join('\n');
     var contact = document.getElementById('contact');

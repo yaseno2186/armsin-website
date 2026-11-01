@@ -715,7 +715,7 @@
           <p class="check-foot" data-i18n="index.check.foot">Läuft komplett in Ihrem Browser. Es wird nichts gespeichert oder gesendet.</p>
         </div>
 
-        <!-- Results: one block per outcome. data-mode: range | from | custom | free | talk | photo
+        <!-- Results: one block per outcome. data-mode: range | from | custom | agree | free | talk | photo
              Prices: data-min / data-max = base price incl. the first feature,
              data-add-min / data-add-max = added for every further feature.
              data-per10 = photo price per 10 images. -->
@@ -740,9 +740,9 @@
             <span data-part="title" data-i18n="index.check.res.none.t">Eine neue Website brauchen Sie wohl nicht</span>
             <span data-part="desc" data-i18n="index.check.res.none.d">Ihre Seite funktioniert und Sie brauchen keine neuen Funktionen. Dann wäre ein neues Projekt rausgeworfenes Geld. Im kostenlosen Check schaue ich, ob Kleinigkeiten wie Ladezeit oder Ihr Google-Profil mehr bringen.</span>
           </div>
-          <div data-result="photo-new" data-mode="photo">
+          <div data-result="photo-new" data-mode="agree">
             <span data-part="title" data-i18n="index.check.res.photo-new.t">Neue Fotos für Ihren Betrieb</span>
-            <span data-part="desc" data-i18n="index.check.res.photo-new.d">Ich fotografiere Ihren Betrieb oder Ihre Produkte mit dem Handy und bearbeite die Bilder, fertig für Website, Speisekarte und Social Media.</span>
+            <span data-part="desc" data-i18n="index.check.res.photo-new.d">Ich komme zu Ihnen, fotografiere Ihren Betrieb oder Ihre Produkte mit dem Handy und bearbeite die Bilder. Weil Anfahrt und Zeit vor Ort dazukommen, stimmen wir den Preis kurz im Gespräch ab.</span>
           </div>
           <div data-result="photo-improve" data-mode="photo">
             <span data-part="title" data-i18n="index.check.res.photo-improve.t">Ihre Bilder, professionell verbessert</span>
@@ -758,10 +758,14 @@
           <span data-label="from" data-i18n="index.check.l.from">ab</span>
           <span data-label="custom" data-i18n="index.check.l.custom">Preis nach Umfang</span>
           <span data-label="talk" data-i18n="index.check.l.talk">Kostenlos</span>
+          <span data-label="agree" data-i18n="index.check.l.agree">Nach Absprache</span>
+          <span data-label="bdAgree" data-i18n="index.check.l.bdAgree">nach Absprache</span>
+          <span data-label="photoAgreeNote" data-i18n="index.check.l.photoAgreeNote">Neue Fotos vor Ort stimmen wir im Gespräch ab, weil Anfahrt und Zeit beim Kunden dazukommen.</span>
           <span data-label="bdBase" data-i18n="index.check.l.bdBase">Grundpreis inkl. {feature}</span>
           <span data-label="bdIncluded" data-i18n="index.check.l.bdIncluded">Basis-Funktionen</span>
           <span data-label="bdIncludedValue" data-i18n="index.check.l.bdIncludedValue">inklusive</span>
           <span data-label="bdTotal" data-i18n="index.check.l.bdTotal">Gesamt</span>
+          <span data-label="bdTotalPlus" data-i18n="index.check.l.bdTotalPlus">Gesamt zzgl. Fotos</span>
           <span data-label="photoBundle" data-i18n="index.check.l.photoBundle">Zusammen mit der Website werden die Fotos günstiger. Den genauen Preis bekommen Sie im Angebot.</span>
           <span data-label="photosNone" data-i18n="index.check.l.photosNone">keine</span>
           <span data-label="msgIntro" data-i18n="index.check.l.msgIntro">Hallo Yass, hier ist mein Ergebnis aus dem Bedarfs-Check:</span>
@@ -925,8 +929,8 @@
 </footer>
 
 <script type="module" src="assets/js/hero-model.js?v=12"></script>
-<script src="assets/js/i18n.js?v=6"></script>
-<script src="assets/js/site.js?v=7"></script>
+<script src="assets/js/i18n.js?v=7"></script>
+<script src="assets/js/site.js?v=8"></script>
 
 </body>
 </html>
