@@ -152,7 +152,6 @@ var I18N_EN = {
   'index.check.l.msgResult': 'Recommendation',
   'index.check.h2': 'What does your business really need?',
   'index.check.lead': 'A few short questions, then an honest recommendation with a price range. Takes less than a minute.',
-  'index.check.meta': 'Under 1 minute',
   'index.check.back': 'Back',
   'index.check.next': 'Next',
   'index.check.show': 'Show result',

@@ -1751,7 +1751,6 @@ img { max-width: 100%; display: block; }
 .check-bar-dot:first-child { background: var(--amber); }
 .check-bar-dot:nth-child(3) { background: var(--accent); }
 .check-bar-title { margin-left: 10px; }
-.check-bar-meta { margin-left: auto; }
 
 @media (max-width: 600px) {
   .check-bar-title { display: none; }
