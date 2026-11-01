@@ -488,6 +488,283 @@ function initServiceCarousel() {
   else track.classList.add('is-user');
 }
 
+// Homepage needs check: a short survey that shows a recommendation and
+// a price range only at the end. Texts and prices live in index.html;
+// which questions appear depends on the first answer (data-path on each
+// step). This only decides which result fits and fills it in.
+function initNeedsCheck() {
+  var app = document.getElementById('check-app');
+  if (!app) return;
+  var form = app.querySelector('.check-form');
+  var allSteps = Array.prototype.slice.call(app.querySelectorAll('.check-step'));
+  var progressBar = app.querySelector('.check-progress-track span');
+  var nav = app.querySelector('.check-nav');
+  var backBtn = app.querySelector('[data-check-action="back"]');
+  var nextBtn = app.querySelector('[data-check-action="next"]');
+  var result = app.querySelector('.check-result');
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var path = [allSteps[0]];
+  var current = 0;
+  var showingResult = false;
+  var lastPointer = 0;
+
+  var part = function (name) { return app.querySelector('[data-check="' + name + '"]'); };
+  var label = function (name) {
+    var el = app.querySelector('[data-label="' + name + '"]');
+    return el ? el.textContent.trim() : '';
+  };
+  var fmt = function (n) {
+    return new Intl.NumberFormat(document.documentElement.lang === 'en' ? 'en-US' : 'de-DE').format(n);
+  };
+  var titleOf = function (input) {
+    var t = input.closest('label').querySelector('.check-option-title, .check-card-title');
+    return t ? t.textContent.trim() : '';
+  };
+
+  var need = function () {
+    var r = form.querySelector('input[name="need"]:checked');
+    return r ? r.value : null;
+  };
+
+  var buildPath = function () {
+    var n = need();
+    path = allSteps.filter(function (step, i) {
+      if (i === 0) return true;
+      return !!n && step.dataset.path.split(' ').indexOf(n) !== -1;
+    });
+  };
+
+  // Everything answered on the active path, in order
+  var readState = function () {
+    var s = { need: need(), situation: null, picks: [], photos: 0, photosInput: null };
+    path.slice(1).forEach(function (step) {
+      step.querySelectorAll('input:checked').forEach(function (input) {
+        if (input.name === 'situation') s.situation = input;
+        else if (input.name === 'photos') { s.photos = parseInt(input.value, 10); s.photosInput = input; }
+        else s.picks.push(input);
+      });
+    });
+    return s;
+  };
+
+  var pickResult = function (s) {
+    if (s.need !== 'website') return s.need;
+    var advanced = s.picks.some(function (i) { return i.dataset.tier === 'advanced'; });
+    if (advanced) return 'advanced';
+    // A working website that only needs the basics doesn't need replacing.
+    if (s.situation && s.situation.value === 'good') return 'none';
+    return 'basic';
+  };
+
+  // Price as pieces; numbers stay numbers so they can count up.
+  var photoParts = function (n) {
+    var parts = [n / 10 * 12, ' €'];
+    if (n >= 30) parts.unshift(label('from') + ' ');
+    return parts;
+  };
+  var priceParts = function (block, s) {
+    var mode = block.dataset.mode;
+    if (mode === 'range') return [+block.dataset.min, ' – ', +block.dataset.max, ' €'];
+    if (mode === 'from') return [label('from') + ' ', +block.dataset.min, ' €'];
+    if (mode === 'custom') return [label('custom')];
+    if (mode === 'talk') return [label('talk')];
+    if (mode === 'photo') return photoParts(s.photos || 10);
+    return [0, ' €'];
+  };
+  var partsToText = function (parts) {
+    return parts.map(function (p) { return typeof p === 'number' ? fmt(p) : p; }).join('');
+  };
+
+  var renderPrice = function (el, parts, animate) {
+    el.textContent = '';
+    parts.forEach(function (p) {
+      if (typeof p !== 'number') { el.appendChild(document.createTextNode(p)); return; }
+      var span = document.createElement('span');
+      span.className = 'check-num';
+      var run = animate && !reduceMotion && p > 0;
+      span.textContent = fmt(run ? 0 : p);
+      el.appendChild(span);
+      if (!run) return;
+      var start = null;
+      var tick = function (now) {
+        if (start === null) start = now;
+        var t = Math.min(1, (now - start) / 800);
+        span.textContent = fmt(Math.round(p * (1 - Math.pow(1 - t, 3))));
+        if (t < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+  };
+
+  var photoLine = function (s, key) {
+    if (!s.photos || key === 'photo') return '';
+    var line = label('photoLine')
+      .replace('{price}', partsToText(photoParts(s.photos)))
+      .replace('{n}', s.photos >= 30 ? '30+' : String(s.photos));
+    if (key === 'basic' || key === 'advanced' || key === 'none') line += ' ' + label('photoBundle');
+    return line;
+  };
+
+  var stepValid = function (step) { return !!step.querySelector('input:checked'); };
+
+  var syncChrome = function () {
+    var total = need() ? path.length + 1 : 0;      // +1 for the result
+    var pos = showingResult ? path.length : current;
+    var text = total ? label('stepOf').replace('{n}', total) : label('step');
+    part('progress').textContent = text.replace('{x}', pos + 1);
+    var share = total ? (pos + 1) / total : 0.2;
+    progressBar.style.transform = 'scaleX(' + share + ')';
+    backBtn.hidden = current === 0;
+    nextBtn.disabled = !stepValid(path[current]);
+    var last = current === path.length - 1 && !!need();
+    part('nextLabel').hidden = last;
+    part('showLabel').hidden = !last;
+  };
+
+  var goTo = function (i, focus) {
+    path[current].classList.remove('is-active');
+    path[i].dataset.dir = i >= current ? 'fwd' : 'back';
+    current = i;
+    path[i].classList.add('is-active');
+    syncChrome();
+    if (focus) {
+      var legend = path[i].querySelector('legend');
+      if (legend) legend.focus({ preventScroll: true });
+      if (app.getBoundingClientRect().top < 0) {
+        app.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+      }
+    }
+  };
+
+  var fillResult = function (animate) {
+    var s = readState();
+    var key = pickResult(s);
+    var block = app.querySelector('[data-result="' + key + '"]');
+    if (!block) return;
+    part('title').textContent = block.querySelector('[data-part="title"]').textContent.trim();
+    part('desc').textContent = block.querySelector('[data-part="desc"]').textContent.trim();
+    renderPrice(part('price'), priceParts(block, s), animate);
+
+    var items = [titleOf(form.querySelector('input[name="need"]:checked'))];
+    if (s.situation) items.push(titleOf(s.situation));
+    s.picks.forEach(function (i) { items.push(titleOf(i)); });
+    if (s.photosInput && s.photos > 0) items.push(titleOf(s.photosInput));
+    var list = part('list');
+    list.textContent = '';
+    items.forEach(function (text, idx) {
+      var li = document.createElement('li');
+      li.textContent = text;
+      li.style.setProperty('--i', idx);
+      list.appendChild(li);
+    });
+
+    var line = photoLine(s, key);
+    part('photo').textContent = line;
+    part('photo').hidden = !line;
+    part('note').hidden = key === 'unsure';   // nothing to estimate yet
+  };
+
+  var showResult = function () {
+    showingResult = true;
+    app.classList.add('is-result');
+    fillResult(true);
+    form.hidden = true;
+    nav.hidden = true;
+    result.hidden = false;
+    syncChrome();
+    if (app.getBoundingClientRect().top < 0) {
+      app.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    }
+    result.focus({ preventScroll: true });
+  };
+
+  var markChecked = function () {
+    form.querySelectorAll('input').forEach(function (i) {
+      i.closest('label').classList.toggle('is-checked', i.checked);
+    });
+  };
+
+  var restart = function () {
+    form.reset();
+    markChecked();
+    allSteps.forEach(function (step) { step.classList.remove('is-active'); });
+    current = 0;
+    buildPath();
+    showingResult = false;
+    app.classList.remove('is-result');
+    result.hidden = true;
+    form.hidden = false;
+    nav.hidden = false;
+    goTo(0, true);
+  };
+
+  var next = function () {
+    if (!stepValid(path[current])) return;
+    if (current < path.length - 1) goTo(current + 1, true);
+    else showResult();
+  };
+
+  var sendAsMessage = function () {
+    var s = readState();
+    var key = pickResult(s);
+    var block = app.querySelector('[data-result="' + key + '"]');
+    var field = document.getElementById('cf-message');
+    if (!block || !field) return;
+    var lines = [label('msgIntro'), '',
+      '- ' + label('msgNeed') + ': ' + titleOf(form.querySelector('input[name="need"]:checked'))];
+    if (s.situation) lines.push('- ' + label('msgSituation') + ': ' + titleOf(s.situation));
+    if (s.picks.length) lines.push('- ' + label('msgFeatures') + ': ' + s.picks.map(titleOf).join(', '));
+    if (s.photosInput) lines.push('- ' + label('msgPhotos') + ': ' + (s.photos > 0 ? titleOf(s.photosInput) : label('photosNone')));
+    lines.push('- ' + label('msgResult') + ': ' + block.querySelector('[data-part="title"]').textContent.trim() +
+      ' (' + partsToText(priceParts(block, s)) + ')');
+    field.value = lines.join('\n');
+    var contact = document.getElementById('contact');
+    if (contact) contact.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    var name = document.getElementById('cf-name');
+    if (name) name.focus({ preventScroll: true });
+  };
+
+  form.addEventListener('pointerdown', function () { lastPointer = Date.now(); });
+
+  form.addEventListener('change', function (e) {
+    var input = e.target;
+    if (input.name === 'need') {
+      // New direction: answers from another path no longer apply.
+      allSteps.slice(1).forEach(function (step) {
+        step.querySelectorAll('input').forEach(function (i) { i.checked = false; });
+      });
+      buildPath();
+    }
+    markChecked();
+    syncChrome();
+    // Single-choice questions move on by themselves after a click or tap.
+    // Keyboard users (arrow keys) keep control and use "Weiter".
+    if (input.type === 'radio' && Date.now() - lastPointer < 800) {
+      var stepAtClick = current;
+      setTimeout(function () { if (current === stepAtClick && !showingResult) next(); }, 320);
+    }
+  });
+
+  form.addEventListener('submit', function (e) { e.preventDefault(); next(); });
+  nextBtn.addEventListener('click', next);
+  backBtn.addEventListener('click', function () { if (current > 0) goTo(current - 1, true); });
+  app.querySelector('[data-check-action="restart"]').addEventListener('click', restart);
+  app.querySelector('[data-check-action="message"]').addEventListener('click', sendAsMessage);
+
+  // Language switch: i18n.js swaps the static texts first, then the
+  // generated ones (progress, result) are rebuilt in the new language.
+  document.querySelectorAll('.lang-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      setTimeout(function () {
+        syncChrome();
+        if (showingResult) fillResult(false);
+      }, 0);
+    });
+  });
+
+  syncChrome();
+}
+
 markFooterReveal();
 initNavToggle();
 initNavIndicator();
@@ -502,3 +779,4 @@ initHeadingDecode();
 initCardSpotlight();
 initProcessLine();
 initServiceCarousel();
+initNeedsCheck();

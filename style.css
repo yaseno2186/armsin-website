@@ -1690,6 +1690,688 @@ img { max-width: 100%; display: block; }
   margin-top: var(--space-6);
 }
 
+/* ---------- Needs check / price estimate (homepage) ----------
+   A short survey in an app window. The first question uses big picture
+   cards, the follow-ups depend on that answer, and the price appears only
+   on the result. Logic in site.js (initNeedsCheck), texts in index.html. */
+.needs-check {
+  position: relative;
+  padding: var(--space-12) 0;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+@media (max-width: 600px) {
+  .needs-check { padding: var(--space-8) 0; }
+}
+
+/* Faint dot grid behind the panel, fading out towards the edges */
+.needs-check::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(var(--border-default) 1px, transparent 1.3px);
+  background-size: 22px 22px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 60%, #000 30%, transparent 78%);
+          mask-image: radial-gradient(ellipse 70% 60% at 50% 60%, #000 30%, transparent 78%);
+}
+
+.check-app [hidden] { display: none !important; }
+
+.check-app {
+  max-width: 1040px;
+  margin: 0 auto;
+  background: var(--surface);
+  border: 1px solid var(--border-default);
+  border-radius: calc(var(--radius) + 4px);
+  box-shadow: 0 30px 70px var(--shadow-lift), 0 0 0 1px var(--accent-glow);
+  overflow: hidden;
+}
+
+.check-bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 12px 18px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border-subtle);
+  font-family: var(--font-head);
+  font-size: 0.76rem;
+  color: var(--text-dim);
+}
+
+.check-bar-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--border-strong);
+}
+.check-bar-dot:first-child { background: var(--amber); }
+.check-bar-dot:nth-child(3) { background: var(--accent); }
+.check-bar-title { margin-left: 10px; }
+
+@media (max-width: 600px) {
+  .check-bar-title { display: none; }
+}
+
+.check-main {
+  padding: var(--space-4) var(--space-6) var(--space-3);
+}
+
+@media (max-width: 760px) {
+  .check-main { padding: var(--space-3) var(--space-2) var(--space-2); }
+}
+
+/* Progress: thin bar with "Schritt x von n" */
+.check-progress {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: var(--space-6);
+}
+
+.check-progress-track {
+  flex: 1;
+  height: 6px;
+  border-radius: 6px;
+  background: var(--border-subtle);
+  overflow: hidden;
+}
+
+.check-progress-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent-dark), var(--accent));
+  transform-origin: left center;
+  transform: scaleX(0.2);
+  transition: transform 520ms var(--ease-out);
+}
+
+.check-progress-label {
+  flex: none;
+  min-width: 9ch;
+  text-align: right;
+  font-family: var(--font-head);
+  font-size: 0.78rem;
+  color: var(--text-dim);
+}
+
+@media (max-width: 600px) {
+  .check-progress { margin-bottom: var(--space-4); }
+}
+
+/* Steps */
+.check-step {
+  display: none;
+  border: 0;
+  min-width: 0;
+}
+
+.check-step.is-active {
+  display: block;
+  animation: check-in 420ms var(--ease-out);
+}
+.check-step.is-active[data-dir="back"] { animation-name: check-in-back; }
+
+@keyframes check-in {
+  from { opacity: 0; transform: translateX(16px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes check-in-back {
+  from { opacity: 0; transform: translateX(-16px); }
+  to { opacity: 1; transform: none; }
+}
+
+.check-step legend {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin-bottom: 6px;
+  text-align: center;
+  font-family: var(--font-head);
+  font-size: clamp(1.35rem, 2.6vw, 1.8rem);
+  font-weight: 600;
+  color: var(--text);
+  text-wrap: balance;
+}
+.check-step legend:focus { outline: none; }
+
+.check-hint {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.95rem;
+  margin-bottom: var(--space-4);
+}
+
+/* First question: big picture cards */
+.check-cards {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+}
+
+@media (max-width: 900px) {
+  .check-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 600px) {
+  .check-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .check-cards .check-card:last-child { grid-column: 1 / -1; }
+}
+
+.check-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  padding: 28px 14px 22px;
+  border-radius: 14px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-default);
+  cursor: pointer;
+  -webkit-user-select: none;
+          user-select: none;
+  transition: border-color var(--duration-base) ease, background-color var(--duration-base) ease,
+              box-shadow var(--duration-base) ease, transform var(--duration-lift) var(--ease-out);
+}
+
+@media (max-width: 600px) {
+  .check-card { padding: 20px 10px 16px; }
+}
+
+.check-ill {
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  margin-bottom: 10px;
+  border-radius: 24px;
+  background: radial-gradient(circle at 50% 40%, var(--accent-wash), transparent 70%);
+  transition: transform var(--duration-lift) var(--ease-out);
+}
+
+@media (max-width: 600px) {
+  .check-ill { width: 64px; height: 64px; margin-bottom: 6px; }
+  .check-ill svg { width: 48px; height: 48px; }
+}
+
+.check-ill svg {
+  width: 68px;
+  height: 68px;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.check-ill .ill-fill { fill: var(--accent-wash); }
+.check-ill .ill-amber { stroke: var(--amber); }
+.check-ill .ill-amber-fill { stroke: var(--amber); fill: var(--amber-wash); }
+
+.check-card-title {
+  font-family: var(--font-head);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.check-card-desc {
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--text-dim);
+}
+
+.check-card .check-option-mark {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity var(--duration-base) ease, transform var(--duration-lift) var(--ease-out),
+              background-color var(--duration-base) ease, border-color var(--duration-base) ease;
+}
+
+/* Follow-up questions: list tiles */
+.check-group-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: var(--space-3) 0 10px;
+  font-family: var(--font-head);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.check-hint + .check-group-label { margin-top: 0; }
+.check-group-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-subtle);
+}
+
+.check-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+@media (max-width: 600px) {
+  .check-options { grid-template-columns: 1fr; gap: 10px; }
+}
+
+.check-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-default);
+  cursor: pointer;
+  -webkit-user-select: none;
+          user-select: none;
+  transition: border-color var(--duration-base) ease, background-color var(--duration-base) ease,
+              box-shadow var(--duration-base) ease, transform var(--duration-lift) var(--ease-out);
+}
+
+/* Shared: real radio/checkbox inside the label, visually hidden */
+.check-option input,
+.check-card input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .check-option:hover,
+  .check-card:hover {
+    border-color: var(--accent-ring);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px var(--shadow-soft);
+  }
+  .check-card:hover .check-ill { transform: scale(1.06); }
+}
+
+.check-option:active,
+.check-card:active { transform: scale(0.985); }
+
+.check-option.is-checked,
+.check-card.is-checked {
+  border-color: var(--accent);
+  background: var(--accent-wash);
+  box-shadow: 0 0 0 3px var(--accent-wash);
+}
+
+.check-card.is-checked .check-option-mark { opacity: 1; transform: none; }
+
+.check-option:has(input:focus-visible),
+.check-card:has(input:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.check-option-icon {
+  flex: 0 0 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--accent-wash);
+  color: var(--accent);
+  transition: background-color var(--duration-base) ease, color var(--duration-base) ease;
+}
+
+.check-option-icon svg {
+  width: 21px;
+  height: 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.check-option-count {
+  font-family: var(--font-head);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.check-option.is-checked .check-option-icon {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.check-option-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.check-option-title {
+  font-size: 0.97rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.check-option-desc {
+  font-size: 0.84rem;
+  line-height: 1.4;
+  color: var(--text-dim);
+}
+
+.check-option-mark {
+  flex: 0 0 22px;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-strong);
+  transition: background-color var(--duration-base) ease, border-color var(--duration-base) ease;
+}
+.check-option input[type="checkbox"] ~ .check-option-mark { border-radius: 7px; }
+
+.check-option-mark svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: var(--on-accent);
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  transition: stroke-dashoffset 320ms var(--ease-out) 60ms;
+}
+
+.is-checked > .check-option-mark {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.is-checked > .check-option-mark svg { stroke-dashoffset: 0; }
+
+/* Back / next */
+.check-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.check-next-btn { margin-left: auto; }
+.check-nav .btn { padding: 12px 22px; }
+.check-nav .btn[disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.check-foot {
+  margin-top: var(--space-3);
+  text-align: center;
+  font-size: 0.76rem;
+  color: var(--text-dim);
+}
+
+/* Result */
+.check-result {
+  text-align: center;
+  animation: check-in 480ms var(--ease-out);
+}
+.check-result:focus { outline: none; }
+
+.check-result-kicker {
+  display: inline-flex;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--accent-wash);
+  border: 1px solid var(--accent-ring);
+  font-family: var(--font-head);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.check-result-title {
+  margin: 16px 0 4px;
+  font-family: var(--font-head);
+  font-size: clamp(1.35rem, 2.6vw, 1.85rem);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--text);
+  text-wrap: balance;
+}
+
+.check-result-price {
+  font-family: var(--font-head);
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 36px var(--accent-glow-strong);
+  animation: check-pop 600ms var(--ease-out) 120ms both;
+}
+
+@keyframes check-pop {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: none; }
+}
+
+.check-result-desc {
+  max-width: 60ch;
+  margin: 14px auto var(--space-4);
+  line-height: 1.65;
+  color: var(--text-dim);
+}
+
+.check-result-label {
+  margin-bottom: 12px;
+  font-family: var(--font-head);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+.check-result-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.check-result-list li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px 6px 8px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-subtle);
+  font-size: 0.88rem;
+  color: var(--text);
+  animation: check-li 380ms var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * 60ms + 250ms);
+}
+
+.check-result-list li::before {
+  content: '';
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent-wash) no-repeat center / 11px
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2339D97A' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E");
+}
+
+@keyframes check-li {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.check-result-photo {
+  display: inline-block;
+  margin-top: var(--space-3);
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: var(--amber-wash);
+  border: 1px solid var(--amber-glow);
+  font-size: 0.92rem;
+  color: var(--text);
+}
+
+.check-result-note {
+  max-width: 60ch;
+  margin: var(--space-3) auto 0;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+}
+
+.check-result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: var(--space-3);
+}
+
+.check-result-actions .btn { text-align: center; }
+
+@media (max-width: 600px) {
+  .check-result-actions .btn { width: 100%; padding: 14px 20px; }
+}
+
+.check-next {
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.check-next-title {
+  margin-bottom: var(--space-2);
+  font-family: var(--font-head);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.check-next-steps {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 700px) {
+  .check-next-steps { grid-template-columns: 1fr; text-align: left; }
+}
+
+.check-next-steps li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--text-dim);
+}
+
+@media (max-width: 700px) {
+  .check-next-steps li { flex-direction: row; align-items: flex-start; }
+}
+
+.check-next-num {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--accent-wash);
+  color: var(--accent);
+  font-family: var(--font-head);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.check-restart {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--space-4);
+  padding: 4px 0;
+  background: none;
+  border: 0;
+  font: inherit;
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: color var(--duration-base) ease;
+}
+.check-restart:hover { color: var(--accent); }
+.check-restart:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .check-step.is-active,
+  .check-result,
+  .check-result-price,
+  .check-result-list li { animation: none; }
+  .check-option,
+  .check-card,
+  .check-ill,
+  .check-option-mark,
+  .check-option-mark svg,
+  .check-progress-track span { transition: none; }
+  .check-option:hover,
+  .check-card:hover,
+  .check-option:active,
+  .check-card:active,
+  .check-card:hover .check-ill { transform: none; }
+}
+
+/* Light theme */
+html[data-theme="light"] .check-app {
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow: var(--card-shadow-hover);
+}
+html[data-theme="light"] .check-option,
+html[data-theme="light"] .check-card,
+html[data-theme="light"] .check-result-list li { background: var(--bg); }
+html[data-theme="light"] .check-option.is-checked,
+html[data-theme="light"] .check-card.is-checked { background: var(--accent-wash); }
+html[data-theme="light"] .check-result-price { text-shadow: none; }
+html[data-theme="light"] .check-result-list li::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2315803D' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E");
+}
+
 /* ---------- Booking ---------- */
 .booking {
   position: relative;
