@@ -488,6 +488,325 @@ function initServiceCarousel() {
   else track.classList.add('is-user');
 }
 
+// Homepage needs check: three questions, a live estimate and a result
+// with a price range. Texts and prices live in index.html (data-tier on
+// the options, data-result blocks for the outcomes); this only decides
+// which outcome fits and fills it in.
+function initNeedsCheck() {
+  var app = document.getElementById('check-app');
+  if (!app) return;
+  var form = app.querySelector('.check-form');
+  var steps = app.querySelectorAll('.check-step');
+  var progressSteps = app.querySelectorAll('.check-progress-step');
+  var progressBar = app.querySelector('.check-progress-track span');
+  var nav = app.querySelector('.check-nav');
+  var backBtn = app.querySelector('[data-check-action="back"]');
+  var nextBtn = app.querySelector('[data-check-action="next"]');
+  var result = app.querySelector('.check-result');
+  var nextSteps = app.querySelector('.check-next');
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var current = 0;
+  var showingResult = false;
+  var TIER_ORDER = ['unsure', 'system', 'app', 'advanced', 'basic', 'photo'];
+
+  var part = function (name) { return app.querySelector('[data-check="' + name + '"]'); };
+  var label = function (name) {
+    var el = app.querySelector('[data-label="' + name + '"]');
+    return el ? el.textContent.trim() : '';
+  };
+  var fmt = function (n) {
+    return new Intl.NumberFormat(document.documentElement.lang === 'en' ? 'en-US' : 'de-DE').format(n);
+  };
+  var optionTitle = function (input) {
+    var t = input.closest('.check-option').querySelector('.check-option-title');
+    return t ? t.textContent.trim() : '';
+  };
+
+  var readState = function () {
+    var photos = form.querySelector('input[name="photos"]:checked');
+    return {
+      situation: form.querySelector('input[name="situation"]:checked'),
+      features: Array.prototype.slice.call(form.querySelectorAll('input[name="features"]:checked')),
+      photos: photos ? parseInt(photos.value, 10) : null,
+      photosInput: photos
+    };
+  };
+
+  var pickResult = function (s) {
+    var tiers = s.features.map(function (f) { return f.dataset.tier; });
+    for (var i = 0; i < TIER_ORDER.length; i++) {
+      var tier = TIER_ORDER[i];
+      if (tiers.indexOf(tier) === -1) continue;
+      // A working website that only needs the basics doesn't need a new one.
+      if (tier === 'basic' && s.situation && s.situation.value === 'good') return 'none';
+      return tier;
+    }
+    return null;
+  };
+
+  // Price as a list of pieces; numbers stay numbers so they can count up.
+  var priceParts = function (block, s) {
+    var mode = block.dataset.mode;
+    if (mode === 'range') return [+block.dataset.min, ' – ', +block.dataset.max, ' €'];
+    if (mode === 'from') return [label('from') + ' ', +block.dataset.min, ' €'];
+    if (mode === 'custom') return [label('custom')];
+    if (mode === 'photo') return photoParts(s.photos || 10);
+    return [0, ' €'];
+  };
+  var photoParts = function (n) {
+    var parts = [n / 10 * 12, ' €'];
+    if (n >= 30) parts.unshift(label('from') + ' ');
+    return parts;
+  };
+  var partsToText = function (parts) {
+    return parts.map(function (p) { return typeof p === 'number' ? fmt(p) : p; }).join('');
+  };
+
+  var renderPrice = function (el, parts, animate) {
+    el.textContent = '';
+    parts.forEach(function (p) {
+      if (typeof p !== 'number') { el.appendChild(document.createTextNode(p)); return; }
+      var span = document.createElement('span');
+      span.className = 'check-num';
+      span.textContent = fmt(animate && !reduceMotion ? 0 : p);
+      el.appendChild(span);
+      if (!animate || reduceMotion || p === 0) return;
+      var start = null;
+      var DURATION = 750;
+      var tick = function (now) {
+        if (start === null) start = now;
+        var t = Math.min(1, (now - start) / DURATION);
+        var eased = 1 - Math.pow(1 - t, 3);
+        span.textContent = fmt(Math.round(p * eased));
+        if (t < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+  };
+
+  var photoLine = function (s, key) {
+    if (!s.photos || key === 'photo') return '';
+    var line = label('photoLine')
+      .replace('{price}', partsToText(photoParts(s.photos)))
+      .replace('{n}', s.photos >= 30 ? '30+' : String(s.photos));
+    if (key === 'basic' || key === 'advanced') line += ' ' + label('photoBundle');
+    return line;
+  };
+
+  var updateLive = function () {
+    var s = readState();
+    var key = pickResult(s);
+    var block = key && app.querySelector('[data-result="' + key + '"]');
+    var tierEl = part('liveTier');
+    var priceEl = part('livePrice');
+    var photoEl = part('livePhoto');
+    part('liveHint').hidden = !!block;
+    if (block) {
+      var newTier = block.querySelector('[data-part="title"]').textContent.trim();
+      var parts = priceParts(block, s);
+      var changed = priceEl.dataset.key !== key || priceEl.dataset.photos !== String(s.photos);
+      tierEl.textContent = newTier;
+      renderPrice(priceEl, parts, false);
+      priceEl.dataset.key = key;
+      priceEl.dataset.photos = String(s.photos);
+      if (changed && !reduceMotion) {
+        priceEl.classList.remove('is-bump');
+        void priceEl.offsetWidth;
+        priceEl.classList.add('is-bump');
+      }
+    } else {
+      tierEl.textContent = '–';
+      priceEl.textContent = '– €';
+      delete priceEl.dataset.key;
+    }
+    tierEl.hidden = !block;
+    var line = block ? photoLine(s, key) : '';
+    photoEl.textContent = line;
+    photoEl.hidden = !line;
+
+    part('mini').hidden = !block || showingResult;
+    if (block) part('miniPrice').textContent = partsToText(priceParts(block, s));
+
+    var chips = part('liveChips');
+    chips.textContent = '';
+    s.features.forEach(function (f) {
+      var li = document.createElement('li');
+      li.textContent = optionTitle(f);
+      chips.appendChild(li);
+    });
+  };
+
+  var isValid = function (i) {
+    var s = readState();
+    if (i === 0) return !!s.situation;
+    if (i === 1) return s.features.length > 0;
+    return s.photos !== null;
+  };
+
+  var syncChrome = function () {
+    var pos = showingResult ? steps.length : current;
+    progressSteps.forEach(function (li, idx) {
+      li.classList.toggle('is-current', idx === pos);
+      li.classList.toggle('is-done', idx < pos);
+    });
+    progressBar.style.transform = 'scaleX(' + ((pos + 1) / (steps.length + 1)) + ')';
+    backBtn.hidden = current === 0;
+    nextBtn.disabled = !isValid(current);
+    var last = current === steps.length - 1;
+    nextBtn.querySelector('[data-i18n="index.check.next"]').hidden = last;
+    nextBtn.querySelector('[data-i18n="index.check.show"]').hidden = !last;
+  };
+
+  var goTo = function (i) {
+    steps[current].classList.remove('is-active');
+    steps[i].dataset.dir = i > current ? 'fwd' : 'back';
+    current = i;
+    steps[i].classList.add('is-active');
+    syncChrome();
+    var legend = steps[i].querySelector('legend');
+    if (legend) legend.focus({ preventScroll: true });
+  };
+
+  var fillResult = function (animate) {
+    var s = readState();
+    var key = pickResult(s);
+    var block = app.querySelector('[data-result="' + key + '"]');
+    if (!block) return;
+    part('title').textContent = block.querySelector('[data-part="title"]').textContent.trim();
+    part('desc').textContent = block.querySelector('[data-part="desc"]').textContent.trim();
+    renderPrice(part('price'), priceParts(block, s), animate);
+
+    var list = part('list');
+    list.textContent = '';
+    var items = [];
+    if (s.situation) items.push(optionTitle(s.situation));
+    s.features.forEach(function (f) { items.push(optionTitle(f)); });
+    if (s.photosInput && s.photos > 0) items.push(optionTitle(s.photosInput));
+    items.forEach(function (text, idx) {
+      var li = document.createElement('li');
+      li.textContent = text;
+      li.style.setProperty('--i', idx);
+      list.appendChild(li);
+    });
+
+    var line = photoLine(s, key);
+    part('photo').textContent = line;
+    part('photo').hidden = !line;
+  };
+
+  var showResult = function () {
+    showingResult = true;
+    app.classList.add('is-result');
+    fillResult(true);
+    form.hidden = true;
+    nav.hidden = true;
+    part('mini').hidden = true;
+    result.hidden = false;
+    nextSteps.hidden = false;
+    syncChrome();
+    if (app.getBoundingClientRect().top < 0) {
+      app.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    }
+    result.focus({ preventScroll: true });
+  };
+
+  var restart = function () {
+    form.reset();
+    form.querySelectorAll('.check-option').forEach(function (o) { o.classList.remove('is-checked'); });
+    syncPhotoLock();
+    showingResult = false;
+    app.classList.remove('is-result');
+    result.hidden = true;
+    nextSteps.hidden = true;
+    form.hidden = false;
+    nav.hidden = false;
+    goTo(0);
+    updateLive();
+  };
+
+  var sendAsMessage = function () {
+    var s = readState();
+    var key = pickResult(s);
+    var block = app.querySelector('[data-result="' + key + '"]');
+    var field = document.getElementById('cf-message');
+    if (!block || !field) return;
+    var photos = s.photos > 0 ? optionTitle(s.photosInput) : label('photosNone');
+    var lines = [
+      label('msgIntro'),
+      '',
+      '- ' + label('msgSituation') + ': ' + (s.situation ? optionTitle(s.situation) : '–'),
+      '- ' + label('msgFeatures') + ': ' + s.features.map(optionTitle).join(', '),
+      '- ' + label('msgPhotos') + ': ' + photos,
+      '- ' + label('msgResult') + ': ' + block.querySelector('[data-part="title"]').textContent.trim() +
+        ' (' + partsToText(priceParts(block, s)) + ')'
+    ];
+    field.value = lines.join('\n');
+    var contact = document.getElementById('contact');
+    if (contact) contact.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    var name = document.getElementById('cf-name');
+    if (name) name.focus({ preventScroll: true });
+  };
+
+  // "Nur Fotos" without any photos makes no sense: lock "Keine Fotos".
+  var syncPhotoLock = function () {
+    var photoOnly = form.querySelector('input[name="features"][data-tier="photo"]');
+    var noPhotos = form.querySelector('input[name="photos"][value="0"]');
+    var locked = photoOnly.checked;
+    noPhotos.disabled = locked;
+    noPhotos.closest('.check-option').classList.toggle('is-disabled', locked);
+    if (locked && noPhotos.checked) {
+      noPhotos.checked = false;
+      noPhotos.closest('.check-option').classList.remove('is-checked');
+    }
+  };
+
+  form.addEventListener('change', function (e) {
+    var input = e.target;
+    if (input.name === 'features' && input.checked) {
+      // "Nur Fotos" and "Weiß ich noch nicht" can't be combined with anything.
+      form.querySelectorAll('input[name="features"]').forEach(function (other) {
+        if (other === input) return;
+        if (input.hasAttribute('data-exclusive') || other.hasAttribute('data-exclusive')) other.checked = false;
+      });
+    }
+    form.querySelectorAll('.check-option input').forEach(function (i) {
+      i.closest('.check-option').classList.toggle('is-checked', i.checked);
+    });
+    syncPhotoLock();
+    syncChrome();
+    updateLive();
+  });
+
+  // Enter on a step moves on instead of submitting the form.
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!nextBtn.disabled) nextBtn.click();
+  });
+
+  nextBtn.addEventListener('click', function () {
+    if (!isValid(current)) return;
+    if (current < steps.length - 1) goTo(current + 1);
+    else showResult();
+  });
+  backBtn.addEventListener('click', function () { if (current > 0) goTo(current - 1); });
+  app.querySelector('[data-check-action="restart"]').addEventListener('click', restart);
+  app.querySelector('[data-check-action="message"]').addEventListener('click', sendAsMessage);
+
+  // Language switch: i18n.js swaps the static texts first, then we rebuild
+  // the generated ones (prices, chips, result) in the new language.
+  document.querySelectorAll('.lang-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      setTimeout(function () {
+        updateLive();
+        if (showingResult) fillResult(false);
+      }, 0);
+    });
+  });
+
+  syncChrome();
+  updateLive();
+}
+
 markFooterReveal();
 initNavToggle();
 initNavIndicator();
@@ -502,3 +821,4 @@ initHeadingDecode();
 initCardSpotlight();
 initProcessLine();
 initServiceCarousel();
+initNeedsCheck();

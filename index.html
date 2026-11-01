@@ -22,7 +22,7 @@
   "telephone": "+49 176 62625699",
   "email": "yaseno2186ss@gmail.com",
   "founder": "Yass Almardoud",
-  "sameAs": ["https://www.linkedin.com/company/armsin-digital-media/", "https://www.instagram.com/armsin_digital_media/"],
+  "sameAs": ["https://www.linkedin.com/company/armsin-digital-media/", "https://www.instagram.com/armsin_digital_media/", "https://www.threads.com/@armsin_digital_media"],
   "address": {"@type": "PostalAddress", "addressLocality": "Freiberg", "postalCode": "09599", "addressRegion": "Sachsen", "addressCountry": "DE"},
   "areaServed": [
     {"@type": "City", "name": "Freiberg"},
@@ -43,7 +43,7 @@
       "name": "Was kostet eine Website für meinen Betrieb?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Das hängt davon ab, was Ihre Seite können muss. Ein Café mit Speisekarte braucht etwas anderes als ein Handwerksbetrieb mit Anfrageformular. Deshalb steht am Anfang ein kostenloser Check. Danach bekommen Sie ein schriftliches Festangebot, und erst wenn Sie zustimmen, geht es los."
+        "text": "Als Richtwert: Eine einfache Website kostet 100 bis 499 €, eine Website mit Buchung, Reservierung oder Animationen 500 bis 999 €, eine eigene App ab 1.200 €. Systeme und Automatisierung kalkuliere ich nach Umfang, Fotos kosten 12 € pro 10 Bilder. Ihre persönliche Spanne zeigt der Bedarfs-Check oben. Den verbindlichen Festpreis bekommen Sie schriftlich nach dem kostenlosen Gespräch, und erst wenn Sie zustimmen, geht es los."
       }
     },
     {
@@ -92,7 +92,7 @@
 <link rel="canonical" href="https://armsin.de/">
 <link rel="preload" href="assets/fonts/inter-var.woff" as="font" type="font/woff" crossorigin>
 <link rel="preload" href="assets/fonts/jetbrains-mono-var.woff" as="font" type="font/woff" crossorigin>
-<link rel="stylesheet" href="style.css?v=19">
+<link rel="stylesheet" href="style.css?v=20">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="48x48" href="assets/logo/favicon-48.png">
 <link rel="icon" type="image/png" sizes="192x192" href="assets/logo/favicon-192.png">
@@ -117,6 +117,7 @@
       <div class="nav-links">
         <span class="nav-indicator" aria-hidden="true"></span>
         <a href="ablauf.html" data-i18n="nav.ablauf">Ablauf</a>
+        <a href="#preis-check" data-i18n="nav.preise">Preise</a>
         <a href="#termin" data-i18n="nav.termin">Termin buchen</a>
         <a href="studio.html" data-i18n="nav.studio">Studio</a>
         <a href="blog.html" data-i18n="nav.blog">Blog</a>
@@ -296,6 +297,341 @@
     </div>
   </section>
 
+  <!-- ================= NEEDS CHECK & PRICE ESTIMATE =================
+       All texts and prices live here in the HTML. To change a price, edit
+       data-min / data-max on the matching data-result block below.
+       assets/js/site.js (initNeedsCheck) only picks the block that fits. -->
+  <section class="needs-check" id="preis-check">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <h2 data-i18n="index.check.h2">Was braucht Ihr Betrieb wirklich?</h2>
+        <p data-i18n="index.check.lead">Drei kurze Fragen, eine ehrliche Empfehlung und eine Preisspanne. Dauert keine Minute.</p>
+      </div>
+
+      <div class="check-app" id="check-app" data-reveal>
+        <div class="check-bar" aria-hidden="true">
+          <span class="check-bar-dot"></span><span class="check-bar-dot"></span><span class="check-bar-dot"></span>
+          <span class="check-bar-title">~/armsin/bedarfs-check</span>
+          <span class="check-bar-meta" data-i18n="index.check.meta">3 Fragen · 1 Minute</span>
+        </div>
+
+        <div class="check-body">
+          <div class="check-main">
+
+            <div class="check-progress">
+              <ol class="check-progress-steps">
+                <li class="check-progress-step is-current"><span class="check-progress-num">1</span><span class="check-progress-label" data-i18n="index.check.p1">Ausgangslage</span></li>
+                <li class="check-progress-step"><span class="check-progress-num">2</span><span class="check-progress-label" data-i18n="index.check.p2">Funktionen</span></li>
+                <li class="check-progress-step"><span class="check-progress-num">3</span><span class="check-progress-label" data-i18n="index.check.p3">Fotos</span></li>
+                <li class="check-progress-step"><span class="check-progress-num">4</span><span class="check-progress-label" data-i18n="index.check.p4">Ergebnis</span></li>
+              </ol>
+              <div class="check-progress-track" aria-hidden="true"><span></span></div>
+            </div>
+
+            <form class="check-form" novalidate>
+
+              <!-- Step 1 -->
+              <fieldset class="check-step is-active">
+                <legend tabindex="-1" data-i18n="index.check.s1.q">Wo steht Ihr Betrieb gerade?</legend>
+                <p class="check-hint" data-i18n="index.check.s1.hint">Eine Antwort wählen.</p>
+                <div class="check-options">
+                  <label class="check-option">
+                    <input type="radio" name="situation" value="none">
+                    <span class="check-option-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8.5v7M8.5 12h7"/></svg></span>
+                    <span class="check-option-text">
+                      <span class="check-option-title" data-i18n="index.check.s1.none.t">Noch keine Website</span>
+                      <span class="check-option-desc" data-i18n="index.check.s1.none.d">Ich starte bei null.</span>
+                    </span>
+                    <span class="check-option-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12.5l4 4 8-8.5"/></svg></span>
+                  </label>
+                  <label class="check-option">
+                    <input type="radio" name="situation" value="old">
+                    <span class="check-option-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19.5 11A7.5 7.5 0 0 0 5.6 7.4M4.5 4v3.9h3.9"/><path d="M4.5 13a7.5 7.5 0 0 0 13.9 3.6M19.5 20v-3.9h-3.9"/></svg></span>
+                    <span class="check-option-text">
+                      <span class="check-option-title" data-i18n="index.check.s1.old.t">Website ist veraltet</span>
+                      <span class="check-option-desc" data-i18n="index.check.s1.old.d">Sieht alt aus oder läuft schlecht auf dem Handy.</span>
+                    </span>
+                    <span class="check-option-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12.5l4 4 8-8.5"/></svg></span>
+                  </label>
+                  <label class="check-option">
+                    <input type="radio" name="situation" value="good">
+                    <span class="check-option-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M8.3 12.4l2.6 2.6 5-5.3"/></svg></span>
+                    <span class="check-option-text">
+                      <span class="check-option-title" data-i18n="index.check.s1.good.t">Website funktioniert gut</span>
+                      <span class="check-option-desc" data-i18n="index.check.s1.good.d">Ich will wissen, ob sich mehr lohnt.</span>
+                    </span>
+                    <span class="check-option-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12.5l4 4 8-8.5"/></svg></span>
+                  </label>
+                </div>
+              </fieldset>
+
+              <!-- Step 2: data-tier decides the result (basic < advanced < app < system) -->
+              <fieldset class="check-step">
+                <legend tabindex="-1" data-i18n="index.check.s2.q">Was soll Ihre Lösung können?</legend>
+                <p class="check-hint" data-i18n="index.check.s2.hint">Mehrere Antworten möglich.</p>
+
+                <p class="check-group-label" data-i18n="index.check.g.basic">Website · Basis</p>
+                <div class="check-options">
+                  <label class="check-option">
+                    <input type="checkbox" name="features" value="info" data-tier="basic">
+                    <span class="check-option-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4.5 9.5L6 4.5h12l1.5 5"/><path d="M4.5 9.5h15V20h-15z"/><path d="M10 20v-5h4v5"/></svg></span>
+                    <span class="check-option-text">
+                      <span class="check-option-title" data-i18n="index.check.f.info.t">Angebot, Öffnungszeiten &amp; Kontakt</span>
+                      <span class="check-option-desc" data-i18n="index.check.f.info.d">Damit Kunden Sie finden und erreichen.</span>
+                    </span>
+                    <span class="check-option-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12.5l4 4 8-8.5"/></svg></span>
+                  </label>
+                  <label class="check-option">
+                    <input type="checkbox" name="features" value="gallery" data-tier="basic">
+                    <span class="check-option-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.7"/><path d="M20.5 16l-5-5-8.5 8.5"/></svg></span>
+                    <span class="check-option-text">
+                      <span class="check-option-title" data-i18n="index.check.f.gallery.t">Bilder, Speisekarte oder Referenzen</span>
+                      <span class="check-option-desc" data-i18n="index.check.f.gallery.d">Zeigen, was Sie können.</span>
+                    </span>
+                    <span class="check-option-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12.5l4 4 8-8.5"/></svg></span>
+                  </label>
+                  <label class="check-option">
+                    <input type="checkbox" name="features" value="form" data-tier="basic">
+                    <span class="check-option-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="13" rx="2.5"/><path d="M4.5 7.5l7.5 5.5 7.5-5.5"/></svg></span>
+                    <span class="check-option-text">
+                      <span class="check-option-title" data-i18n="index.check.f.form.t">Kontakt- oder Anfrageformular</span>
+                      <span class="check-option-desc" data-i18n="index.check.f.form.d">Anfragen direkt über die Website.</span>
+                    </span>
+                    <span class="check-option-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12.5l4 4 8-8.5"/></svg></span>
+                  </label>
+                </div>
+
+                <p class="check-group-label" data-i18n="index.check.g.advanced">Website · Mehr Funktionen</p>
+                <div class="check-options">
+                  <label class="check-option">
+                    <input type="checkbox" name="features" value="booking" data-tier="advanced">
+                    <span class="check-option-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M9.2 15.2l2 2 3.8-4"/></svg></span>
+                    <span class="check-option-text">
+                      <span class="check-option-title" data-i18n="index.check.f.booking.t">Online-Terminbuchung</span>
+                      <span class="check-option-desc" data-i18n="index.check.f.booking.d">Kunden buchen selbst, rund um die Uhr.</span>
+                    </span>
+                    <span class="check-option-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12.5l4 4 8-8.5"/></svg></span>
+                  </label>
+                  <label class="check-option">
+                    <input type="checkbox" name="features" value="reserve" data-tier="advanced">
+                    <span class="check-option-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3.5 7.5h17v3a1.6 1.6 0 0 0 0 3.2v3.3h-17v-3.3a1.6 1.6 0 0 0 0-3.2z"/><path d="M14.5 8v8.5" stroke-dasharray="1.6 2.2"/></svg></span>
+                    <span class="check-option-text">
+                      <span class="check-option-title" data-i18n="index.check.f.reserve.t">Reservierungen</span>
+                      <span class="check-option-desc" data-i18n="index.check.f.reserve.d">Tische, Räume oder Plätze online reservieren.</span>
+                    </span>
+                    <span class="check-option-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12.5l4 4 8-8.5"/></svg></span>
+                  </label>
+                  <label class="check-option">
+                    <input type="checkbox" name="features" value="shop" data-tier="advanced">
+                    <span class="check-option-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8.5h14l-1.1 11.5H6.1z"/><path d="M9 8.5V7a3 3 0 0 1 6 0v1.5"/></svg></span>
+                    <span class="check-option-text">
+                      <span class="check-option-title" data-i18n="index.check.f.shop.t">Online bestellen</span>
+                      <span class="check-option-desc" data-i18n="index.check.f.shop.d">Kleiner Shop oder Bestellung zum Abholen.</span>
+                    </span>
+                    <span class="check-option-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12.5l4 4 8-8.5"/></svg></span>
+                  </label>
+                  <label class="check-option">
+                    <input type="checkbox" name="features" value="motion" data-tier="advanced">
+                    <span class="check-option-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M11 3.5l1.7 4.4 4.4 1.7-4.4 1.7L11 15.7l-1.7-4.4-4.4-1.7 4.4-1.7z"/><path d="M18 14.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg></span>
+                    <span class="check-option-text">
+                      <span class="check-option-title" data-i18n="index.check.f.motion.t">Animationen &amp; besonderer Auftritt</span>
+                      <span class="check-option-desc" data-i18n="index.check.f.motion.d">Eine Seite, die im Kopf bleibt.</span>
+                    </span>
+                    <span class="check-option-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12.5l4 4 8-8.5"/></svg></span>
+                  </label>
+                </div>
+
+                <p class="check-group-label" data-i18n="index.check.g.app">App &amp; Systeme</p>
+                <div class="check-options">
+                  <label class="check-option">
+                    <input type="checkbox" name="features" value="app" data-tier="app">
+                    <span class="check-option-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.6"/><path d="M11 18.5h2"/></svg></span>
+                    <span class="check-option-text">
+                      <span class="check-option-title" data-i18n="index.check.f.app.t">Eigene App</span>
+                      <span class="check-option-desc" data-i18n="index.check.f.app.d">Mit Login, Kundenkonto oder für Ihr Team.</span>
+                    </span>
+                    <span class="check-option-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12.5l4 4 8-8.5"/></svg></span>
+                  </label>
+                  <label class="check-option">
+                    <input type="checkbox" name="features" value="auto" data-tier="system">
+                    <span class="check-option-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M13.2 3L5.5 13.4h5.6L10.2 21l7.8-10.4h-5.6z"/></svg></span>
+                    <span class="check-option-text">
+                      <span class="check-option-title" data-i18n="index.check.f.auto.t">Abläufe automatisieren</span>
+                      <span class="check-option-desc" data-i18n="index.check.f.auto.d">Bestätigungen, Erinnerungen, Kalender, Rechnungen.</span>
+                    </span>
+                    <span class="check-option-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12.5l4 4 8-8.5"/></svg></span>
+                  </label>
+                </div>
+
+                <p class="check-group-label" data-i18n="index.check.g.other">Oder</p>
+                <div class="check-options">
+                  <label class="check-option">
+                    <input type="checkbox" name="features" value="photo" data-tier="photo" data-exclusive>
+                    <span class="check-option-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8.5h3.2l1.6-2.5h6.4l1.6 2.5H20v11H4z"/><circle cx="12" cy="13.6" r="3.3"/></svg></span>
+                    <span class="check-option-text">
+                      <span class="check-option-title" data-i18n="index.check.f.photo.t">Nur Fotos</span>
+                      <span class="check-option-desc" data-i18n="index.check.f.photo.d">Produkt- oder Speisekartenbilder, keine Website.</span>
+                    </span>
+                    <span class="check-option-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12.5l4 4 8-8.5"/></svg></span>
+                  </label>
+                  <label class="check-option">
+                    <input type="checkbox" name="features" value="unsure" data-tier="unsure" data-exclusive>
+                    <span class="check-option-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M9.7 9.5a2.4 2.4 0 0 1 4.7.6c0 1.6-2.4 2.1-2.4 3.7"/><path d="M12 17h.01"/></svg></span>
+                    <span class="check-option-text">
+                      <span class="check-option-title" data-i18n="index.check.f.unsure.t">Weiß ich noch nicht</span>
+                      <span class="check-option-desc" data-i18n="index.check.f.unsure.d">Wir finden es gemeinsam heraus.</span>
+                    </span>
+                    <span class="check-option-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12.5l4 4 8-8.5"/></svg></span>
+                  </label>
+                </div>
+              </fieldset>
+
+              <!-- Step 3: value = number of images, 12 € per 10 -->
+              <fieldset class="check-step">
+                <legend tabindex="-1" data-i18n="index.check.s3.q">Brauchen Sie Fotos dazu?</legend>
+                <p class="check-hint" data-i18n="index.check.s3.hint">12 € pro 10 Bilder. Zusammen mit einer Website wird es günstiger.</p>
+                <div class="check-options check-options-photos">
+                  <label class="check-option">
+                    <input type="radio" name="photos" value="0">
+                    <span class="check-option-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><path d="M5 18.5l14-13"/></svg></span>
+                    <span class="check-option-text">
+                      <span class="check-option-title" data-i18n="index.check.s3.none.t">Keine Fotos nötig</span>
+                      <span class="check-option-desc" data-i18n="index.check.s3.none.d">Ich habe passende Bilder.</span>
+                    </span>
+                    <span class="check-option-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12.5l4 4 8-8.5"/></svg></span>
+                  </label>
+                  <label class="check-option">
+                    <input type="radio" name="photos" value="10">
+                    <span class="check-option-icon check-option-count" aria-hidden="true">10</span>
+                    <span class="check-option-text">
+                      <span class="check-option-title" data-i18n="index.check.s3.10.t">Ca. 10 Bilder</span>
+                      <span class="check-option-desc">12 €</span>
+                    </span>
+                    <span class="check-option-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12.5l4 4 8-8.5"/></svg></span>
+                  </label>
+                  <label class="check-option">
+                    <input type="radio" name="photos" value="20">
+                    <span class="check-option-icon check-option-count" aria-hidden="true">20</span>
+                    <span class="check-option-text">
+                      <span class="check-option-title" data-i18n="index.check.s3.20.t">Ca. 20 Bilder</span>
+                      <span class="check-option-desc">24 €</span>
+                    </span>
+                    <span class="check-option-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12.5l4 4 8-8.5"/></svg></span>
+                  </label>
+                  <label class="check-option">
+                    <input type="radio" name="photos" value="30">
+                    <span class="check-option-icon check-option-count" aria-hidden="true">30+</span>
+                    <span class="check-option-text">
+                      <span class="check-option-title" data-i18n="index.check.s3.30.t">30 Bilder oder mehr</span>
+                      <span class="check-option-desc" data-i18n="index.check.s3.30.d">ab 36 €</span>
+                    </span>
+                    <span class="check-option-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 12.5l4 4 8-8.5"/></svg></span>
+                  </label>
+                </div>
+              </fieldset>
+            </form>
+
+            <p class="check-mini" data-check="mini" hidden><span data-i18n="index.check.mini">Schätzung:</span> <strong data-check="miniPrice"></strong></p>
+
+            <div class="check-nav">
+              <button type="button" class="btn btn-ghost check-back" data-check-action="back" hidden>
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+                <span data-i18n="index.check.back">Zurück</span>
+              </button>
+              <button type="button" class="btn btn-primary check-next-btn" data-check-action="next" disabled>
+                <span data-i18n="index.check.next">Weiter</span>
+                <span data-i18n="index.check.show" hidden>Ergebnis anzeigen</span>
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+
+            <div class="check-result" tabindex="-1" hidden>
+              <p class="check-result-kicker" data-i18n="index.check.r.kicker">Ihre Empfehlung</p>
+              <h3 class="check-result-title" data-check="title"></h3>
+              <p class="check-result-price" data-check="price"></p>
+              <p class="check-result-desc" data-check="desc"></p>
+              <p class="check-result-label" data-i18n="index.check.r.selected">Ihre Auswahl</p>
+              <ul class="check-result-list" data-check="list"></ul>
+              <p class="check-result-photo" data-check="photo" hidden></p>
+              <p class="check-result-note" data-i18n="index.check.r.note">Richtwert, kein Angebot. Den verbindlichen Festpreis bekommen Sie schriftlich nach dem kostenlosen Gespräch.</p>
+              <div class="check-result-actions">
+                <a href="#termin" class="btn btn-primary" data-i18n="index.check.r.book">Kostenloses Gespräch buchen</a>
+                <button type="button" class="btn btn-ghost" data-check-action="message" data-i18n="index.check.r.message">Ergebnis als Nachricht senden</button>
+              </div>
+              <button type="button" class="check-restart" data-check-action="restart">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3M4.5 4v3.9h3.9"/></svg>
+                <span data-i18n="index.check.r.restart">Neu starten</span>
+              </button>
+            </div>
+          </div>
+
+          <aside class="check-live" aria-live="polite">
+            <p class="check-live-label"><span class="check-live-dot" aria-hidden="true"></span><span data-i18n="index.check.live.label">Live-Schätzung</span></p>
+            <p class="check-live-tier" data-check="liveTier">–</p>
+            <p class="check-live-price" data-check="livePrice">– €</p>
+            <p class="check-live-photo" data-check="livePhoto" hidden></p>
+            <p class="check-live-hint" data-check="liveHint" data-i18n="index.check.live.hint">Wählen Sie Funktionen aus, dann erscheint hier Ihre Preisspanne.</p>
+            <ul class="check-live-chips" data-check="liveChips"></ul>
+
+            <div class="check-next" hidden>
+              <p class="check-next-title" data-i18n="index.check.n.title">So geht es weiter</p>
+              <ol class="check-next-steps">
+                <li><span class="check-next-num">1</span><span data-i18n="index.check.n.1">Kostenloses Gespräch, 15 bis 20 Minuten</span></li>
+                <li><span class="check-next-num">2</span><span data-i18n="index.check.n.2">Schriftliches Festangebot, ohne versteckte Kosten</span></li>
+                <li><span class="check-next-num">3</span><span data-i18n="index.check.n.3">Umsetzung mit Zwischenständen</span></li>
+              </ol>
+            </div>
+
+            <p class="check-live-foot" data-i18n="index.check.live.foot">Läuft komplett in Ihrem Browser. Es wird nichts gespeichert oder gesendet.</p>
+          </aside>
+        </div>
+
+        <!-- Results: one block per outcome. data-mode: range | from | custom | free | photo -->
+        <div class="check-results" hidden>
+          <div data-result="basic" data-mode="range" data-min="100" data-max="499">
+            <span data-part="title" data-i18n="index.check.res.basic.t">Einfache Website</span>
+            <span data-part="desc" data-i18n="index.check.res.basic.d">Eine klare, schnelle Seite mit Ihrem Angebot, Bildern und Kontakt, gemacht fürs Handy. Für die meisten kleinen Betriebe ist das genau richtig.</span>
+          </div>
+          <div data-result="advanced" data-mode="range" data-min="500" data-max="999">
+            <span data-part="title" data-i18n="index.check.res.advanced.t">Website mit Buchung &amp; Extras</span>
+            <span data-part="desc" data-i18n="index.check.res.advanced.d">Ihre Website nimmt Ihnen Arbeit ab: Kunden buchen, reservieren oder bestellen selbst, dazu Animationen und ein Auftritt, der auffällt.</span>
+          </div>
+          <div data-result="app" data-mode="from" data-min="1200">
+            <span data-part="title" data-i18n="index.check.res.app.t">Eigene App</span>
+            <span data-part="desc" data-i18n="index.check.res.app.d">Eine App mit Login, Kundenkonto oder Funktionen für Ihr Team. Der genaue Preis hängt davon ab, wie viel sie können muss.</span>
+          </div>
+          <div data-result="system" data-mode="custom">
+            <span data-part="title" data-i18n="index.check.res.system.t">System &amp; Automatisierung</span>
+            <span data-part="desc" data-i18n="index.check.res.system.d">Systeme sind so unterschiedlich wie Betriebe. Ob ein paar automatische Erinnerungen oder ein ganzer Ablauf: In einem kurzen Gespräch klären wir den Umfang, danach bekommen Sie einen festen Preis.</span>
+          </div>
+          <div data-result="none" data-mode="free">
+            <span data-part="title" data-i18n="index.check.res.none.t">Eine neue Website brauchen Sie wohl nicht</span>
+            <span data-part="desc" data-i18n="index.check.res.none.d">Ihre Seite funktioniert und Sie brauchen keine neuen Funktionen. Dann wäre ein neues Projekt rausgeworfenes Geld. Im kostenlosen Check schaue ich, ob Kleinigkeiten wie Ladezeit oder Ihr Google-Profil mehr bringen.</span>
+          </div>
+          <div data-result="photo" data-mode="photo">
+            <span data-part="title" data-i18n="index.check.res.photo.t">Fotografie</span>
+            <span data-part="desc" data-i18n="index.check.res.photo.d">Aus Ihren Handyfotos werden saubere Produktbilder für Website, Speisekarte und Social Media. Mit KI bearbeitet, von mir geprüft.</span>
+          </div>
+          <div data-result="unsure" data-mode="free">
+            <span data-part="title" data-i18n="index.check.res.unsure.t">Lassen Sie uns kurz sprechen</span>
+            <span data-part="desc" data-i18n="index.check.res.unsure.d">Völlig normal. In 15 Minuten finden wir heraus, ob Sie eine Website, eine App, ein System oder gar nichts Neues brauchen. Das Gespräch ist kostenlos und unverbindlich.</span>
+          </div>
+
+          <span data-label="from" data-i18n="index.check.l.from">ab</span>
+          <span data-label="custom" data-i18n="index.check.l.custom">Preis nach Umfang</span>
+          <span data-label="photoLine" data-i18n="index.check.l.photoLine">+ Fotografie: {price} für {n} Bilder.</span>
+          <span data-label="photoBundle" data-i18n="index.check.l.photoBundle">Zusammen mit der Website günstiger.</span>
+          <span data-label="photosNone" data-i18n="index.check.l.photosNone">keine</span>
+          <span data-label="msgIntro" data-i18n="index.check.l.msgIntro">Hallo Yass, hier ist mein Ergebnis aus dem Bedarfs-Check:</span>
+          <span data-label="msgSituation" data-i18n="index.check.l.msgSituation">Ausgangslage</span>
+          <span data-label="msgFeatures" data-i18n="index.check.l.msgFeatures">Funktionen</span>
+          <span data-label="msgPhotos" data-i18n="index.check.l.msgPhotos">Fotos</span>
+          <span data-label="msgResult" data-i18n="index.check.l.msgResult">Empfehlung</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ================= BOOKING ================= -->
   <section class="booking" id="termin">
     <div class="container">
@@ -340,7 +676,7 @@
       <div class="faq-list" data-reveal>
         <details>
           <summary data-i18n="index.faq1.q">Was kostet eine Website für meinen Betrieb?</summary>
-          <p data-i18n="index.faq1.a">Das hängt davon ab, was Ihre Seite können muss. Ein Café mit Speisekarte braucht etwas anderes als ein Handwerksbetrieb mit Anfrageformular. Deshalb steht am Anfang ein kostenloser Check. Danach bekommen Sie ein schriftliches Festangebot, und erst wenn Sie zustimmen, geht es los.</p>
+          <p data-i18n="index.faq1.a">Als Richtwert: Eine einfache Website kostet 100 bis 499 €, eine Website mit Buchung, Reservierung oder Animationen 500 bis 999 €, eine eigene App ab 1.200 €. Systeme und Automatisierung kalkuliere ich nach Umfang, Fotos kosten 12 € pro 10 Bilder. Ihre persönliche Spanne zeigt der Bedarfs-Check oben. Den verbindlichen Festpreis bekommen Sie schriftlich nach dem kostenlosen Gespräch, und erst wenn Sie zustimmen, geht es los.</p>
         </details>
         <details>
           <summary data-i18n="index.faq2.q">Arbeiten Sie nur in Freiberg und Sachsen?</summary>
@@ -386,6 +722,10 @@
               <span class="contact-label">Instagram</span>
               <a href="https://www.instagram.com/armsin_digital_media/" target="_blank" rel="noopener">@armsin_digital_media</a>
             </li>
+            <li>
+              <span class="contact-label">Threads</span>
+              <a href="https://www.threads.com/@armsin_digital_media" target="_blank" rel="noopener">@armsin_digital_media</a>
+            </li>
           </ul>
         </div>
 
@@ -426,6 +766,7 @@
       <a href="datenschutz.html" data-i18n="footer.datenschutz">Datenschutz</a>
       <a href="https://www.linkedin.com/company/armsin-digital-media/" class="footer-ico" target="_blank" rel="noopener" aria-label="Armsin Digital Media auf LinkedIn"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></a>
       <a href="https://www.instagram.com/armsin_digital_media/" class="footer-ico" target="_blank" rel="noopener" aria-label="Armsin Digital Media auf Instagram"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1.1" fill="currentColor" stroke="none"/></svg></a>
+      <a href="https://www.threads.com/@armsin_digital_media" class="footer-ico" target="_blank" rel="noopener" aria-label="Armsin Digital Media auf Threads"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 0 1 3.02.142c-.126-.742-.375-1.332-.75-1.757-.513-.586-1.308-.883-2.359-.89h-.029c-.844 0-1.992.232-2.721 1.32L7.734 7.847c.98-1.454 2.568-2.256 4.478-2.256h.044c3.194.02 5.097 1.975 5.287 5.388.108.046.216.094.321.142 1.49.7 2.58 1.761 3.154 3.07.797 1.82.871 4.79-1.548 7.158-1.85 1.81-4.094 2.628-7.277 2.65Zm1.003-11.69c-.242 0-.487.007-.739.021-1.836.103-2.98.946-2.916 2.143.067 1.256 1.452 1.839 2.784 1.767 1.224-.065 2.818-.543 3.086-3.71a10.5 10.5 0 0 0-2.215-.221z"/></svg></a>
     </nav>
     <div class="footer-toggles">
       <div class="theme-switch" role="group" aria-label="Farbschema / Color theme">
@@ -441,8 +782,8 @@
 </footer>
 
 <script type="module" src="assets/js/hero-model.js?v=12"></script>
-<script src="assets/js/i18n.js?v=3"></script>
-<script src="assets/js/site.js?v=4"></script>
+<script src="assets/js/i18n.js?v=4"></script>
+<script src="assets/js/site.js?v=5"></script>
 
 </body>
 </html>
