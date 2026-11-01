@@ -149,9 +149,11 @@ var I18N_EN = {
   'index.check.l.from': 'from',
   'index.check.l.custom': 'Priced by scope',
   'index.check.l.talk': 'Free',
-  'index.check.l.photoLine-new': '+ New photos by me: {price} for {n} images.',
-  'index.check.l.photoLine-improve': '+ Improving images with AI: {price} for {n} images.',
-  'index.check.l.photoBundle': 'Cheaper together with the website.',
+  'index.check.l.bdBase': 'Base price incl. {feature}',
+  'index.check.l.bdIncluded': 'Basic features',
+  'index.check.l.bdIncludedValue': 'included',
+  'index.check.l.bdTotal': 'Total',
+  'index.check.l.photoBundle': 'Together with the website the photos get cheaper. You get the exact price in the offer.',
   'index.check.l.photosNone': 'none',
   'index.check.l.msgIntro': "Hi Yass, here's my result from the needs check:",
   'index.check.l.msgNeed': 'Need',
@@ -165,6 +167,7 @@ var I18N_EN = {
   'index.check.next': 'Next',
   'index.check.show': 'Show result',
   'index.check.r.kicker': 'Your recommendation',
+  'index.check.r.breakdown': 'How the price adds up',
   'index.check.r.selected': 'Your selection',
   'index.check.r.note': 'An estimate, not an offer. You get the binding fixed price in writing after the free call.',
   'index.check.r.book': 'Book a free call',
@@ -175,6 +178,7 @@ var I18N_EN = {
   'index.check.n.3': 'Build with regular check-ins',
   'index.check.r.restart': 'Start over',
   'index.check.foot': 'Runs entirely in your browser. Nothing is stored or sent.',
+
 
 
   'booking.consent.title': 'Load booking calendar',
