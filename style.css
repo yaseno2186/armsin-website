@@ -2494,7 +2494,7 @@ html[data-theme="light"] .check-result-list li::before {
      regardless (cross-origin, can't be recolored), so a dark frame around
      it used to read as a mismatched dark-ring-around-a-white-box. A warm
      light frame blends into the embed's own white instead of fighting it. */
-  background: #FAF6F0;
+  background: var(--surface);
   border-radius: var(--radius);
   box-shadow: 0 24px 56px var(--shadow-lift), 0 0 0 1px var(--accent-glow-strong);
   overflow: hidden;
@@ -2525,7 +2525,7 @@ html[data-theme="light"] .check-result-list li::before {
 }
 
 /* Click-to-load panel shown inside the booking frame until the visitor
-   agrees to load the Google Calendar (no request to Google before that). */
+   agrees to load the Cal.com calendar (no request to Cal.com before that). */
 .booking-frame { position: relative; }
 .booking-consent {
   position: absolute;

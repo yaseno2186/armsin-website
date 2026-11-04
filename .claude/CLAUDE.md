@@ -67,7 +67,7 @@ site.js). Card images live in `assets/images/service-*.jpg` (900x1125,
 (`assets/fonts/*.woff`, @font-face at the top of style.css) and three.js is
 vendored in `assets/js/vendor/three/` (importmap in index.html). Never add
 Google Fonts, CDN scripts or other external embeds without updating
-datenschutz.html. The only external embed is the Google Calendar booking
+datenschutz.html. The only external embed is the Cal.com booking
 iframe (index.html, ablauf.html): click-to-load (iframe has data-src, no src,
 until "Kalender laden" is clicked; initBookingFade in site.js), described in
 datenschutz.html section 6.
