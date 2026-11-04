@@ -188,7 +188,7 @@ var I18N_EN = {
 
 
   'booking.consent.title': 'Load booking calendar',
-  'booking.consent.text': 'The calendar is provided by Google. A connection to Google is only made once you click the button.',
+  'booking.consent.text': 'The calendar is provided by Cal.com. A connection to Cal.com is only made once you click the button.',
   'booking.consent.more': 'Learn more',
   'booking.consent.button': 'Load calendar',
   'index.contact.h2': 'Ready for a digital solution that pays off?',
@@ -257,11 +257,11 @@ var I18N_EN = {
   'ablauf.step4.li2': 'A short walkthrough on how to update the text yourself',
   'ablauf.step4.li3': 'Ongoing support optional, cancel monthly',
   'ablauf.cta.p': 'Sounds like the right approach for your business?',
-  'ablauf.cta.btn': 'Book a slot (30 min)',
-  'ablauf.booking.duration': '30 minutes, no obligation',
+  'ablauf.cta.btn': 'Book a slot (60 min)',
+  'ablauf.booking.duration': '60 minutes, no obligation',
   'ablauf.booking.h2': 'Book a slot directly',
   'ablauf.booking.lead': 'Just pick a free slot for a short, no-obligation call with Yass Almardoud, no back-and-forth emailing.',
-  'ablauf.booking.iframeTitle': "Yass Almardoud's booking calendar: book a 30-minute slot online",
+  'ablauf.booking.iframeTitle': "Yass Almardoud's booking calendar: book a 60-minute slot online",
   'ablauf.booking.fallback': 'Calendar not loading for you?',
   'ablauf.booking.fallbackLink': 'Open booking page in a new tab',
 

@@ -98,9 +98,10 @@ function initScrollReveal() {
   revealEls.forEach(function (el) { observer.observe(el); });
 }
 
-// Google Calendar booking embed: click-to-load. The iframe has no src
-// until the visitor clicks "Kalender laden", so no data goes to Google
-// before that (see datenschutz.html section 6). Fades in once loaded.
+// Cal.com booking embed: click-to-load. The iframe has no src until the
+// visitor clicks "Kalender laden", so no data goes to Cal.com before that
+// (see datenschutz.html section 6). The site's current theme (dark/light)
+// is passed on so the calendar matches. Fades in once loaded.
 function initBookingFade() {
   document.querySelectorAll('.booking-frame').forEach(function (frame) {
     var iframe = frame.querySelector('iframe[data-src]');
@@ -113,7 +114,10 @@ function initBookingFade() {
     });
     btn.addEventListener('click', function () {
       frame.classList.add('is-loading');
-      iframe.setAttribute('src', iframe.getAttribute('data-src'));
+      var src = iframe.getAttribute('data-src');
+      var light = document.documentElement.getAttribute('data-theme') === 'light';
+      src += (src.indexOf('?') === -1 ? '?' : '&') + 'theme=' + (light ? 'light' : 'dark');
+      iframe.setAttribute('src', src);
       iframe.focus();
     });
   });
