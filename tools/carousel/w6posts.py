@@ -87,3 +87,45 @@ T45 = [
    kicker="IHRE MEINUNG", box="Antworten Sie mit dem Emoji in den Kommentaren.", last=True),
 ]
 POSTS["T-tech-news-kw45-google"] = T45
+
+# ================= F: Tech-News KW 45 (Fri 6 Nov) =================
+def tile_logo(inner, w=520, h=340):
+    return f'<div class="tile" style="width:{w}px;height:{h}px;gap:30px;flex-direction:column">{inner}</div>'
+def pixbig(t, c=G, s=120, fam="Pix"):
+    return f'<div style="font:{"700" if fam=="Mono" else "400"} {s}px/1 {fam};color:{c};text-shadow:0 0 40px {c}99;white-space:nowrap">{t}</div>'
+def fnews(i, k, inner, h1, pills_, box):
+    vis = f'<div style="position:relative;width:920px;height:100%;display:flex;align-items:center;justify-content:center">{tile_logo(inner)}' + pills(pills_) + '</div>'
+    return slide(i, 7, h1, vis, kicker=k, box=box, boxcls="o")
+oai = f'<div class="logo-c" style="width:300px;height:82px;--c:#FFFFFF">{logo_svg("openai")}</div>'
+router = f'''<svg width="220" height="150" viewBox="0 0 220 150" fill="none" stroke="{G}" stroke-width="6" stroke-linecap="round"><rect x="10" y="70" width="200" height="60" rx="14"/><path d="M60 70 L40 10 M160 70 L180 10"/><circle cx="50" cy="100" r="6" fill="{G}"/><circle cx="75" cy="100" r="6" fill="{G}"/><circle cx="100" cy="100" r="6" fill="#E06A4E" stroke="#E06A4E"/></svg>'''
+P = [(t, pos, r) for t, pos, r in []]
+F45 = [
+ slide(1, 7, f'Tech-News der <em><span class="s">Woche</span>{und()}</em>',
+   '<div style="position:relative;width:920px;height:100%">'
+   + flo(gword(110), 40, 8, -6, "#4285F4")
+   + flo(oai, 520, 10, 5, "#FFFFFF")
+   + flo(pixbig(".de", G, 150, "Mono"), 360, 36, -3, G)
+   + flo(router, 640, 54, 6, G)
+   + flo(f'<div style="font:400 120px/1 Outfit">⚖️</div>', 90, 56, -4, "#E9B949") + '</div>',
+   kicker="KW 45 · 5 NEWS · 2 MINUTEN", box="Und was sie für kleine Betriebe bedeuten.", cover=True),
+ fnews(2, "NEWS 1 VON 5 · EU-GERICHT", gword(120) + '<div style="font:400 80px/1 Outfit">⚖️</div>', 'KI-Chatbots können <em>Presserechte</em> verletzen',
+   [("Gutachten EuGH · 3.11.2026", "left:8px;top:3%", -3), ("Fall: Google Gemini", "right:10px;bottom:22%", 3), ("noch kein Urteil", "left:8px;bottom:4%", 2)],
+   "Für Sie: KI darf nicht einfach abschreiben. Auch nicht Ihre Website."),
+ fnews(3, "NEWS 2 VON 5 · DEUTSCHLAND", pixbig("KI 2030", G, 84), 'Merz will <em>KI-Nation</em> bis 2030',
+   [("Digital-Gipfel · 2.–3.11.", "left:8px;top:3%", -3), ("90 % der Bundesbehörden mit KI", "right:10px;bottom:22%", 3), ("neue Taskforce", "left:8px;bottom:4%", 2)],
+   "Für Sie: Behörden werden digitaler. Ihr Betrieb sollte mithalten."),
+ fnews(4, "NEWS 3 VON 5 · SICHERHEIT", router, '3 Fritzboxen ohne <em>Update-Garantie</em>',
+   [("7582 · 5490 · 4020", "left:8px;top:3%", -3), ("Mindest-Support endet 10/2026", "right:10px;bottom:22%", 3), ("Modell: Etikett hinten", "left:8px;bottom:4%", 2)],
+   "Für Sie: Router im Laden prüfen. Alte Technik ist ein Einfallstor."),
+ fnews(5, "NEWS 4 VON 5 · OPENAI", oai, 'ChatGPT Bilder können jetzt <em>GIFs</em>',
+   [("Images 2.6 · 5.11.2026", "left:8px;top:3%", -3), ("Referenzbilder speichern", "right:10px;bottom:22%", 3), ("genauer bearbeiten", "left:8px;bottom:4%", 2)],
+   "Für Sie: Kleine Animationen für Instagram, ohne Designer."),
+ fnews(6, "NEWS 5 VON 5 · INTERNET", pixbig(".de", G, 170, "Mono"), 'Die .de-Domain wird <em>40</em>',
+   [("seit 5.11.1986", "left:8px;top:3%", -3), ("18 Mio. .de-Adressen", "right:10px;bottom:22%", 3), ("1988 waren es 6", "left:8px;bottom:4%", 2)],
+   "Für Sie: Eine eigene .de-Adresse schafft Vertrauen bei Kunden."),
+ slide(7, 7, 'Welche News betrifft <em>Sie</em> am meisten?',
+   '<div style="display:flex;gap:18px">' + ''.join(f'<div class="tile" style="width:160px;height:210px;flex-direction:column;gap:16px"><div style="font:400 76px/1 Outfit">{e}</div><div style="font:700 26px/1 Outfit;color:{LIGHT}">{t}</div></div>' for e, t in [
+     ("⚖️", "Recht"), ("🇩🇪", "KI-Land"), ("📶", "Router"), ("🎨", "Bilder"), ("🌐", ".de")]) + '</div>',
+   kicker="IHRE MEINUNG", box="Antworten Sie mit dem Emoji in den Kommentaren.", last=True),
+]
+POSTS["F-tech-news-kw45"] = F45
