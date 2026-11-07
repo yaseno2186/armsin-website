@@ -4437,3 +4437,120 @@ html[data-theme="light"] .svc-btn { box-shadow: var(--card-shadow); }
           mask-composite: intersect;
 }
 .hero > .container { position: relative; z-index: 3; }
+
+/* ================= SHOWCASE (what I build) =================
+   Services on an arc beside the retro PC (assets/js/showcase-model.js).
+   Mobile: model on top, pills as a wrapped list. ≥900px: pills sit on the
+   arc (positions match the SVG path: centre 560/300, r 260, in a 600x600
+   box stretched over the left 45% of the stage). */
+.showcase {
+  position: relative;
+  padding: var(--space-12) 0;
+  overflow: hidden;
+  background:
+    radial-gradient(60% 55% at 30% 55%, var(--accent-glow) 0%, transparent 70%),
+    radial-gradient(45% 50% at 85% 40%, var(--amber-wash) 0%, transparent 70%),
+    var(--bg);
+}
+.showcase-title {
+  text-align: center;
+  font-size: clamp(1.7rem, 4.4vw, 3rem);
+  line-height: 1.15;
+  margin: 0 auto var(--space-6);
+  max-width: 20ch;
+}
+.showcase-title span { display: inline; }
+.showcase-title-strong { font-family: var(--font-head); font-weight: 700; color: var(--text); }
+.showcase-title-light { font-family: var(--font-head); font-weight: 300; color: var(--accent); }
+
+.showcase-stage { position: relative; display: flex; flex-direction: column; }
+.showcase-arc { display: none; }
+.showcase-pills {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+.showcase-pill {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--text);
+  padding: 12px 20px;
+  border-radius: 999px;
+  border: 1px solid var(--accent-ring);
+  background: linear-gradient(180deg, var(--accent-tint), var(--wash)), var(--surface);
+  box-shadow: 0 0 0 1px var(--border-subtle) inset, 0 10px 30px var(--shadow-soft), 0 0 24px var(--accent-glow);
+  white-space: nowrap;
+}
+.showcase-pill::before {
+  content: '>';
+  color: var(--accent);
+  margin-right: 10px;
+}
+.showcase-model {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  margin-bottom: var(--space-4);
+  opacity: 0;
+  transition: opacity 600ms var(--ease-out);
+}
+.showcase-model.is-loaded { opacity: 1; }
+.showcase-model canvas { display: block; width: 100% !important; height: 100% !important; }
+
+@media (min-width: 900px) {
+  .showcase-stage { display: block; height: clamp(540px, 48vw, 760px); }
+  .showcase-arc {
+    display: block;
+    position: absolute;
+    left: 0; top: 0;
+    width: 45%; height: 100%;
+    color: var(--border-strong);
+    overflow: visible;
+  }
+  .showcase-pills { display: block; position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+  .showcase-pill {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    translate: -50% -50%;
+    font-size: clamp(0.9rem, 1.15vw, 1.08rem);
+    padding: 14px 26px;
+    pointer-events: auto;
+  }
+  .showcase-pill-1 { --x: 34.7%; --y: 9.8%; }
+  .showcase-pill-2 { --x: 27.1%; --y: 22.1%; }
+  .showcase-pill-3 { --x: 22.9%; --y: 41%; }
+  .showcase-pill-4 { --x: 23.1%; --y: 60.5%; }
+  .showcase-pill-5 { --x: 27.1%; --y: 77.9%; }
+  .showcase-pill-6 { --x: 34.7%; --y: 90.2%; }
+  .showcase-pills [data-reveal]:nth-child(2) { transition-delay: var(--stagger-step); }
+  .showcase-pills [data-reveal]:nth-child(3) { transition-delay: calc(var(--stagger-step) * 2); }
+  .showcase-pills [data-reveal]:nth-child(4) { transition-delay: calc(var(--stagger-step) * 3); }
+  .showcase-pills [data-reveal]:nth-child(5) { transition-delay: calc(var(--stagger-step) * 4); }
+  .showcase-pills [data-reveal]:nth-child(6) { transition-delay: calc(var(--stagger-step) * 5); }
+  .showcase-model {
+    position: absolute;
+    right: -4%; top: 50%;
+    translate: 0 -50%;
+    width: 66%;
+    height: 125%;
+    aspect-ratio: auto;
+    margin: 0;
+  }
+}
+
+html[data-theme="light"] .showcase-pill {
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgba(19, 36, 27, 0.06), 0 8px 24px rgba(19, 36, 27, 0.08);
+}
+
+/* Showcase on phones (after the base rules so it wins the cascade) */
+@media (max-width: 899px) {
+  .showcase-model { order: -1; width: 112%; margin-left: -6%; aspect-ratio: 1 / 1; margin-bottom: var(--space-2); }
+  .showcase-pill { white-space: normal; text-align: center; font-size: 0.85rem; padding: 10px 16px; }
+}
