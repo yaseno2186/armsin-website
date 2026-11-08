@@ -19,9 +19,9 @@ var I18N_EN = {
   'footer.theme.dark': 'Dark theme',
   'footer.theme.light': 'Light theme',
 
-  'index.meta.title': 'Web Design Freiberg (Saxony) for All of Germany | Armsin Digital Media',
+  'index.meta.title': 'Web Design Freiberg Saxony | Armsin Digital Media',
   'index.meta.description': 'Websites, apps and automation for small businesses: web design from Freiberg in Saxony for clients across Germany. Fixed price, one contact person, free check.',
-  'index.hero.eyebrow': 'Web design from Freiberg (Saxony) for all of Germany',
+  'index.hero.eyebrow': 'Web design Freiberg, Saxony',
   'index.faq2.more': 'More about web design in Freiberg and Mittelsachsen',
   'index.hero.visualAria': '3D model of a retro workstation, surrounded by two floating code windows',
   'index.hero.ctaPrimary': 'Request a free check',
