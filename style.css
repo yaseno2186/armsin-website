@@ -4636,7 +4636,17 @@ html[data-theme="light"] .showcase-pill {
 .svc-card3.is-active { cursor: default; }
 .svc-card3.is-far { opacity: 0; pointer-events: none; }
 .svc-card3 slim-monitor { display: block; width: 100%; max-width: none; }
-.svc-card3 .svc-mon-body { padding: 0 var(--space-2); margin-top: calc(var(--space-2) * -1); width: min(560px, 92vw); margin-inline: auto; }
+/* Text is wider than the monitor, so it's centred on the monitor's middle
+   (left 50% + translate) instead of starting at the monitor's left edge. */
+.svc-card3 .svc-mon-body {
+  position: relative;
+  left: 50%;
+  translate: -50% 0;
+  width: min(560px, 92vw);
+  padding: 0 var(--space-2);
+  margin-top: calc(var(--space-2) * -1);
+  text-align: center;
+}
 .svc-card3 { justify-self: center; }
 .svc-card3 .svc-num {
   display: inline-block;

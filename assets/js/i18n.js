@@ -43,7 +43,7 @@ var I18N_EN = {
   'index.showcase.pill.web': 'Custom websites',
   'index.showcase.pill.photo': 'Product photos & AI image editing',
   'index.showcase.pill.auto': 'Systems & automation',
-  'index.showcase.modelAria': '3D model of a retro computer showing the Youroma project website on its screen',
+  'index.showcase.modelAria': '3D model of a retro computer showing the animated Youroma homepage on its screen',
   'index.trust.h2': 'Why Armsin',
   'index.trust.lead': 'Small, direct, no detours.',
   'index.trust.fast.h3': 'Fast',
