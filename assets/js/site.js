@@ -350,6 +350,81 @@ function markFooterReveal() {
 // the right; any touch, drag, wheel, hover, focus or arrow click pauses it
 // and it resumes after a few quiet seconds. The card nearest the middle
 // grows a little, the others return to normal size.
+// Services coverflow (index.html .svc-flow): the middle card sits in front
+// with its monitor switched on; neighbours sit smaller behind, turned toward
+// the middle, screens off. When a card reaches the middle its screen powers
+// on (slim-monitor's built-in fade) and the monitor turns to face you.
+// Arrows, swipe, arrow keys, click on a side card; slow auto-advance that
+// pauses on hover/focus and is off for reduced motion.
+function initServiceFlow() {
+  var track = document.querySelector('.svc-flow-track');
+  if (!track) return;
+  var cards = Array.prototype.slice.call(track.querySelectorAll('.svc-card3'));
+  var n = cards.length;
+  var current = 0;
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function layout() {
+    cards.forEach(function (card, i) {
+      var off = ((i - current) % n + n) % n;      // 0..n-1
+      if (off > n / 2) off -= n;                  // -> -n/2..n/2
+      var abs = Math.abs(off);
+      card.style.setProperty('--off', off);
+      card.style.setProperty('--abs', abs);
+      card.style.zIndex = String(10 - abs);
+      card.classList.toggle('is-active', off === 0);
+      card.classList.toggle('is-far', abs >= 2);
+      card.setAttribute('aria-hidden', off === 0 ? 'false' : 'true');
+      var mon = card.querySelector('slim-monitor');
+      if (mon && mon.setView) {
+        mon.on = off === 0;
+        mon.setView(-6, off === 0 ? 0 : (off < 0 ? 28 : -28), !reduceMotion);
+      }
+    });
+  }
+  function go(dir) { current = (current + dir + n) % n; layout(); }
+
+  document.querySelectorAll('.svc-flow [data-svc-dir]').forEach(function (btn) {
+    btn.addEventListener('click', function () { go(parseInt(btn.getAttribute('data-svc-dir'), 10)); restart(); });
+  });
+  // Click a side card to bring it to the middle (ignored right after a swipe).
+  var swiped = false;
+  track.addEventListener('click', function (e) {
+    if (swiped) { swiped = false; return; }
+    var card = e.target.closest('.svc-card3');
+    if (!card || card.classList.contains('is-active')) return;
+    var off = parseInt(card.style.getPropertyValue('--off'), 10);
+    if (off) { go(off); restart(); }
+  });
+  track.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft') { go(-1); restart(); e.preventDefault(); }
+    if (e.key === 'ArrowRight') { go(1); restart(); e.preventDefault(); }
+  });
+  var startX = null;
+  track.addEventListener('pointerdown', function (e) { startX = e.clientX; });
+  track.addEventListener('pointerup', function (e) {
+    if (startX === null) return;
+    var dx = e.clientX - startX; startX = null;
+    if (Math.abs(dx) > 40) { swiped = true; go(dx < 0 ? 1 : -1); restart(); }
+  });
+
+  var timer = null, paused = false;
+  function restart() {
+    if (reduceMotion) return;
+    clearInterval(timer);
+    timer = setInterval(function () { if (!paused && !document.hidden) go(1); }, 5000);
+  }
+  ['mouseenter', 'focusin'].forEach(function (ev) { track.parentNode.addEventListener(ev, function () { paused = true; }); });
+  ['mouseleave', 'focusout'].forEach(function (ev) { track.parentNode.addEventListener(ev, function () { paused = false; }); });
+
+  // slim-monitor upgrades when its (deferred) script runs; lay out after.
+  if (window.customElements && customElements.whenDefined) {
+    customElements.whenDefined('slim-monitor').then(layout);
+  }
+  layout();
+  restart();
+}
+
 function initServiceCarousel() {
   var track = document.querySelector('.svc-track');
   if (!track) return;
@@ -883,4 +958,5 @@ initHeadingDecode();
 initCardSpotlight();
 initProcessLine();
 initServiceCarousel();
+initServiceFlow();
 initNeedsCheck();

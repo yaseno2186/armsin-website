@@ -130,6 +130,35 @@ h1, h2, h3 {
   letter-spacing: -0.01em;
 }
 
+/* Retro "glitch" on main titles (h1/h2 only): a thin red/cyan colour split
+   like a misaligned CRT, plus a short jitter every few seconds. Uses the
+   `translate` property so it never fights the reveal `transform`.
+   Reduced motion: the static colour split stays, the jitter is off. */
+:root {
+  --glitch-red: rgba(255, 64, 96, 0.5);
+  --glitch-cyan: rgba(0, 214, 255, 0.45);
+}
+html[data-theme="light"] {
+  --glitch-red: rgba(220, 38, 80, 0.32);
+  --glitch-cyan: rgba(0, 150, 200, 0.3);
+}
+h1, h2 {
+  text-shadow: 0.05em 0 var(--glitch-red), -0.05em 0 var(--glitch-cyan);
+  animation: title-glitch 5.5s steps(1, end) infinite;
+}
+h2:nth-of-type(2n) { animation-delay: -2.3s; }
+@keyframes title-glitch {
+  0%, 84%, 100% { text-shadow: 0.05em 0 var(--glitch-red), -0.05em 0 var(--glitch-cyan); translate: 0 0; }
+  86% { text-shadow: 0.16em 0 var(--glitch-red), -0.12em 0 var(--glitch-cyan); translate: -2px 0; }
+  88% { text-shadow: -0.1em 0.03em var(--glitch-red), 0.14em -0.02em var(--glitch-cyan); translate: 2px 0; }
+  90% { text-shadow: 0.08em 0 var(--glitch-red), -0.2em 0 var(--glitch-cyan); translate: -1px 0; }
+  92% { text-shadow: 0.05em 0 var(--glitch-red), -0.05em 0 var(--glitch-cyan); translate: 0 0; }
+  95% { text-shadow: 0.12em 0 var(--glitch-red), -0.06em 0 var(--glitch-cyan); translate: 1px 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  h1, h2 { animation: none; }
+}
+
 img { max-width: 100%; display: block; }
 
 .container {
@@ -4437,3 +4466,188 @@ html[data-theme="light"] .svc-btn { box-shadow: var(--card-shadow); }
           mask-composite: intersect;
 }
 .hero > .container { position: relative; z-index: 3; }
+
+/* ================= SHOWCASE (what I build) =================
+   Services on an arc beside the retro PC (assets/js/showcase-model.js).
+   Mobile: model on top, pills as a wrapped list. ≥900px: pills sit on the
+   arc (positions match the SVG path: centre 560/300, r 260, in a 600x600
+   box stretched over the left 45% of the stage). */
+.showcase {
+  position: relative;
+  padding: var(--space-12) 0;
+  overflow: hidden;
+  background:
+    radial-gradient(60% 55% at 30% 55%, var(--accent-glow) 0%, transparent 70%),
+    radial-gradient(45% 50% at 85% 40%, var(--amber-wash) 0%, transparent 70%),
+    var(--bg);
+}
+.showcase-title {
+  text-align: center;
+  font-size: clamp(1.7rem, 4.4vw, 3rem);
+  line-height: 1.15;
+  margin: 0 auto var(--space-6);
+  max-width: 20ch;
+}
+.showcase-title span { display: inline; }
+.showcase-title-strong { font-family: var(--font-head); font-weight: 700; color: var(--text); }
+.showcase-title-light { font-family: var(--font-head); font-weight: 300; color: var(--accent); }
+
+.showcase-stage { position: relative; display: flex; flex-direction: column; }
+.showcase-arc { display: none; }
+.showcase-pills {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+.showcase-pill {
+  font-family: var(--font-head);
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--text);
+  padding: 12px 20px;
+  border-radius: 999px;
+  border: 1px solid var(--accent-ring);
+  background: linear-gradient(180deg, var(--accent-tint), var(--wash)), var(--surface);
+  box-shadow: 0 0 0 1px var(--border-subtle) inset, 0 10px 30px var(--shadow-soft), 0 0 24px var(--accent-glow);
+  white-space: nowrap;
+}
+.showcase-pill-1 { --k: 0.85; } .showcase-pill-2 { --k: 0.932; } .showcase-pill-3 { --k: 1.02; }
+.showcase-pill-4 { --k: 1.118; } .showcase-pill-5 { --k: 1.226; } .showcase-pill-6 { --k: 1.375; }
+.showcase-pill::before {
+  content: '>';
+  color: var(--accent);
+  margin-right: 10px;
+}
+.showcase-model {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  margin-bottom: var(--space-4);
+  opacity: 0;
+  transition: opacity 600ms var(--ease-out);
+}
+.showcase-model.is-loaded { opacity: 1; }
+.showcase-model canvas { display: block; width: 100% !important; height: 100% !important; }
+
+@media (min-width: 900px) {
+  /* Stage keeps the spiral's 1000x750 box, so % positions below match it. */
+  .showcase-stage { display: block; aspect-ratio: 4 / 3; height: auto; max-width: 1240px; margin: 0 auto; }
+  .showcase-arc {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    color: var(--border-strong);
+    overflow: visible;
+    z-index: 0;
+  }
+  .showcase-pills { display: block; position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+  /* Each pill's right end sits on the spiral; size grows by phi^(1/5) per
+     step, so the last pill is phi (1.618x) the size of the first. */
+  .showcase-pill {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    translate: calc(-100% + 2.2em) -50%;
+    font-size: calc(var(--k) * clamp(0.78rem, 0.95vw, 1.08rem));
+    padding: 0.95em 1.6em;
+    pointer-events: auto;
+  }
+  .showcase-pill-1 { --x: 51.4%; --y: 12.7%; --k: 0.85; }
+  .showcase-pill-2 { --x: 39.1%; --y: 26.6%; --k: 0.932; }
+  .showcase-pill-3 { --x: 35.4%; --y: 41.3%; --k: 1.02; }
+  .showcase-pill-4 { --x: 36.1%; --y: 56.7%; --k: 1.118; }
+  .showcase-pill-5 { --x: 41.6%; --y: 72.7%; --k: 1.226; }
+  .showcase-pill-6 { --x: 55.7%; --y: 89.3%; --k: 1.375; }
+  .showcase-pills [data-reveal]:nth-child(2) { transition-delay: var(--stagger-step); }
+  .showcase-pills [data-reveal]:nth-child(3) { transition-delay: calc(var(--stagger-step) * 2); }
+  .showcase-pills [data-reveal]:nth-child(4) { transition-delay: calc(var(--stagger-step) * 3); }
+  .showcase-pills [data-reveal]:nth-child(5) { transition-delay: calc(var(--stagger-step) * 4); }
+  .showcase-pills [data-reveal]:nth-child(6) { transition-delay: calc(var(--stagger-step) * 5); }
+  .showcase-model {
+    position: absolute;
+    /* Centred on the spiral's eye (64% / 34.7%); the JS puts the
+       screen in the middle of this box. */
+    left: 64%; top: 34.7%;
+    translate: -50% -50%;
+    width: 72%;
+    height: 96%;
+    aspect-ratio: auto;
+    margin: 0;
+    z-index: 1;
+  }
+}
+
+html[data-theme="light"] .showcase-pill {
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgba(19, 36, 27, 0.06), 0 8px 24px rgba(19, 36, 27, 0.08);
+}
+
+/* Showcase on phones (after the base rules so it wins the cascade) */
+@media (max-width: 899px) {
+  .showcase-model { order: -1; width: 112%; margin-left: -6%; aspect-ratio: 1 / 1; margin-bottom: var(--space-2); }
+  .showcase-pill { white-space: normal; text-align: center; font-size: calc(var(--k) * 0.9rem); padding: 10px 16px; }
+}
+
+/* ================= SERVICES COVERFLOW =================
+   "Meine Leistungen": items (3D monitor + text, no card body) stacked in one grid cell (so the track is as tall
+   as the tallest card); site.js sets --off (-2..2) and --abs per card. The
+   middle card is full size in front; neighbours shift sideways, shrink, sit
+   behind and dim. Monitor power on/off + turning is done in site.js. */
+.svc-flow { margin-top: var(--space-4); }
+.svc-flow-track {
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  padding: var(--space-4) 0 var(--space-2);
+  outline: none;
+  touch-action: pan-y;
+  user-select: none;
+}
+.svc-flow-track:focus-visible { box-shadow: 0 0 0 2px var(--accent-ring); border-radius: var(--radius); }
+.svc-card3 {
+  grid-area: 1 / 1;
+  width: min(440px, 80vw);
+  text-align: center;
+  cursor: pointer;
+  transform:
+    translateX(calc(var(--off, 0) * min(60%, 270px)))
+    scale(calc(1 - var(--abs, 0) * 0.16));
+  filter: brightness(calc(1 - var(--abs, 0) * 0.32)) blur(calc(var(--abs, 0) * 0.6px));
+  opacity: 1;
+  transition:
+    transform 700ms var(--ease-out),
+    filter 700ms var(--ease-out),
+    opacity 500ms var(--ease-out);
+  will-change: transform;
+}
+.svc-card3.is-active { cursor: default; }
+.svc-card3.is-far { opacity: 0; pointer-events: none; }
+.svc-card3 slim-monitor { display: block; width: 100%; max-width: none; }
+.svc-card3 .svc-mon-body { padding: 0 var(--space-2); margin-top: calc(var(--space-2) * -1); }
+.svc-card3 .svc-num {
+  display: inline-block;
+  font-family: var(--font-head);
+  font-size: 0.8rem;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.svc-card3 h3 {
+  font-family: var(--font-head);
+  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  margin: 0 0 8px;
+  color: var(--text);
+}
+.svc-card3 p { margin: 0; color: var(--text-dim); line-height: 1.6; font-size: 0.95rem; }
+.svc-card3:not(.is-active) .svc-mon-body { opacity: 0; transition: opacity 500ms var(--ease-out); }
+.svc-flow .svc-controls { display: flex; justify-content: center; gap: 12px; margin-top: var(--space-3); }
+@media (prefers-reduced-motion: reduce) {
+  .svc-card3 { transition-duration: 1ms; }
+}
+
+/* The coverflow side cards stick out past the screen edge: clip them. */
+.services { overflow-x: clip; }
