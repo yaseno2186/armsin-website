@@ -92,8 +92,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     setVisible(true);
   }
 
-  // Paint a project screenshot onto the CRT face ("cover" crop to the
-  // screen's 728x556 canvas, plus faint scanlines so it still reads as CRT).
+  // Paint a project screenshot onto the CRT face: the whole image fits the
+  // screen's 728x556 canvas (no cropping), plus faint scanlines for the CRT look.
   function paintScreen(screenFace) {
     var src = container.getAttribute('data-screen');
     if (!src) return;
@@ -103,11 +103,17 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
       var c = document.createElement('canvas');
       c.width = W; c.height = H;
       var cx = c.getContext('2d');
-      var s = Math.max(W / img.width, H / img.height);
-      var dw = img.width * s, dh = img.height * s;
+      // Whole screenshot visible ("contain"), with a blurred, darkened copy
+      // filling the leftover space so the screen is never empty or cropped.
+      var sc = Math.max(W / img.width, H / img.height);
       cx.fillStyle = '#0a0e0c';
       cx.fillRect(0, 0, W, H);
-      cx.drawImage(img, (W - dw) / 2, 0, dw, dh);
+      cx.filter = 'blur(18px) brightness(0.5)';
+      cx.drawImage(img, (W - img.width * sc) / 2, (H - img.height * sc) / 2, img.width * sc, img.height * sc);
+      cx.filter = 'none';
+      var s = Math.min(W / img.width, H / img.height) * 0.9;   // 0.9: clear of the curved bezel corners
+      var dw = img.width * s, dh = img.height * s;
+      cx.drawImage(img, (W - dw) / 2, (H - dh) / 2, dw, dh);
       cx.fillStyle = 'rgba(0,0,0,0.12)';
       for (var y = 0; y < H; y += 3) cx.fillRect(0, y, W, 1);
       var tex = new THREE.CanvasTexture(c);

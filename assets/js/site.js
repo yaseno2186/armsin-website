@@ -359,6 +359,17 @@ function markFooterReveal() {
 function initServiceFlow() {
   var track = document.querySelector('.svc-flow-track');
   if (!track) return;
+  // Two monitors on each side of the middle one means 5 visible at once;
+  // with only 4 services, a second copy of the set fills the ring. Copies
+  // keep their data-i18n so they translate too.
+  var originals = Array.prototype.slice.call(track.querySelectorAll('.svc-card3'));
+  if (originals.length < 6) {
+    originals.forEach(function (card) {
+      var c = card.cloneNode(true);
+      c.classList.add('svc-card3-copy');
+      track.appendChild(c);
+    });
+  }
   var cards = Array.prototype.slice.call(track.querySelectorAll('.svc-card3'));
   var n = cards.length;
   var current = 0;
@@ -373,7 +384,7 @@ function initServiceFlow() {
       card.style.setProperty('--abs', abs);
       card.style.zIndex = String(10 - abs);
       card.classList.toggle('is-active', off === 0);
-      card.classList.toggle('is-far', abs >= 2);
+      card.classList.toggle('is-far', abs >= 3);
       card.setAttribute('aria-hidden', off === 0 ? 'false' : 'true');
       var mon = card.querySelector('slim-monitor');
       if (mon && mon.setView) {
