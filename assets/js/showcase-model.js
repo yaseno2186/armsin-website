@@ -64,6 +64,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
   var clock = new THREE.Clock();
   var BASE_YAW = -0.55;            // turned so the screen faces the pills on the left
+  var SCREEN_SCALE = 1.1;          // screen face size vs. the model's original
+  function isShown(o) { for (var p = o; p; p = p.parent) { if (!p.visible) return false; } return true; }
   function frame() {
     var dt = clock.getDelta();
     var t = clock.elapsedTime;
@@ -123,19 +125,48 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
       var object = gltf.scene;
       pivot.add(object);
 
+      // Monitor + system unit only: no keyboard, mouse or mouse cord here.
+      // screen_light* are point lights baked into the model that paint the
+      // green glow ring around the picture; off here so the screen reads clean.
+      ['keyboard', 'mouse', 'mouse_cord', 'screen_light', 'screen_light_core', 'screen_halo_1', 'screen_halo_2'].forEach(function (n) {
+        var o = object.getObjectByName(n);
+        if (o) o.visible = false;
+      });
+      // Bigger picture: scale the screen face up around its own centre so
+      // it fills the bezel opening.
+      ['screen_code_face'].forEach(function (n) {
+        var m = object.getObjectByName(n);
+        if (!m || !m.geometry) return;
+        m.geometry = m.geometry.clone();
+        m.geometry.computeBoundingBox();
+        var c = m.geometry.boundingBox.getCenter(new THREE.Vector3());
+        m.geometry.translate(-c.x, -c.y, -c.z);
+        m.geometry.scale(SCREEN_SCALE, SCREEN_SCALE, 1);
+        m.geometry.translate(c.x, c.y, c.z);
+      });
+
       // Fit off the physical geometry only (skip oversized glow planes).
       var box = new THREE.Box3();
       object.traverse(function (o) {
-        if (o.isMesh && !/halo|glow/i.test(o.name)) box.expandByObject(o);
+        if (o.isMesh && !/halo|glow/i.test(o.name) && isShown(o)) box.expandByObject(o);
       });
       if (box.isEmpty()) box.setFromObject(object);
       var sphere = box.getBoundingSphere(new THREE.Sphere());
-      object.position.sub(sphere.center);
+      // Wide layout: centre on the SCREEN, not the whole PC, so the screen
+      // lands exactly in the middle of the canvas box. style.css centres that
+      // box on the golden spiral's eye. Phones: centre on the whole PC.
+      var wide = window.matchMedia('(min-width: 900px)').matches; // same breakpoint as style.css
+      var face = object.getObjectByName('screen_code_face');
+      var centre = sphere.center.clone();
+      if (wide && face) new THREE.Box3().setFromObject(face).getCenter(centre);
+      object.position.sub(centre);
       object.updateMatrixWorld(true);
 
       var halfFov = (camera.fov * Math.PI) / 360;
-      // Phones: the canvas is square and narrow, so pull in closer.
-      var dist = sphere.radius / Math.tan(halfFov) * (container.clientWidth < 700 ? 0.68 : 0.92);
+      // Zoom: data-zoom on wide screens (bigger number = PC smaller),
+      // phones pull in closer because the canvas is square and narrow.
+      var zoom = wide ? parseFloat(container.getAttribute('data-zoom') || '1.1') : 0.95;
+      var dist = sphere.radius / Math.tan(halfFov) * zoom;
       var elev = 14 * Math.PI / 180;
       camera.position.set(0, dist * Math.sin(elev), dist * Math.cos(elev));
       camera.lookAt(0, 0, 0);
