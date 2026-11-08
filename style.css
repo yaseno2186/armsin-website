@@ -4615,7 +4615,7 @@ html[data-theme="light"] .showcase-pill {
   text-align: center;
   cursor: pointer;
   transform:
-    translateX(calc(var(--off, 0) * min(58%, 260px)))
+    translateX(calc(var(--off, 0) * min(60%, 270px)))
     scale(calc(1 - var(--abs, 0) * 0.16));
   filter: brightness(calc(1 - var(--abs, 0) * 0.32)) blur(calc(var(--abs, 0) * 0.6px));
   opacity: 1;
