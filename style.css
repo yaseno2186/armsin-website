@@ -4594,7 +4594,7 @@ html[data-theme="light"] .showcase-pill {
 }
 
 /* ================= SERVICES COVERFLOW =================
-   "Meine Leistungen": cards stacked in one grid cell (so the track is as tall
+   "Meine Leistungen": items (3D monitor + text, no card body) stacked in one grid cell (so the track is as tall
    as the tallest card); site.js sets --off (-2..2) and --abs per card. The
    middle card is full size in front; neighbours shift sideways, shrink, sit
    behind and dim. Monitor power on/off + turning is done in site.js. */
@@ -4612,12 +4612,7 @@ html[data-theme="light"] .showcase-pill {
 .svc-card3 {
   grid-area: 1 / 1;
   width: min(440px, 80vw);
-  background: var(--surface);
-  border: 1px solid var(--border-default);
-  border-radius: 28px;
-  padding: 10px 10px var(--space-3);
-  box-shadow: 0 24px 60px var(--shadow-lift), 0 2px 0 var(--border-subtle) inset;
-  text-align: left;
+  text-align: center;
   cursor: pointer;
   transform:
     translateX(calc(var(--off, 0) * min(58%, 260px)))
@@ -4632,16 +4627,8 @@ html[data-theme="light"] .showcase-pill {
 }
 .svc-card3.is-active { cursor: default; }
 .svc-card3.is-far { opacity: 0; pointer-events: none; }
-.svc-card3 slim-monitor {
-  display: block;
-  margin: -10px -10px 0;
-  width: calc(100% + 20px);
-  max-width: none;
-  border-radius: 22px 22px 0 0;
-  overflow: hidden;
-  background: radial-gradient(120% 80% at 50% 30%, var(--accent-glow) 0%, transparent 70%), var(--surface-2);
-}
-.svc-card3 .svc-mon-body { padding: var(--space-2) var(--space-2) 0; }
+.svc-card3 slim-monitor { display: block; width: 100%; max-width: none; }
+.svc-card3 .svc-mon-body { padding: 0 var(--space-2); margin-top: calc(var(--space-2) * -1); }
 .svc-card3 .svc-num {
   display: inline-block;
   font-family: var(--font-head);
@@ -4656,14 +4643,8 @@ html[data-theme="light"] .showcase-pill {
   color: var(--text);
 }
 .svc-card3 p { margin: 0; color: var(--text-dim); line-height: 1.6; font-size: 0.95rem; }
-.svc-card3:not(.is-active) .svc-mon-body { opacity: 0.55; transition: opacity 500ms var(--ease-out); }
+.svc-card3:not(.is-active) .svc-mon-body { opacity: 0; transition: opacity 500ms var(--ease-out); }
 .svc-flow .svc-controls { display: flex; justify-content: center; gap: 12px; margin-top: var(--space-3); }
-html[data-theme="light"] .svc-card3 {
-  box-shadow: 0 1px 2px rgba(19, 36, 27, 0.06), 0 18px 44px rgba(19, 36, 27, 0.14);
-}
-html[data-theme="light"] .svc-card3 slim-monitor {
-  background: radial-gradient(120% 80% at 50% 30%, rgba(21, 128, 61, 0.10) 0%, transparent 70%), #E7EEE8;
-}
 @media (prefers-reduced-motion: reduce) {
   .svc-card3 { transition-duration: 1ms; }
 }
