@@ -350,6 +350,16 @@ function markFooterReveal() {
 // the right; any touch, drag, wheel, hover, focus or arrow click pauses it
 // and it resumes after a few quiet seconds. The card nearest the middle
 // grows a little, the others return to normal size.
+// Service monitors (<slim-monitor>): on touch screens dragging a monitor
+// would block page scrolling, so they stay still there ("static").
+function initServiceMonitors() {
+  var mons = document.querySelectorAll('.svc-mons slim-monitor');
+  if (!mons.length) return;
+  if (window.matchMedia('(pointer: coarse)').matches) {
+    mons.forEach(function (m) { m.setAttribute('static', ''); });
+  }
+}
+
 function initServiceCarousel() {
   var track = document.querySelector('.svc-track');
   if (!track) return;
@@ -883,4 +893,5 @@ initHeadingDecode();
 initCardSpotlight();
 initProcessLine();
 initServiceCarousel();
+initServiceMonitors();
 initNeedsCheck();
