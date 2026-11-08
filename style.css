@@ -4618,12 +4618,12 @@ html[data-theme="light"] .showcase-pill {
 .svc-flow-track:focus-visible { box-shadow: 0 0 0 2px var(--accent-ring); border-radius: var(--radius); }
 .svc-card3 {
   grid-area: 1 / 1;
-  width: min(440px, 80vw);
+  width: min(580px, 86vw);
   text-align: center;
   cursor: pointer;
   /* Outer pair (|off| = 2) sits a bit closer than linear so all 5 fit. */
   transform:
-    translateX(calc(var(--off, 0) * min(60%, 270px) * (1 - (var(--abs, 0) - 1) * 0.12 * min(var(--abs, 0), 1))))
+    translateX(calc(var(--off, 0) * min(60%, 350px) * (1 - (var(--abs, 0) - 1) * 0.12 * min(var(--abs, 0), 1))))
     scale(calc(1 - var(--abs, 0) * 0.15));
   filter: brightness(calc(1 - var(--abs, 0) * 0.28)) blur(calc(var(--abs, 0) * 0.6px));
   opacity: 1;
