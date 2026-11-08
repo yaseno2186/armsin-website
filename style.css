@@ -130,6 +130,24 @@ h1, h2, h3 {
   letter-spacing: -0.01em;
 }
 
+/* Retro "glitch" edge on headings: a thin red/cyan colour split, like a
+   slightly misaligned CRT. Static (no motion). Tokens are set per theme. */
+:root {
+  --glitch-red: rgba(255, 64, 96, 0.5);
+  --glitch-cyan: rgba(0, 214, 255, 0.45);
+  --glitch-x: 0.055em;
+}
+h1, h2 {
+  text-shadow: var(--glitch-x) 0 var(--glitch-red), calc(var(--glitch-x) * -1) 0 var(--glitch-cyan);
+}
+h3 {
+  text-shadow: 0.04em 0 var(--glitch-red), -0.04em 0 var(--glitch-cyan);
+}
+html[data-theme="light"] {
+  --glitch-red: rgba(220, 38, 80, 0.32);
+  --glitch-cyan: rgba(0, 150, 200, 0.3);
+}
+
 img { max-width: 100%; display: block; }
 
 .container {
