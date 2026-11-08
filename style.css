@@ -4534,8 +4534,15 @@ html[data-theme="light"] .svc-btn { box-shadow: var(--card-shadow); }
 .showcase-model canvas { display: block; width: 100% !important; height: 100% !important; }
 
 @media (min-width: 900px) {
+  .showcase { padding: var(--space-6) 0; }
+  .showcase-title { font-size: clamp(1.6rem, 2.6vw, 2.3rem); margin-bottom: var(--space-2); max-width: none; }
   /* Stage keeps the spiral's 1000x750 box, so % positions below match it. */
-  .showcase-stage { display: block; aspect-ratio: 4 / 3; height: auto; max-width: 1240px; margin: 0 auto; }
+  /* Fits one screen: the stage is as wide as the viewport height allows. */
+  .showcase-stage {
+    display: block; aspect-ratio: 4 / 3; height: auto;
+    width: min(1240px, 100%, max(640px, calc((100svh - 230px) * 4 / 3)));
+    margin: 0 auto;
+  }
   .showcase-arc {
     display: block;
     position: absolute;
@@ -4614,10 +4621,11 @@ html[data-theme="light"] .showcase-pill {
   width: min(440px, 80vw);
   text-align: center;
   cursor: pointer;
+  /* Outer pair (|off| = 2) sits a bit closer than linear so all 5 fit. */
   transform:
-    translateX(calc(var(--off, 0) * min(60%, 270px)))
-    scale(calc(1 - var(--abs, 0) * 0.16));
-  filter: brightness(calc(1 - var(--abs, 0) * 0.32)) blur(calc(var(--abs, 0) * 0.6px));
+    translateX(calc(var(--off, 0) * min(60%, 270px) * (1 - (var(--abs, 0) - 1) * 0.12 * min(var(--abs, 0), 1))))
+    scale(calc(1 - var(--abs, 0) * 0.15));
+  filter: brightness(calc(1 - var(--abs, 0) * 0.28)) blur(calc(var(--abs, 0) * 0.6px));
   opacity: 1;
   transition:
     transform 700ms var(--ease-out),
@@ -4628,21 +4636,32 @@ html[data-theme="light"] .showcase-pill {
 .svc-card3.is-active { cursor: default; }
 .svc-card3.is-far { opacity: 0; pointer-events: none; }
 .svc-card3 slim-monitor { display: block; width: 100%; max-width: none; }
-.svc-card3 .svc-mon-body { padding: 0 var(--space-2); margin-top: calc(var(--space-2) * -1); }
+/* Text is wider than the monitor, so it's centred on the monitor's middle
+   (left 50% + translate) instead of starting at the monitor's left edge. */
+.svc-card3 .svc-mon-body {
+  position: relative;
+  left: 50%;
+  translate: -50% 0;
+  width: min(560px, 92vw);
+  padding: 0 var(--space-2);
+  margin-top: calc(var(--space-2) * -1);
+  text-align: center;
+}
+.svc-card3 { justify-self: center; }
 .svc-card3 .svc-num {
   display: inline-block;
   font-family: var(--font-head);
-  font-size: 0.8rem;
+  font-size: 0.95rem;
   color: var(--accent);
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 .svc-card3 h3 {
   font-family: var(--font-head);
-  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  font-size: clamp(1.35rem, 2.4vw, 1.75rem);
   margin: 0 0 8px;
   color: var(--text);
 }
-.svc-card3 p { margin: 0; color: var(--text-dim); line-height: 1.6; font-size: 0.95rem; }
+.svc-card3 p { margin: 0; color: var(--text-dim); line-height: 1.6; font-size: clamp(1.02rem, 1.3vw, 1.15rem); }
 .svc-card3:not(.is-active) .svc-mon-body { opacity: 0; transition: opacity 500ms var(--ease-out); }
 .svc-flow .svc-controls { display: flex; justify-content: center; gap: 12px; margin-top: var(--space-3); }
 @media (prefers-reduced-motion: reduce) {

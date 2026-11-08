@@ -77,6 +77,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
       pivot.rotation.x += (pitch - pivot.rotation.x) * lerp;
       pivot.position.y = Math.sin(t * 0.8) * 0.015;
     }
+    if (screenTick) screenTick(t);
     renderer.render(scene, camera);
   }
 
@@ -92,31 +93,153 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
     setVisible(true);
   }
 
-  // Paint a project screenshot onto the CRT face ("cover" crop to the
-  // screen's 728x556 canvas, plus faint scanlines so it still reads as CRT).
+  // CRT screen: a live re-creation of the Youroma homepage hero (the project
+  // shown on the screen, source: github.com/yaseno2186/Youroma,
+  // components/HeroBottle.jsx + app/globals.css). Big "YOUROMA" in Bodoni,
+  // the flacon floating and tilted in front of it with a pulsing gold aura,
+  // orbiting embers and a light glint sweeping over the glass. Same timings
+  // as the real site (float 7s, aura 5s, glint 6s, orbits 9-24s). Drawn on a
+  // 728x556 canvas that fills the whole screen, plus faint CRT scanlines.
+  // Reduced motion: one still frame.
+  var screenTick = null;
   function paintScreen(screenFace) {
     var src = container.getAttribute('data-screen');
     if (!src) return;
+    var W = 728, H = 556;
+    var c = document.createElement('canvas');
+    c.width = W; c.height = H;
+    var cx = c.getContext('2d');
+    var tex = new THREE.CanvasTexture(c);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.anisotropy = 4;
+
     var img = new Image();
-    img.onload = function () {
-      var W = 728, H = 556;
-      var c = document.createElement('canvas');
-      c.width = W; c.height = H;
-      var cx = c.getContext('2d');
-      var s = Math.max(W / img.width, H / img.height);
-      var dw = img.width * s, dh = img.height * s;
-      cx.fillStyle = '#0a0e0c';
+    var font = new FontFace('Bodoni Moda', 'url(assets/fonts/bodoni-moda-latin-400.woff2)');
+    var bottleLayer = document.createElement('canvas');
+    var bx = bottleLayer.getContext('2d');
+
+    // Embers (radius in screen px, duration s, delay s, direction, colour).
+    var EMBERS = [
+      [5, 92, 16, 0, 1, '#FF5A36'], [3, 72, 11, -2, -1, '#FF7A45'], [4, 112, 21, -6, 1, '#E8341C'],
+      [2, 58, 9, -1, -1, '#FF9A4D'], [4, 98, 18, -9, -1, '#E8341C'], [3, 80, 13, -4, 1, '#FF5A36'],
+      [2, 125, 24, -12, 1, '#FF7A45']
+    ];
+    var easeInOut = function (x) { return 0.5 - Math.cos(Math.PI * x) / 2; };
+
+    function draw(t) {
+      // background + soft gold wash (radial, like the site's section glow)
+      cx.fillStyle = '#0E1512';
       cx.fillRect(0, 0, W, H);
-      cx.drawImage(img, (W - dw) / 2, 0, dw, dh);
+      var g = cx.createRadialGradient(W / 2, H * 0.52, 0, W / 2, H * 0.52, W * 0.62);
+      g.addColorStop(0, 'rgba(200,169,106,0.16)');
+      g.addColorStop(1, 'rgba(200,169,106,0)');
+      cx.fillStyle = g;
+      cx.fillRect(0, 0, W, H);
+
+      // eyebrow + badge (top corners)
+      cx.fillStyle = 'rgba(200,169,106,0.9)';
+      cx.fillRect(W * 0.1, H * 0.15, 28, 1);
+      cx.font = '500 11px Inter, sans-serif';
+      cx.textBaseline = 'middle';
+      cx.fillText('E A U   D E   P A R F U M', W * 0.1 + 38, H * 0.15);
+      cx.textAlign = 'right';
+      cx.fillStyle = 'rgba(237,230,216,0.55)';
+      cx.fillText('Y O U R O M A', W * 0.9, H * 0.15);
+      cx.textAlign = 'center';
+
+      // big wordmark
+      cx.fillStyle = 'rgba(237,230,216,0.94)';
+      cx.font = '400 150px "Bodoni Moda", Didot, "Times New Roman", serif';
+      cx.textBaseline = 'middle';
+      cx.fillText('YOUROMA', W / 2, H * 0.53, W * 0.9);
+
+      // aura: pulses 5s (opacity .75 -> 1, scale 1 -> 1.08)
+      var ap = easeInOut((Math.sin(t * Math.PI * 2 / 5 - Math.PI / 2) + 1) / 2);
+      var ar = 150 * (1 + ap * 0.08);
+      cx.save();
+      cx.translate(W / 2, H * 0.53);
+      cx.scale(1, 1.4);
+      var a = cx.createRadialGradient(0, 0, 0, 0, 0, ar);
+      var k = 0.75 + ap * 0.25;
+      a.addColorStop(0, 'rgba(200,169,106,' + (0.5 * k).toFixed(3) + ')');
+      a.addColorStop(0.35, 'rgba(200,169,106,' + (0.22 * k).toFixed(3) + ')');
+      a.addColorStop(0.68, 'rgba(200,169,106,0)');
+      cx.fillStyle = a;
+      cx.fillRect(-ar, -ar, ar * 2, ar * 2);
+      cx.restore();
+
+      // bottle: float 7s (14px), tilted 8deg, glint every 6s (masked to the glass)
+      if (img.naturalWidth) {
+        var bh = H * 0.66, bw = bh * img.naturalWidth / img.naturalHeight;
+        var fy = -7 * (1 - Math.cos(t * Math.PI * 2 / 7));
+        bottleLayer.width = Math.ceil(bw); bottleLayer.height = Math.ceil(bh);
+        bx.clearRect(0, 0, bw, bh);
+        bx.globalCompositeOperation = 'source-over';
+        bx.drawImage(img, 0, 0, bw, bh);
+        var gp = (t % 6) / 6;                     // glint: sweeps between 12% and 32% of the cycle
+        if (gp > 0.12 && gp < 0.32) {
+          var q = (gp - 0.12) / 0.2;
+          var op = q < 0.4 ? q / 0.4 : 1 - (q - 0.4) / 0.6;
+          var gx = -bw + q * bw * 3;
+          var lg = bx.createLinearGradient(gx, 0, gx + bw, bh);
+          lg.addColorStop(0.42, 'rgba(255,246,224,0)');
+          lg.addColorStop(0.5, 'rgba(255,246,224,' + (0.85 * op).toFixed(3) + ')');
+          lg.addColorStop(0.58, 'rgba(255,246,224,0)');
+          bx.globalCompositeOperation = 'source-atop';
+          bx.fillStyle = lg;
+          bx.fillRect(0, 0, bw, bh);
+        }
+        cx.save();
+        cx.translate(W / 2, H * 0.53 + fy);
+        cx.rotate(8 * Math.PI / 180);
+        cx.shadowColor = 'rgba(0,0,0,0.6)';
+        cx.shadowBlur = 30;
+        cx.shadowOffsetY = 22;
+        cx.drawImage(bottleLayer, -bw / 2, -bh / 2);
+        cx.restore();
+      }
+
+      // embers orbit the bottle and twinkle
+      EMBERS.forEach(function (e) {
+        var ang = e[4] * ((t - e[3]) / e[2]) * Math.PI * 2;
+        var tw = (Math.sin(((t - e[3] / 2) / (e[2] / 2.4)) * Math.PI * 2) + 1) / 2;
+        var x = W / 2 + Math.cos(ang) * e[1];
+        var y = H * 0.53 + Math.sin(ang) * e[1];
+        cx.globalAlpha = 0.2 + tw * 0.8;
+        cx.fillStyle = e[5];
+        cx.shadowColor = 'rgba(255,60,20,0.8)';
+        cx.shadowBlur = 8;
+        cx.beginPath();
+        cx.arc(x, y, (e[0] / 2) * (0.7 + tw * 0.45), 0, Math.PI * 2);
+        cx.fill();
+        cx.shadowBlur = 0;
+        cx.globalAlpha = 1;
+      });
+
+      // CRT scanlines
       cx.fillStyle = 'rgba(0,0,0,0.12)';
-      for (var y = 0; y < H; y += 3) cx.fillRect(0, y, W, 1);
-      var tex = new THREE.CanvasTexture(c);
-      tex.colorSpace = THREE.SRGBColorSpace;
-      tex.anisotropy = 4;
+      for (var y2 = 0; y2 < H; y2 += 3) cx.fillRect(0, y2, W, 1);
+      tex.needsUpdate = true;
+    }
+
+    var last = -1;
+    function start() {
       screenFace.material = new THREE.MeshBasicMaterial({ map: tex, toneMapped: false });
+      draw(1.5);
+      if (reduceMotion) { if (!visible) renderer.render(scene, camera); return; }
+      screenTick = function (t) {
+        if (t - last < 1 / 30) return;            // ~30 fps is plenty for the screen
+        last = t;
+        draw(t);
+      };
       if (!visible) renderer.render(scene, camera);
-    };
+    }
+    var pending = 2;
+    function ready() { if (--pending === 0) start(); }
+    img.onload = ready;
+    img.onerror = ready;
     img.src = src;
+    font.load().then(function (f) { document.fonts.add(f); ready(); }, ready);
   }
 
   new GLTFLoader().load(
