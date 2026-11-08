@@ -18,6 +18,7 @@
  *   scanlines   Add the attribute to show subtle scanlines.
  *   rx, ry      Starting angle in degrees (default -12 and -32).
  *   static      Add the attribute to disable drag/keyboard rotation.
+ *   no-floor    Armsin addition: hide the floor shadow/glow under the monitor.
  */
 (function () {
   if (customElements.get('slim-monitor')) return;
@@ -37,6 +38,7 @@
   .fit{position:absolute;left:50%;top:0;width:${STAGE_W}px;height:${STAGE_H}px;transform-origin:50% 0;perspective:1900px;perspective-origin:50% 42%}
   .wall{position:absolute;inset:0;pointer-events:none}
   .floor,.floorglow{position:absolute;left:50%;border-radius:50%;pointer-events:none}
+  :host([no-floor]) .floor,:host([no-floor]) .floorglow{display:none}
   .floor{top:560px;width:760px;height:150px;margin-left:-380px;background:radial-gradient(ellipse at center,rgba(0,0,0,.55) 0%,rgba(0,0,0,.25) 40%,rgba(0,0,0,0) 70%)}
   .floorglow{top:520px;width:620px;height:140px;margin-left:-310px}
   .scene{position:absolute;left:${(STAGE_W - SCENE_W) / 2}px;top:50px;width:${SCENE_W}px;height:${SCENE_H}px;transform-style:preserve-3d;will-change:transform}
