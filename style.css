@@ -1262,11 +1262,11 @@ img { max-width: 100%; display: block; }
 }
 
 /* Minimal card variant: just the image and the arrow link, no title/copy
-   below it — the screenshot does the talking. Square crop keeps it
-   consistent no matter how wide the source screenshot is. */
+   below it — the screenshot does the talking. A fixed landscape (16:10)
+   crop keeps the cards consistent no matter how wide the source is. */
 .portfolio-card-minimal .portfolio-thumb {
   height: auto;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 16 / 10;
   margin-bottom: var(--space-4);
 }
 
