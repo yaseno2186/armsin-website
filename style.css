@@ -4670,3 +4670,7 @@ html[data-theme="light"] .showcase-pill {
 
 /* The coverflow side cards stick out past the screen edge: clip them. */
 .services { overflow-x: clip; }
+
+/* Links inside blog lists (e.g. the sources list in a post) */
+.blog-built a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.blog-built a:hover { color: var(--accent-dark); }
