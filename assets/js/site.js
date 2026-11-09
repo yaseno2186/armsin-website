@@ -436,6 +436,44 @@ function initServiceFlow() {
   restart();
 }
 
+// Blog chart (blog-kfw-mittelstand-september-2026.html): when the chart
+// scrolls into view, .is-in starts the CSS bar growth and card stagger, and
+// every [data-count] number counts up from 0 (German comma, 1 decimal when
+// the target has one). Reduced motion: final values at once, no count-up.
+function initKfwChart() {
+  var chart = document.querySelector('.kfw-chart');
+  if (!chart) return;
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var nums = chart.querySelectorAll('[data-count]');
+  function fmt(el, v) {
+    var target = parseFloat(el.getAttribute('data-count'));
+    var dec = String(el.getAttribute('data-count')).indexOf('.') === -1 ? 0 : 1;
+    var txt = v.toFixed(dec).replace('.', ',');
+    if (target < 0 && v === 0) txt = '0';
+    el.textContent = (el.getAttribute('data-prefix') || '') + txt + (el.getAttribute('data-suffix') || '');
+  }
+  function run() {
+    chart.classList.add('is-in');
+    if (reduceMotion) return;
+    var start = null, DUR = 1400;
+    nums.forEach(function (el) { fmt(el, 0); });
+    function tick(ts) {
+      if (start === null) start = ts;
+      var t = Math.min((ts - start) / DUR, 1);
+      var e = 1 - Math.pow(1 - t, 3);                 // ease-out
+      nums.forEach(function (el) { fmt(el, parseFloat(el.getAttribute('data-count')) * e); });
+      if (t < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  if (!('IntersectionObserver' in window)) { run(); return; }
+  chart.classList.add('kfw-js');
+  var io = new IntersectionObserver(function (entries) {
+    if (entries[0].isIntersecting) { io.disconnect(); run(); }
+  }, { threshold: 0.35 });
+  io.observe(chart);
+}
+
 function initServiceCarousel() {
   var track = document.querySelector('.svc-track');
   if (!track) return;
@@ -970,4 +1008,5 @@ initCardSpotlight();
 initProcessLine();
 initServiceCarousel();
 initServiceFlow();
+initKfwChart();
 initNeedsCheck();

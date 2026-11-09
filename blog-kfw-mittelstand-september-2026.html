@@ -35,7 +35,7 @@
 </script>
 <link rel="preload" href="assets/fonts/inter-var.woff" as="font" type="font/woff" crossorigin>
 <link rel="preload" href="assets/fonts/jetbrains-mono-var.woff" as="font" type="font/woff" crossorigin>
-<link rel="stylesheet" href="style.css?v=33">
+<link rel="stylesheet" href="style.css?v=34">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="48x48" href="assets/logo/favicon-48.png">
 <link rel="icon" type="image/png" sizes="192x192" href="assets/logo/favicon-192.png">
@@ -83,8 +83,37 @@
   <article class="blog-article">
     <div class="container">
 
-      <figure class="blog-figure blog-figure-wide" data-reveal>
-        <img src="assets/blog/kfw-mittelstand-september-2026.jpg?v=1" alt="Grafik: Geschäftsklima im Mittelstand steigt von -12,5 Punkten im August auf -8,1 Punkte im September 2026. Daneben: fünfter Anstieg in Folge, rund 40 Prozent der Mittelständler haben 2025 investiert, Neuinvestitionen preisbereinigt minus 3,7 Prozent." width="1920" height="1080">
+      <!-- Live chart (initKfwChart in site.js): bars grow from the zero line,
+           numbers count up, fact cards come in one after another when the
+           chart scrolls into view. Bar heights are to scale (--h = value / 12.5).
+           The static image assets/blog/kfw-mittelstand-september-2026.jpg is
+           the same chart for link previews and the blog card. -->
+      <figure class="kfw-chart" data-reveal>
+        <div class="kfw-chart-inner">
+          <div class="kfw-card kfw-bars" role="img" aria-label="Geschäftsklima Mittelstand: August 2026 -12,5 Punkte, September 2026 -8,1 Punkte" data-i18n-aria="blog.post2.chart.aria">
+            <p class="kfw-title" data-i18n="blog.post2.chart.title">Geschäftsklima Mittelstand</p>
+            <p class="kfw-sub" data-i18n="blog.post2.chart.sub">KfW-ifo-Mittelstandsbarometer, Saldenpunkte</p>
+            <div class="kfw-plot" aria-hidden="true">
+              <span class="kfw-zero">0</span>
+              <div class="kfw-col">
+                <span class="kfw-month" data-i18n="blog.post2.chart.aug">Aug 2026</span>
+                <span class="kfw-bar kfw-bar-prev" style="--h: 1"></span>
+                <span class="kfw-val" data-count="-12.5">-12,5</span>
+              </div>
+              <span class="kfw-arrow">&#8599;</span>
+              <div class="kfw-col">
+                <span class="kfw-month" data-i18n="blog.post2.chart.sep">Sep 2026</span>
+                <span class="kfw-bar kfw-bar-now" style="--h: 0.648"></span>
+                <span class="kfw-val kfw-val-now" data-count="-8.1">-8,1</span>
+              </div>
+            </div>
+          </div>
+          <div class="kfw-facts">
+            <div class="kfw-card kfw-fact"><b data-count="5" data-suffix="×">5×</b><span data-i18n="blog.post2.chart.f1">in Folge gestiegen, höchster Stand seit Mai 2023</span></div>
+            <div class="kfw-card kfw-fact"><b class="amber" data-count="40" data-prefix="~" data-suffix=" %">~40 %</b><span data-i18n="blog.post2.chart.f2">der Mittelständler haben 2025 überhaupt investiert</span></div>
+            <div class="kfw-card kfw-fact"><b class="amber" data-count="-3.7" data-suffix=" %">-3,7 %</b><span data-i18n="blog.post2.chart.f3">Neuinvestitionen 2025, preisbereinigt</span></div>
+          </div>
+        </div>
         <figcaption data-i18n="blog.post2.fig1.cap">Die wichtigsten Werte auf einen Blick. Quellen: KfW-ifo-Mittelstandsbarometer September 2026 und KfW-Mittelstandspanel 2026.</figcaption>
       </figure>
 
@@ -169,8 +198,8 @@
   </div>
 </footer>
 
-<script src="assets/js/i18n.js?v=15"></script>
-<script src="assets/js/site.js?v=12"></script>
+<script src="assets/js/i18n.js?v=16"></script>
+<script src="assets/js/site.js?v=13"></script>
 
 </body>
 </html>
