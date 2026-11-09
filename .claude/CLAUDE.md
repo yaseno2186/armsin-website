@@ -16,6 +16,13 @@ apps, photography, and systems/automation, not websites alone.
 - Code must stay simple enough for a non-technical person to edit 
   text later without breaking anything.
 
+## URLs (2026-11-09)
+Pages are still files named `*.html`, but every internal link, canonical,
+og:url, JSON-LD URL and sitemap entry uses the short form without `.html`
+(`href="ablauf"`, `https://armsin.de/ablauf`; homepage `./` /
+`https://armsin.de/`). GitHub Pages serves `/ablauf` from `ablauf.html`,
+and old `.html` links keep working. New pages and links: same rule.
+
 ## Language
 All visible content in German (target audience: German local business 
 owners). Code comments can be in English.
