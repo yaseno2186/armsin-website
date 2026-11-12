@@ -4601,10 +4601,11 @@ html[data-theme="light"] .showcase-pill {
 }
 
 /* ================= SERVICES COVERFLOW =================
-   "Meine Leistungen": items (3D monitor + text, no card body) stacked in one grid cell (so the track is as tall
-   as the tallest card); site.js sets --off (-2..2) and --abs per card. The
-   middle card is full size in front; neighbours shift sideways, shrink, sit
-   behind and dim. Monitor power on/off + turning is done in site.js. */
+   "Meine Leistungen": items (monitor + text, no card body) stacked in one
+   grid cell (so the track is as tall as the tallest card); site.js sets
+   --off (-2..2), --abs and data-pose per card. The middle card is full size
+   in front; neighbours shift sideways, shrink and sit behind. Monitors are
+   flat images (see .svc-mon below), so only transform/opacity animate. */
 .svc-flow { margin-top: var(--space-4); }
 .svc-flow-track {
   display: grid;
@@ -4621,18 +4622,12 @@ html[data-theme="light"] .showcase-pill {
   width: min(580px, 86vw);
   text-align: center;
   cursor: pointer;
-  /* Outer pair (|off| = 2) sits a bit closer than linear so all 5 fit.
-     Desktop dims side monitors with brightness only (the old extra blur was
-     the most expensive part and is gone). Phones/touch (.is-lite below) get
-     no filter and no fade at all: animated filters on 3D content made them
-     lag and flash black. */
+  /* Outer pair (|off| = 2) sits a bit closer than linear so all 5 fit. */
   transform:
     translateX(calc(var(--off, 0) * min(60%, 350px) * (1 - (var(--abs, 0) - 1) * 0.12 * min(var(--abs, 0), 1))))
     scale(calc(1 - var(--abs, 0) * 0.15));
-  filter: brightness(calc(1 - var(--abs, 0) * 0.28));
   transition:
     transform 700ms var(--ease-out),
-    filter 700ms var(--ease-out),
     opacity 500ms var(--ease-out);
 }
 .svc-card3.is-active { cursor: default; }
@@ -4644,18 +4639,55 @@ html[data-theme="light"] .showcase-pill {
   pointer-events: none;
   transition: transform 700ms var(--ease-out), opacity 500ms var(--ease-out), visibility 0s linear 500ms;
 }
-/* Lite mode (phones/touch, set by site.js): 3 visible, side monitors
-   peek in at the edges, no 3D turning. */
+/* Lite (small screens/touch, set by site.js): 3 visible, side monitors
+   peek in at the edges. */
 .svc-flow-track.is-lite .svc-card3 {
   transform:
     translateX(calc(var(--off, 0) * min(72%, 350px)))
     scale(calc(1 - var(--abs, 0) * 0.18));
-  filter: none;   /* no filter/fade on 3D layers: phones redraw them every frame */
-  opacity: 1;
   transition: transform 600ms var(--ease-out), opacity 400ms var(--ease-out);
 }
-.svc-flow-track.is-lite .svc-card3.is-far { opacity: 0; }
-.svc-card3 slim-monitor { display: block; width: 100%; max-width: none; }
+
+/* Monitor = flat images. Front: monitor-frame-front.webp is the whole
+   monitor with its screen switched off (solid black). The service
+   screenshot (.svc-mon-screen) is laid exactly over that black screen and
+   fades in when the card is in the middle; .svc-mon-glass adds the glass
+   reflection, vignette and scanlines on top. Nothing is cut out of the
+   frame, so no background can show through at the screen edge. Side poses
+   are pre-rendered turned, switched-off monitors (darkened in the file).
+   Screen box in % of the frame image (1100x934), measured when rendering
+   in tools/render-monitors.html; corner radius = the screen's 8px of 512x288. */
+.svc-mon { position: relative; display: block; width: 100%; aspect-ratio: 1100 / 934; }
+.svc-mon-front, .svc-mon-frame, .svc-mon-side { position: absolute; inset: 0; width: 100%; height: 100%; }
+.svc-mon-screen, .svc-mon-glass {
+  position: absolute;
+  left: 9.421%; top: 14.532%;
+  width: 81.079%; height: 53.722%;
+  border-radius: 1.5625% / 2.778%;
+}
+.svc-mon-screen { object-fit: cover; opacity: 0; transition: opacity 500ms var(--ease-out) 150ms; }
+.svc-mon-glass {
+  pointer-events: none;
+  background:
+    linear-gradient(112deg, rgba(255,255,255,0) 30%, rgba(255,255,255,.10) 44%, rgba(255,255,255,.02) 52%, rgba(255,255,255,0) 60%),
+    repeating-linear-gradient(0deg, rgba(0,0,0,.16) 0 1px, rgba(0,0,0,0) 1px 3px);
+  box-shadow: inset 0 0 28px rgba(0,0,0,.5);
+}
+.svc-mon-side { opacity: 0; transition: opacity 450ms var(--ease-out); }
+.svc-mon-front { transition: opacity 450ms var(--ease-out); }
+[data-pose="on"] .svc-mon-screen { opacity: 1; }
+[data-pose="left"] .svc-mon-front, [data-pose="right"] .svc-mon-front { opacity: 0; }
+[data-pose="left"] .svc-mon-left, [data-pose="right"] .svc-mon-right { opacity: 1; }
+/* The glow of a switched-on screen, drawn once behind the monitor. */
+.svc-mon::before {
+  content: '';
+  position: absolute;
+  left: 15%; right: 15%; top: 18%; bottom: 35%;
+  background: radial-gradient(closest-side, var(--accent-glow-strong), transparent);
+  opacity: 0;
+  transition: opacity 500ms var(--ease-out);
+}
+[data-pose="on"] .svc-mon::before { opacity: .55; }
 /* Text is wider than the monitor, so it's centred on the monitor's middle
    (left 50% + translate) instead of starting at the monitor's left edge. */
 .svc-card3 .svc-mon-body {
@@ -4685,7 +4717,7 @@ html[data-theme="light"] .showcase-pill {
 .svc-card3:not(.is-active) .svc-mon-body { opacity: 0; transition: opacity 500ms var(--ease-out); }
 .svc-flow .svc-controls { display: flex; justify-content: center; gap: 12px; margin-top: var(--space-3); }
 @media (prefers-reduced-motion: reduce) {
-  .svc-card3 { transition-duration: 1ms; }
+  .svc-card3, .svc-mon-front, .svc-mon-side, .svc-mon-screen, .svc-mon::before { transition-duration: 1ms; transition-delay: 0ms; }
 }
 
 /* The coverflow side cards stick out past the screen edge: clip them. */

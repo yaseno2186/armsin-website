@@ -65,10 +65,16 @@ New pages need the head script and the footer `.footer-toggles` markup.
 Use tokens (var(--text), var(--surface) ...) for new CSS, never fixed
 white/black, so both themes keep working.
 
-**Homepage services (2026-10-09):** "Meine Leistungen" is an auto-scrolling
-image-card carousel (`.svc-track` in index.html, `initServiceCarousel` in
-site.js). Card images live in `assets/images/service-*.jpg` (900x1125,
-4:5). To change a card, edit its text in index.html and swap its image.
+**Homepage services (updated 2026-11-12):** "Meine Leistungen" is a
+coverflow of monitors (`.svc-flow` in index.html, `initServiceFlow` in
+site.js). The monitors are flat images, NOT live 3D (live CSS-3D monitors
+lagged and went black on phones): the service screenshot
+(`assets/images/service-*-wide.jpg`, 16:9) sits behind
+`monitor-frame-front.webp` (open screen); side monitors use the
+pre-rendered turned poses `monitor-off-left/-right.webp`. To change a
+service: edit its text in index.html and swap its 16:9 screenshot. The
+monitor images were rendered from `tools/render-monitors.html` (uses
+`assets/js/slim-monitor.js`); don't put live 3D back into this carousel.
 
 **Privacy / no third-party loads (2026-10-11):** fonts are self-hosted
 (`assets/fonts/*.woff`, @font-face at the top of style.css) and three.js is
