@@ -5,7 +5,8 @@
  *   <script src="slim-monitor.js" defer></script>
  *   <slim-monitor src="images/screen.jpg"></slim-monitor>
  *
- * Armsin edit: aria-label text is German (see _applyAll).
+ * Armsin edits: aria-label text is German (see _applyAll); no will-change on
+ * .scene and no filter on the screen image (both cost a lot on phones).
  *
  * Attributes (all optional):
  *   src         Image shown on the screen (PNG/JPG, 16:9 works best, e.g. 1920x1080).
@@ -41,11 +42,11 @@
   :host([no-floor]) .floor,:host([no-floor]) .floorglow{display:none}
   .floor{top:560px;width:760px;height:150px;margin-left:-380px;background:radial-gradient(ellipse at center,rgba(0,0,0,.55) 0%,rgba(0,0,0,.25) 40%,rgba(0,0,0,0) 70%)}
   .floorglow{top:520px;width:620px;height:140px;margin-left:-310px}
-  .scene{position:absolute;left:${(STAGE_W - SCENE_W) / 2}px;top:50px;width:${SCENE_W}px;height:${SCENE_H}px;transform-style:preserve-3d;will-change:transform}
+  .scene{position:absolute;left:${(STAGE_W - SCENE_W) / 2}px;top:50px;width:${SCENE_W}px;height:${SCENE_H}px;transform-style:preserve-3d}
   .scene.anim{transition:transform .7s cubic-bezier(.2,.7,.2,1)}
   .p3{position:absolute;transform-style:preserve-3d}
   .f{position:absolute}
-  .img{width:512px;height:288px;display:block;border-radius:8px;object-fit:cover;filter:saturate(1.08) brightness(1.06);transition:opacity .5s ease}
+  .img{width:512px;height:288px;display:block;border-radius:8px;object-fit:cover;transition:opacity .5s ease}
   .ph{width:512px;height:288px;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:linear-gradient(160deg,#3A5C4D 0%,#2F4A3E 45%,#1C2530 100%);transition:opacity .5s ease;font-family:'Inter',-apple-system,system-ui,sans-serif;color:#FAF6F0}
   .ph b{font:500 30px/36px 'Fraunces',Georgia,serif}
   .ph span{font-size:13px;line-height:20px;opacity:.82}

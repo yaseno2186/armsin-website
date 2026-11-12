@@ -355,15 +355,23 @@ function markFooterReveal() {
 // the middle, screens off. When a card reaches the middle its screen powers
 // on (slim-monitor's built-in fade) and the monitor turns to face you.
 // Arrows, swipe, arrow keys, click on a side card; slow auto-advance that
-// pauses on hover/focus and is off for reduced motion.
+// pauses on hover/focus, while the section is off screen, and is off for
+// reduced motion.
+// Phones/tablets/touch ("lite" mode): every 3D monitor is a stack of
+// GPU layers, so lite mode keeps only 4 monitors (no copies), shows the
+// middle one plus one on each side, and doesn't turn the side monitors in
+// 3D. That keeps the carousel smooth and stops the black-screen glitches
+// that happen when a phone runs out of graphics memory.
 function initServiceFlow() {
   var track = document.querySelector('.svc-flow-track');
   if (!track) return;
-  // Two monitors on each side of the middle one means 5 visible at once;
-  // with only 4 services, a second copy of the set fills the ring. Copies
-  // keep their data-i18n so they translate too.
+  var lite = window.matchMedia('(max-width: 899px), (pointer: coarse)').matches;
+  if (lite) track.classList.add('is-lite');
+  // Desktop: two monitors on each side of the middle one means 5 visible
+  // at once; with only 4 services, a second copy of the set fills the
+  // ring. Copies keep their data-i18n so they translate too.
   var originals = Array.prototype.slice.call(track.querySelectorAll('.svc-card3'));
-  if (originals.length < 6) {
+  if (!lite && originals.length < 6) {
     originals.forEach(function (card) {
       var c = card.cloneNode(true);
       c.classList.add('svc-card3-copy');
@@ -384,12 +392,16 @@ function initServiceFlow() {
       card.style.setProperty('--abs', abs);
       card.style.zIndex = String(10 - abs);
       card.classList.toggle('is-active', off === 0);
-      card.classList.toggle('is-far', abs >= 3);
+      card.classList.toggle('is-far', abs >= (lite ? 2 : 3));
       card.setAttribute('aria-hidden', off === 0 ? 'false' : 'true');
       var mon = card.querySelector('slim-monitor');
       if (mon && mon.setView) {
-        mon.on = off === 0;
-        mon.setView(-6, off === 0 ? 0 : (off < 0 ? 28 : -28), !reduceMotion);
+        // Only touch a monitor when its state really changes: every
+        // setView/on call re-renders that monitor's 3D scene.
+        var on = off === 0;
+        var ry = (on || lite) ? 0 : (off < 0 ? 28 : -28);
+        if (mon._flowOn !== on) { mon.on = on; mon._flowOn = on; }
+        if (mon._flowRy !== ry) { mon.setView(-6, ry, !reduceMotion); mon._flowRy = ry; }
       }
     });
   }
@@ -419,11 +431,16 @@ function initServiceFlow() {
     if (Math.abs(dx) > 40) { swiped = true; go(dx < 0 ? 1 : -1); restart(); }
   });
 
-  var timer = null, paused = false;
+  var timer = null, paused = false, inView = false;
   function restart() {
     if (reduceMotion) return;
     clearInterval(timer);
-    timer = setInterval(function () { if (!paused && !document.hidden) go(1); }, 5000);
+    timer = setInterval(function () { if (!paused && inView && !document.hidden) go(1); }, 5000);
+  }
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) { inView = entries[0].isIntersecting; }, { threshold: 0.25 }).observe(track);
+  } else {
+    inView = true;
   }
   ['mouseenter', 'focusin'].forEach(function (ev) { track.parentNode.addEventListener(ev, function () { paused = true; }); });
   ['mouseleave', 'focusout'].forEach(function (ev) { track.parentNode.addEventListener(ev, function () { paused = false; }); });

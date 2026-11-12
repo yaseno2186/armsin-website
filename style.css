@@ -4621,20 +4621,40 @@ html[data-theme="light"] .showcase-pill {
   width: min(580px, 86vw);
   text-align: center;
   cursor: pointer;
-  /* Outer pair (|off| = 2) sits a bit closer than linear so all 5 fit. */
+  /* Outer pair (|off| = 2) sits a bit closer than linear so all 5 fit.
+     Desktop dims side monitors with brightness only (the old extra blur was
+     the most expensive part and is gone). Phones/touch (.is-lite below) get
+     no filter and no fade at all: animated filters on 3D content made them
+     lag and flash black. */
   transform:
     translateX(calc(var(--off, 0) * min(60%, 350px) * (1 - (var(--abs, 0) - 1) * 0.12 * min(var(--abs, 0), 1))))
     scale(calc(1 - var(--abs, 0) * 0.15));
-  filter: brightness(calc(1 - var(--abs, 0) * 0.28)) blur(calc(var(--abs, 0) * 0.6px));
-  opacity: 1;
+  filter: brightness(calc(1 - var(--abs, 0) * 0.28));
   transition:
     transform 700ms var(--ease-out),
     filter 700ms var(--ease-out),
     opacity 500ms var(--ease-out);
-  will-change: transform;
 }
 .svc-card3.is-active { cursor: default; }
-.svc-card3.is-far { opacity: 0; pointer-events: none; }
+/* Far cards are hidden completely (visibility skips painting them) once
+   they have faded out. */
+.svc-card3.is-far {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform 700ms var(--ease-out), opacity 500ms var(--ease-out), visibility 0s linear 500ms;
+}
+/* Lite mode (phones/touch, set by site.js): 3 visible, side monitors
+   peek in at the edges, no 3D turning. */
+.svc-flow-track.is-lite .svc-card3 {
+  transform:
+    translateX(calc(var(--off, 0) * min(72%, 350px)))
+    scale(calc(1 - var(--abs, 0) * 0.18));
+  filter: none;   /* no filter/fade on 3D layers: phones redraw them every frame */
+  opacity: 1;
+  transition: transform 600ms var(--ease-out), opacity 400ms var(--ease-out);
+}
+.svc-flow-track.is-lite .svc-card3.is-far { opacity: 0; }
 .svc-card3 slim-monitor { display: block; width: 100%; max-width: none; }
 /* Text is wider than the monitor, so it's centred on the monitor's middle
    (left 50% + translate) instead of starting at the monitor's left edge. */
