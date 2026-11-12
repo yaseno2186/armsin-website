@@ -69,12 +69,18 @@ white/black, so both themes keep working.
 coverflow of monitors (`.svc-flow` in index.html, `initServiceFlow` in
 site.js). The monitors are flat images, NOT live 3D (live CSS-3D monitors
 lagged and went black on phones): the service screenshot
-(`assets/images/service-*-wide.jpg`, 16:9) sits behind
+(`assets/images/service-*-wide.webp`, 960x540; the .jpg next to it is the full-size source) sits behind
 `monitor-frame-front.webp` (open screen); side monitors use the
 pre-rendered turned poses `monitor-off-left/-right.webp`. To change a
 service: edit its text in index.html and swap its 16:9 screenshot. The
 monitor images were rendered from `tools/render-monitors.html` (uses
 `assets/js/slim-monitor.js`); don't put live 3D back into this carousel.
+
+**Speed (2026-11-12):** the hero heading and button must never fade in
+(they are the page's largest element). Both 3D scenes (hero-model.js,
+showcase-model.js) start only after load + idle; weak devices get the
+still pictures `hero-poster.webp` / `showcase-poster.webp`. Shown images
+should be served near their display size (WebP, max ~2x).
 
 **Privacy / no third-party loads (2026-10-11):** fonts are self-hosted
 (`assets/fonts/*.woff`, @font-face at the top of style.css) and three.js is
