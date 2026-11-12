@@ -352,16 +352,15 @@ function markFooterReveal() {
 // grows a little, the others return to normal size.
 // Services coverflow (index.html .svc-flow): the middle card sits in front
 // with its monitor switched on; neighbours sit smaller behind, turned toward
-// the middle, screens off. When a card reaches the middle its screen powers
-// on (slim-monitor's built-in fade) and the monitor turns to face you.
+// the middle, screens off. Monitors are flat images, not live 3D: each card
+// gets data-pose="on" | "left" | "right" and CSS crossfades between the
+// front monitor (screenshot behind an open frame) and a pre-rendered turned
+// pose. Only transform and opacity animate, so it stays smooth on phones.
 // Arrows, swipe, arrow keys, click on a side card; slow auto-advance that
 // pauses on hover/focus, while the section is off screen, and is off for
 // reduced motion.
-// Phones/tablets/touch ("lite" mode): every 3D monitor is a stack of
-// GPU layers, so lite mode keeps only 4 monitors (no copies), shows the
-// middle one plus one on each side, and doesn't turn the side monitors in
-// 3D. That keeps the carousel smooth and stops the black-screen glitches
-// that happen when a phone runs out of graphics memory.
+// Small screens/touch ("lite"): 4 monitors (no copies), middle plus one on
+// each side; desktop: 8 (a second copy of the set) so 5 are visible.
 function initServiceFlow() {
   var track = document.querySelector('.svc-flow-track');
   if (!track) return;
@@ -394,15 +393,7 @@ function initServiceFlow() {
       card.classList.toggle('is-active', off === 0);
       card.classList.toggle('is-far', abs >= (lite ? 2 : 3));
       card.setAttribute('aria-hidden', off === 0 ? 'false' : 'true');
-      var mon = card.querySelector('slim-monitor');
-      if (mon && mon.setView) {
-        // Only touch a monitor when its state really changes: every
-        // setView/on call re-renders that monitor's 3D scene.
-        var on = off === 0;
-        var ry = (on || lite) ? 0 : (off < 0 ? 28 : -28);
-        if (mon._flowOn !== on) { mon.on = on; mon._flowOn = on; }
-        if (mon._flowRy !== ry) { mon.setView(-6, ry, !reduceMotion); mon._flowRy = ry; }
-      }
+      card.setAttribute('data-pose', off === 0 ? 'on' : (off < 0 ? 'left' : 'right'));
     });
   }
   function go(dir) { current = (current + dir + n) % n; layout(); }
@@ -445,10 +436,6 @@ function initServiceFlow() {
   ['mouseenter', 'focusin'].forEach(function (ev) { track.parentNode.addEventListener(ev, function () { paused = true; }); });
   ['mouseleave', 'focusout'].forEach(function (ev) { track.parentNode.addEventListener(ev, function () { paused = false; }); });
 
-  // slim-monitor upgrades when its (deferred) script runs; lay out after.
-  if (window.customElements && customElements.whenDefined) {
-    customElements.whenDefined('slim-monitor').then(layout);
-  }
   layout();
   restart();
 }
