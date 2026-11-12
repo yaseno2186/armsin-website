@@ -4797,3 +4797,15 @@ html[data-theme="light"] .showcase-pill {
 @media (prefers-reduced-motion: reduce) {
   .kfw-js .kfw-bar, .kfw-js .kfw-arrow, .kfw-js .kfw-fact { transition-duration: 1ms; transition-delay: 0ms; }
 }
+
+/* Still picture instead of the live 3D scene on weak devices (data saver,
+   <= 2 GB RAM, <= 2 CPU cores, no WebGL). hero-model.js / showcase-model.js
+   add .is-poster; the pictures were captured from the live scenes. */
+.hero-model.is-poster { background: url("assets/images/hero-poster.webp") center / contain no-repeat; }
+.showcase-model.is-poster { background: url("assets/images/showcase-poster.webp") center / contain no-repeat; }
+
+/* Links inside the text sections of Studio, Projekte, Blog and Karriere,
+   and the Freiberg link under "Warum Armsin" on the homepage. */
+.about-story-inner a, .trust-local a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.trust-local { margin-top: var(--space-2); font-size: 0.95rem; }
+.about-story-inner p + p { margin-top: var(--space-2); }
