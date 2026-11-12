@@ -31,7 +31,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-(function initHeroModel() {
+function initHeroModel() {
   var container = document.getElementById('hero-model');
   if (!container) return;
 
@@ -498,4 +498,33 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
       console.warn('hero-model: failed to load retro-workstation.glb', err);
     }
   );
+}
+
+// Start the 3D scene late so it never delays the first paint: wait for the
+// page's load event, then for an idle moment. Weak devices (data saver,
+// <= 2 GB RAM or <= 2 CPU cores) get a still picture instead (.is-poster in
+// style.css), as do browsers without WebGL.
+function canRun3D() {
+  var n = navigator;
+  if (n.connection && n.connection.saveData) return false;
+  if (n.deviceMemory && n.deviceMemory <= 2) return false;
+  if (n.hardwareConcurrency && n.hardwareConcurrency <= 2) return false;
+  try {
+    var c = document.createElement('canvas');
+    if (!(c.getContext('webgl2') || c.getContext('webgl'))) return false;
+  } catch (e) { return false; }
+  return true;
+}
+function whenIdleAfterLoad(fn) {
+  var idle = window.requestIdleCallback || function (f) { return setTimeout(f, 300); };
+  var go = function () { idle(fn, { timeout: 2500 }); };
+  if (document.readyState === 'complete') go();
+  else window.addEventListener('load', go, { once: true });
+}
+
+(function () {
+  var el = document.getElementById('hero-model');
+  if (!el) return;
+  if (canRun3D()) whenIdleAfterLoad(initHeroModel);
+  else el.classList.add('is-poster', 'is-loaded');
 })();
