@@ -3,13 +3,14 @@
      images of this 3D monitor instead of the live component (live 3D lagged
      on phones). The images were made by screenshotting #m at 2x with a
      transparent background, then cropped to the same box and saved as WebP:
-       monitor-frame-front.webp  rx 0, ry 0, screen on; in the shadow root
-         .screen background transparent, .img/.ph hidden, first .p3>.f plate
-         transparent, .back hidden, .wall hidden (open screen)
+       monitor-frame-front.webp  rx 0, ry 0, screen off, .wall hidden, the four
+         recess side walls hidden (.f[style*="translateZ(20px) rotate"]; edge-on
+         they only render as thin light lines)
+         (the service screenshot is laid over its black screen in CSS)
        monitor-off-left.webp     ry 28, screen off, .wall hidden, then 72% brightness
        monitor-off-right.webp    ry -28, same
      If the frame is re-rendered, re-measure the screen box and update the
-     .svc-mon-screen / .svc-mon-off percentages in style.css. -->
+     .svc-mon-screen / .svc-mon-glass percentages in style.css. -->
 <style>html,body{margin:0;background:transparent}#m{width:780px}</style>
 <script src="../assets/js/slim-monitor.js"></script>
 <slim-monitor id="m" shell="#E4DDCF" rx="0" ry="0" scanlines static no-floor strength="0"></slim-monitor>

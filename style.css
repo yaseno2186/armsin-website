@@ -4648,24 +4648,34 @@ html[data-theme="light"] .showcase-pill {
   transition: transform 600ms var(--ease-out), opacity 400ms var(--ease-out);
 }
 
-/* Monitor = flat images. Front: the service screenshot (.svc-mon-screen)
-   sits in the open screen of monitor-frame-front.webp; .svc-mon-off is a
-   black panel that fades in when the screen is "off". Side poses are
-   pre-rendered turned, switched-off monitors (already darkened in the file).
-   Screen box in % of the frame image (1100x934): measured when rendering
-   the frame in tools/render-monitors.html. */
+/* Monitor = flat images. Front: monitor-frame-front.webp is the whole
+   monitor with its screen switched off (solid black). The service
+   screenshot (.svc-mon-screen) is laid exactly over that black screen and
+   fades in when the card is in the middle; .svc-mon-glass adds the glass
+   reflection, vignette and scanlines on top. Nothing is cut out of the
+   frame, so no background can show through at the screen edge. Side poses
+   are pre-rendered turned, switched-off monitors (darkened in the file).
+   Screen box in % of the frame image (1100x934), measured when rendering
+   in tools/render-monitors.html; corner radius = the screen's 8px of 512x288. */
 .svc-mon { position: relative; display: block; width: 100%; aspect-ratio: 1100 / 934; }
 .svc-mon-front, .svc-mon-frame, .svc-mon-side { position: absolute; inset: 0; width: 100%; height: 100%; }
-.svc-mon-screen, .svc-mon-off {
+.svc-mon-screen, .svc-mon-glass {
   position: absolute;
   left: 9.421%; top: 14.532%;
   width: 81.079%; height: 53.722%;
+  border-radius: 1.5625% / 2.778%;
 }
-.svc-mon-screen { object-fit: cover; }
-.svc-mon-off { background: #07090A; opacity: 1; transition: opacity 500ms var(--ease-out) 150ms; }
+.svc-mon-screen { object-fit: cover; opacity: 0; transition: opacity 500ms var(--ease-out) 150ms; }
+.svc-mon-glass {
+  pointer-events: none;
+  background:
+    linear-gradient(112deg, rgba(255,255,255,0) 30%, rgba(255,255,255,.10) 44%, rgba(255,255,255,.02) 52%, rgba(255,255,255,0) 60%),
+    repeating-linear-gradient(0deg, rgba(0,0,0,.16) 0 1px, rgba(0,0,0,0) 1px 3px);
+  box-shadow: inset 0 0 28px rgba(0,0,0,.5);
+}
 .svc-mon-side { opacity: 0; transition: opacity 450ms var(--ease-out); }
 .svc-mon-front { transition: opacity 450ms var(--ease-out); }
-[data-pose="on"] .svc-mon-off { opacity: 0; }
+[data-pose="on"] .svc-mon-screen { opacity: 1; }
 [data-pose="left"] .svc-mon-front, [data-pose="right"] .svc-mon-front { opacity: 0; }
 [data-pose="left"] .svc-mon-left, [data-pose="right"] .svc-mon-right { opacity: 1; }
 /* The glow of a switched-on screen, drawn once behind the monitor. */
@@ -4707,7 +4717,7 @@ html[data-theme="light"] .showcase-pill {
 .svc-card3:not(.is-active) .svc-mon-body { opacity: 0; transition: opacity 500ms var(--ease-out); }
 .svc-flow .svc-controls { display: flex; justify-content: center; gap: 12px; margin-top: var(--space-3); }
 @media (prefers-reduced-motion: reduce) {
-  .svc-card3, .svc-mon-front, .svc-mon-side, .svc-mon-off, .svc-mon::before { transition-duration: 1ms; transition-delay: 0ms; }
+  .svc-card3, .svc-mon-front, .svc-mon-side, .svc-mon-screen, .svc-mon::before { transition-duration: 1ms; transition-delay: 0ms; }
 }
 
 /* The coverflow side cards stick out past the screen edge: clip them. */

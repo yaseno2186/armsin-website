@@ -96,7 +96,7 @@
 <link rel="canonical" href="https://armsin.de/">
 <link rel="preload" href="assets/fonts/inter-var.woff" as="font" type="font/woff" crossorigin>
 <link rel="preload" href="assets/fonts/jetbrains-mono-var.woff" as="font" type="font/woff" crossorigin>
-<link rel="stylesheet" href="style.css?v=37">
+<link rel="stylesheet" href="style.css?v=38">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="48x48" href="assets/logo/favicon-48.png">
 <link rel="icon" type="image/png" sizes="192x192" href="assets/logo/favicon-192.png">
@@ -189,8 +189,9 @@
     </div>
 
     <!-- Services coverflow: one card per service. Each monitor is flat
-         images (fast on every phone): the service screenshot sits behind a
-         front monitor frame with an open screen (monitor-frame-front.webp);
+         images (fast on every phone): the service screenshot is laid over the
+         black screen of the front monitor (monitor-frame-front.webp), with
+         CSS glass and scanlines on top;
          side monitors show a turned, switched-off pose (monitor-off-left /
          -right.webp). initServiceFlow in site.js sets data-pose on each card.
          To change a service: edit its text here and swap the screenshot in
@@ -202,9 +203,9 @@
           <article class="svc-card3">
             <span class="svc-mon">
             <span class="svc-mon-front">
-              <img class="svc-mon-screen" src="assets/images/service-websites-wide.jpg" alt="Ansicht der Youroma-Website auf Computer und Handy" width="1280" height="720" loading="lazy" decoding="async">
-              <span class="svc-mon-off" aria-hidden="true"></span>
               <img class="svc-mon-frame" src="assets/images/monitor-frame-front.webp" alt="" width="1100" height="934" decoding="async">
+              <img class="svc-mon-screen" src="assets/images/service-websites-wide.jpg" alt="Ansicht der Youroma-Website auf Computer und Handy" width="1280" height="720" loading="lazy" decoding="async">
+              <span class="svc-mon-glass" aria-hidden="true"></span>
             </span>
             <img class="svc-mon-side svc-mon-left" src="assets/images/monitor-off-left.webp" alt="" width="1100" height="934" loading="lazy" decoding="async">
             <img class="svc-mon-side svc-mon-right" src="assets/images/monitor-off-right.webp" alt="" width="1100" height="934" loading="lazy" decoding="async">
@@ -218,9 +219,9 @@
           <article class="svc-card3">
             <span class="svc-mon">
             <span class="svc-mon-front">
-              <img class="svc-mon-screen" src="assets/images/service-apps-wide.jpg" alt="Handy mit einer Terminbuchung für einen Salon" width="1280" height="720" loading="lazy" decoding="async">
-              <span class="svc-mon-off" aria-hidden="true"></span>
               <img class="svc-mon-frame" src="assets/images/monitor-frame-front.webp" alt="" width="1100" height="934" decoding="async">
+              <img class="svc-mon-screen" src="assets/images/service-apps-wide.jpg" alt="Handy mit einer Terminbuchung für einen Salon" width="1280" height="720" loading="lazy" decoding="async">
+              <span class="svc-mon-glass" aria-hidden="true"></span>
             </span>
             <img class="svc-mon-side svc-mon-left" src="assets/images/monitor-off-left.webp" alt="" width="1100" height="934" loading="lazy" decoding="async">
             <img class="svc-mon-side svc-mon-right" src="assets/images/monitor-off-right.webp" alt="" width="1100" height="934" loading="lazy" decoding="async">
@@ -234,9 +235,9 @@
           <article class="svc-card3">
             <span class="svc-mon">
             <span class="svc-mon-front">
-              <img class="svc-mon-screen" src="assets/images/service-fotografie-wide.jpg" alt="Produktfoto einer roten Parfümflasche auf hellem Hintergrund" width="1280" height="720" loading="lazy" decoding="async">
-              <span class="svc-mon-off" aria-hidden="true"></span>
               <img class="svc-mon-frame" src="assets/images/monitor-frame-front.webp" alt="" width="1100" height="934" decoding="async">
+              <img class="svc-mon-screen" src="assets/images/service-fotografie-wide.jpg" alt="Produktfoto einer roten Parfümflasche auf hellem Hintergrund" width="1280" height="720" loading="lazy" decoding="async">
+              <span class="svc-mon-glass" aria-hidden="true"></span>
             </span>
             <img class="svc-mon-side svc-mon-left" src="assets/images/monitor-off-left.webp" alt="" width="1100" height="934" loading="lazy" decoding="async">
             <img class="svc-mon-side svc-mon-right" src="assets/images/monitor-off-right.webp" alt="" width="1100" height="934" loading="lazy" decoding="async">
@@ -250,9 +251,9 @@
           <article class="svc-card3">
             <span class="svc-mon">
             <span class="svc-mon-front">
-              <img class="svc-mon-screen" src="assets/images/service-automatisierung-wide.jpg" alt="Ablauf: Neue Buchung, Bestätigung, Kalender, Erinnerung" width="1280" height="720" loading="lazy" decoding="async">
-              <span class="svc-mon-off" aria-hidden="true"></span>
               <img class="svc-mon-frame" src="assets/images/monitor-frame-front.webp" alt="" width="1100" height="934" decoding="async">
+              <img class="svc-mon-screen" src="assets/images/service-automatisierung-wide.jpg" alt="Ablauf: Neue Buchung, Bestätigung, Kalender, Erinnerung" width="1280" height="720" loading="lazy" decoding="async">
+              <span class="svc-mon-glass" aria-hidden="true"></span>
             </span>
             <img class="svc-mon-side svc-mon-left" src="assets/images/monitor-off-left.webp" alt="" width="1100" height="934" loading="lazy" decoding="async">
             <img class="svc-mon-side svc-mon-right" src="assets/images/monitor-off-right.webp" alt="" width="1100" height="934" loading="lazy" decoding="async">
