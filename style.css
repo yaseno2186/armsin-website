@@ -4809,3 +4809,14 @@ html[data-theme="light"] .showcase-pill {
 .about-story-inner a, .trust-local a { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 .trust-local { margin-top: var(--space-2); font-size: 0.95rem; }
 .about-story-inner p + p { margin-top: var(--space-2); }
+
+/* Screenshots between the paragraphs of a project page (project-*.html) */
+.project-figure { margin: var(--space-4) 0; }
+.project-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: calc(var(--radius) - 4px);
+  border: 1px solid var(--border-subtle);
+}
+.project-figure figcaption { margin-top: var(--space-1); font-size: 0.9rem; color: var(--text-dim); text-align: center; }
