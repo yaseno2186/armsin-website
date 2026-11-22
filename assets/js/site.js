@@ -211,6 +211,11 @@ function swapThemeAssets(theme) {
 
 function initThemeSwitch() {
   var root = document.documentElement;
+  // light theme retired 11/2026: always dark, forget any saved choice
+  root.removeAttribute('data-theme');
+  try { localStorage.removeItem(THEME_KEY); } catch (e) {}
+  swapThemeAssets('dark');
+  return;
   var buttons = document.querySelectorAll('.theme-btn');
   var current = function () { return root.getAttribute('data-theme') === 'light' ? 'light' : 'dark'; };
 

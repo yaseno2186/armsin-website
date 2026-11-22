@@ -34,8 +34,8 @@
   --secondary: #0F1A14;       /* alternate section background (Services, Booking) — distinct dark green-black from --bg for section rhythm */
   --text: #D6E8DD;            /* primary text everywhere — was --ink's text role + --paper's light-text-on-dark role, now one token since the whole page is dark */
   --text-dim: rgba(214, 232, 221, 0.68); /* secondary/muted text — was --neutral + --paper-dim */
-  --accent: #39D97A;          /* phosphor-green primary accent — was the burnt-orange #C1592B */
-  --accent-dark: #2BB863;     /* accent hover-darken */
+  --accent: #E07444;          /* phosphor-green primary accent — was the burnt-orange #C1592B */
+  --accent-dark: #C1592B;     /* accent hover-darken */
   --on-accent: #06120B;       /* near-black text for use ON the bright accent fill (buttons, badges) — white-on-accent measured ~1.8:1 (fails), --on-accent measures ~10.5:1 */
   --amber: #BA5629;           /* logo orange — measured from the real asset (assets/logo/armsin-wordmark.png's cursor bar), was a guessed generic amber #E0A458; now the site's second terminal color alongside phosphor-green */
   --amber-dark: #9A4620;      /* amber hover-darken, same lightness-step relationship as --accent/--accent-dark */
@@ -67,12 +67,12 @@
   --shadow-soft: rgba(0, 0, 0, 0.35);
   --shadow-lift: rgba(0, 0, 0, 0.5);
   --shadow-card: rgba(0, 0, 0, 0.4);
-  --accent-wash: rgba(57, 217, 122, 0.12);
-  --accent-tint: rgba(57, 217, 122, 0.14);
-  --accent-ring: rgba(57, 217, 122, 0.28);
-  --accent-glow: rgba(57, 217, 122, 0.12);
-  --accent-glow-strong: rgba(57, 217, 122, 0.28);
-  --accent-shadow: rgba(57, 217, 122, 0.35);
+  --accent-wash: rgba(224, 116, 68, 0.12);
+  --accent-tint: rgba(224, 116, 68, 0.14);
+  --accent-ring: rgba(224, 116, 68, 0.28);
+  --accent-glow: rgba(224, 116, 68, 0.12);
+  --accent-glow-strong: rgba(224, 116, 68, 0.28);
+  --accent-shadow: rgba(224, 116, 68, 0.35);
 
   /* Motion scale — every transition/animation in this file draws from here.
      Curves are the strong UI-grade beziers, not the weak CSS built-ins. */
@@ -568,7 +568,7 @@ img { max-width: 100%; display: block; }
   background: #06120b;
   border: 1px solid var(--border-subtle);
   border-radius: 0.5em;
-  box-shadow: 0 0.8em 1.6em rgba(0, 0, 0, 0.45), 0 0 1.4em rgba(57, 217, 122, 0.06);
+  box-shadow: 0 0.8em 1.6em rgba(0, 0, 0, 0.45), 0 0 1.4em rgba(224, 116, 68, 0.06);
   font-family: var(--font-head);
   font-size: 0.8rem;
   font-weight: 600;
@@ -771,7 +771,7 @@ img { max-width: 100%; display: block; }
   background: #06120b;
   border: 1px solid var(--border-subtle);
   border-radius: 0.5em;
-  box-shadow: 0 0.8em 1.6em rgba(0, 0, 0, 0.45), 0 0 1.4em rgba(57, 217, 122, 0.06);
+  box-shadow: 0 0.8em 1.6em rgba(0, 0, 0, 0.45), 0 0 1.4em rgba(224, 116, 68, 0.06);
   display: flex;
   flex-direction: column;
   gap: 0.3em;
@@ -3185,7 +3185,7 @@ html[data-theme="light"] .check-result-list li::before {
   position: absolute;
   /* needs to cover the image exactly, sitting inside the padding */
   left: 8px; right: 8px; top: 10px; bottom: 8px;
-  background: #39d97a;
+  background: #E07444;
   mix-blend-mode: multiply;
   pointer-events: none;
   z-index: 2;
@@ -3206,9 +3206,9 @@ html[data-theme="light"] .check-result-list li::before {
   background: linear-gradient(
     to bottom,
     transparent,
-    rgba(57, 217, 122, 0.15) 35%,
-    rgba(57, 217, 122, 0.4) 50%,
-    rgba(57, 217, 122, 0.15) 65%,
+    rgba(224, 116, 68, 0.15) 35%,
+    rgba(224, 116, 68, 0.4) 50%,
+    rgba(224, 116, 68, 0.15) 65%,
     transparent
   );
   filter: blur(12px);
@@ -4403,7 +4403,7 @@ html[data-theme="light"] .hero-visual-frame { filter: drop-shadow(0 24px 36px rg
   display: inline-block;
   font-family: var(--font-head);
   font-size: 0.75rem;
-  color: #39D97A;
+  color: #E07444;
   letter-spacing: 0.08em;
   margin-bottom: 6px;
 }
@@ -4881,3 +4881,40 @@ html[data-theme="light"] .nav-toggle span { background: rgba(19, 36, 27, 0.75); 
 @media (max-width: 700px) {
   html[data-theme="light"] .nav-menu { background: var(--surface); border-color: var(--border-subtle); }
 }
+
+
+/* ---------- Base v2 (11/2026): the other pages on the new homepage look ----------
+   Dark #0E100F, cream text, orange for actions, green only for "done".
+   The light theme is retired (no switch any more). */
+:root {
+  --bg: #0E100F;
+  --surface: #191C1A;
+  --surface-2: #141716;
+  --secondary: #131615;
+  --text: #EFECE6;
+  --text-dim: rgba(239, 236, 230, 0.7);
+  --accent: #E07444;          /* orange: links, icons, highlights (6.1:1 on --bg) */
+  --accent-dark: #C1592B;
+  --on-accent: #0E100F;
+  --wash: rgba(239, 236, 230, 0.05);
+  --border-subtle: rgba(239, 236, 230, 0.08);
+  --border-default: rgba(239, 236, 230, 0.14);
+  --border-strong: rgba(239, 236, 230, 0.24);
+  --accent-wash: rgba(224, 116, 68, 0.12);
+  --accent-tint: rgba(224, 116, 68, 0.14);
+  --accent-ring: rgba(224, 116, 68, 0.3);
+  --accent-glow: rgba(224, 116, 68, 0.12);
+  --accent-glow-strong: rgba(224, 116, 68, 0.26);
+  --accent-shadow: rgba(185, 85, 42, 0.35);
+}
+/* main buttons exactly like the homepage */
+.btn-primary { background: #B9552A; color: #fff; }
+.btn-primary:hover { background: #C1592B; color: #fff; box-shadow: none; }
+.portfolio-filter-btn.is-active { background: #B9552A; color: #fff; }
+/* "done" stays green */
+.check-option.is-checked .check-option-icon,
+.is-checked > .check-option-mark { background: #2FB863; color: #06120B; }
+/* footer like the homepage */
+.site-footer { background: #080908; border-top: 1.5px solid #2A2F2C; }
+.lang-btn.is-active { background: #EFECE6; color: #0E100F; }
+.footer-toggles .theme-switch { display: none; }

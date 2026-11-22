@@ -304,7 +304,7 @@
     'beweis.rT': 'Demo project, fictional brand', 'beweis.rP': 'Sample website for a travel agency with a booking request', 'beweis.rAlt': 'ReiseGlück demo website for a fictional travel agency',
     'beweis.hS': 'Armsin has existed since 2026.', 'beweis.hP': 'You only see what was really built. I will show reviews once real clients have written them. Your business could be the next project.', 'beweis.cta': 'Start my project',
     'ueber.label': '07 · Who is behind it', 'ueber.h2': 'Hello, I’m Yass.', 'ueber.aside': 'one contact person, from the first call until after launch.', 'ueber.alt': 'Yass Almardoud, founder of Armsin Digital Media',
-    'ueber.p': 'I founded Armsin Digital Media in Freiberg in 2026. Before that I worked as a backend developer. Today I build websites and automations for small businesses, explain everything clearly and work at a fixed price.',
+    'ueber.p': 'I founded Armsin Digital Media in Freiberg in 2026. Before that I worked as a backend developer. Today I build websites and automations for businesses, explain everything clearly and work at a fixed price.',
     'ueber.place': 'Freiberg, Saxony · for all of Germany', 'ueber.cta': 'Talk to Yass', 'ueber.more': 'More about me',
     'faq.label': '08 · Questions', 'faq.h2': 'Quick answers.',
     'faq.q1': 'What does the demo website cost?', 'faq.a1': 'Nothing. Until 01.01.2027 I build you a demo website, free and without obligation.',
@@ -321,7 +321,7 @@
     'f.msg': 'What is it about?', 'f.msgP': 'For example: new website with online booking', 'f.msgE': 'One or two sentences are enough.',
     'f.send': 'Request free demo', 'f.note': 'Opens your e-mail app with a ready message to me. I only use your details to reply.',
     'f.sent': 'Sent', 'f.thanks': 'Thank you, I will get back to you within 24 h.',
-    'foot.p': 'Websites, booking and automation for small businesses. Karl-Kegel-Str. 45, 09599 Freiberg, Germany.', 'foot.nav': 'Pages', 'foot.careers': 'Careers', 'foot.impressum': 'Legal notice', 'foot.datenschutz': 'Privacy policy',
+    'foot.p': 'Websites, booking and automation for businesses. Karl-Kegel-Str. 45, 09599 Freiberg, Germany.', 'foot.nav': 'Pages', 'foot.careers': 'Careers', 'foot.impressum': 'Legal notice', 'foot.datenschutz': 'Privacy policy',
     'foot.small': 'Examples are marked as “Example”.', 'wa.aria': 'Message Yass on WhatsApp',
     'boot.2': 'Loading model', 'boot.3': 'Ready'
   };
