@@ -132,10 +132,10 @@
   }
 
   /* ---------- state driven from outside ---------- */
-  var k = 0, lookT = [0, 0], look = [0, 0], power = reduce ? 1 : 0, powerT0 = -1, running = true, visible = true;
+  var k = 0, lookT = [0, 0], look = [0, 0], power = (reduce || !document.documentElement.classList.contains('booting')) ? 1 : 0, powerT0 = -1, running = true, visible = true;
   PC3D.setProgress = function (v) { k = clamp(v, 0, 1); };
   PC3D.look = function (x, y) { lookT = [clamp(x, -1, 1), clamp(y, -1, 1)]; };
-  PC3D.power = function () { if (powerT0 < 0) powerT0 = performance.now(); };
+  PC3D.power = function () { if (power < 1 && powerT0 < 0) powerT0 = performance.now(); };
 
   function run(S) {
     var h = S.head, cam0 = h.cam.pos, tgt0 = h.cam.target, fov = 2 * Math.atan(h.cam.sensor / 2 / h.cam.lens);
@@ -143,6 +143,7 @@
     var W = 0, H = 0, dpr = 1, scale = 1, nextBlink = 1.5, blinkT = -1, hopT = -1, nextHop = 4.5, t0 = performance.now(), frames = 0, slow = 0, first = true;
     function size() {
       var r = canvas.getBoundingClientRect(); dpr = Math.min(window.devicePixelRatio || 1, innerWidth < 900 ? 1.5 : 1.75) * scale;
+      var area = Math.max(1, r.width * r.height); if (area * dpr * dpr > 2.4e6) dpr = Math.sqrt(2.4e6 / area);
       W = Math.max(1, Math.round(r.width * dpr)); H = Math.max(1, Math.round(r.height * dpr));
       if (canvas.width !== W || canvas.height !== H) { canvas.width = W; canvas.height = H; }
     }
@@ -153,6 +154,7 @@
     // where the PC sits in the viewport (in css px): desktop right, mobile top-right
     function frame() {
       var w = W / dpr, hh = H / dpr, m = w < 900;
+      if (window.armsinPcFrame) return window.armsinPcFrame(w, hh);
       if (m) { var t = w >= 600, s = Math.min(w * (t ? .38 : .5), hh * (t ? .26 : .3)); return { cx: w - s * .42, cy: 140 + s * .5, s: s }; }
       var s2 = Math.min(w * .5, hh * .98); return { cx: w * .74, cy: hh * .52, s: s2 };
     }
@@ -162,9 +164,14 @@
       raf = 0; if (!running) return;
       var t = (now - t0) / 1000, dt;
       // performance guard: if frames are slow, drop resolution once, then fall back to the poster
-      frames++; if (S.last) { dt = now - S.last; if (!document.hidden && frames > 8 && frames < 90 && dt > 34 && dt < 250) slow++; }  // ignore throttled (background) frames
+      // performance guard: ignore the busy first 1.5 s and throttled (background) frames, judge by the average
+      // of 90 frames, lower the resolution first and only fall back to the still image if it stays slow
+      var pf = S.pf || (S.pf = { from: now + 1500, n: 0, sum: 0, stage: 0, done: false });
+      if (S.last && !pf.done && !document.hidden) { dt = now - S.last;
+        if (dt < 250 && now > pf.from) { pf.n++; pf.sum += dt;
+          if (pf.n >= 90) { var avg = pf.sum / pf.n; pf.n = 0; pf.sum = 0; pf.from = now + 500;
+            if (avg <= 40) pf.done = true; else if (pf.stage === 0) { pf.stage = 1; scale = .7; size(); } else { S.last = now; running = false; return fail('slow device'); } } } }
       S.last = now;
-      if (slow > 30) { if (scale > .7) { scale = .66; slow = 0; frames = 0; size(); } else { running = false; return fail('slow device'); } }
       if (powerT0 >= 0) power = clamp((now - powerT0) / 900, 0, 1);
       look[0] += (lookT[0] - look[0]) * .08; look[1] += (lookT[1] - look[1]) * .08;
       // blink

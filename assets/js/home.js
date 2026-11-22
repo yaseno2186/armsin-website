@@ -16,6 +16,16 @@
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
 
+  /* ---------- where the PC sits (css px); the 3D renderer uses the same numbers ---------- */
+  window.armsinPcFrame = function (w, hh) {
+    if (w < 900) { var t = w >= 600, s = Math.min(w * (t ? .38 : .5), hh * (t ? .26 : .3)); return { cx: w - s * .42, cy: 140 + s * .5, s: s }; }
+    var s2 = Math.min(w * .5, hh * .98); return { cx: w * .74, cy: hh * .52, s: s2 };
+  };
+  var pcBox = $('.pc'), poster = $('.pc-poster');
+  function placePoster() { if (!pcBox || !poster) return; var r = pcBox.getBoundingClientRect(), f = window.armsinPcFrame(r.width, r.height);
+    poster.style.left = (f.cx - f.s / 2).toFixed(1) + 'px'; poster.style.top = (f.cy - f.s / 2).toFixed(1) + 'px'; poster.style.width = f.s.toFixed(1) + 'px'; }
+  placePoster();
+
   /* ---------- contact links ---------- */
   function waHref(text) { return 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(text || WA_TEXT); }
   $$('[data-wa]').forEach(function (a) { a.href = waHref(); });
@@ -108,7 +118,7 @@
   function offTop(el) { if (offCache[el.id] == null) { var t = 0, e = el; while (e) { t += e.offsetTop; e = e.offsetParent; } offCache[el.id] = t; } return offCache[el.id]; }
   function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
   addEventListener('scroll', onScroll, { passive: true });
-  addEventListener('resize', function () { offCache = {}; measure(); update(); });
+  addEventListener('resize', function () { offCache = {}; placePoster(); measure(); update(); });
   // page height changes (fonts, images, sections rendering in) -> measure again
   if ('ResizeObserver' in window) { var lastH = 0, roT = 0; new ResizeObserver(function () { var h = document.body.scrollHeight; if (h === lastH) return; lastH = h;
     cancelAnimationFrame(roT); roT = requestAnimationFrame(function () { offCache = {}; measure(); update(); }); }).observe(document.body); }
