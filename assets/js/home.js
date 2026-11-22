@@ -25,15 +25,22 @@
   /* in-page jumps: render all sections first, so the browser knows the real distances */
   document.addEventListener('click', function (e) { var a = e.target.closest && e.target.closest('a[href^="#"]'); if (a && html.classList.contains('cv')) { html.classList.remove('cv'); offCache = {}; } }, true);
 
-  /* ---------- nav (mobile panel) ---------- */
+  /* ---------- nav: mobile dropdown + sliding hover highlight (as on the previous site) ---------- */
   var burger = $('#burger'), nav = $('#nav');
-  function closeNav() { html.classList.remove('nav-open'); burger.setAttribute('aria-expanded', 'false'); }
+  function closeNav() { nav.classList.remove('nav-open'); burger.setAttribute('aria-expanded', 'false'); burger.setAttribute('aria-label', t('nav.menu', 'Menü öffnen')); }
   burger.addEventListener('click', function () {
-    var open = !html.classList.contains('nav-open'); html.classList.toggle('nav-open', open); burger.setAttribute('aria-expanded', String(open));
-    if (open) { var f = $('#nav-links a'); if (f) f.focus(); }
+    var open = nav.classList.toggle('nav-open'); burger.setAttribute('aria-expanded', String(open));
+    burger.setAttribute('aria-label', open ? t('nav.close', 'Menü schließen') : t('nav.menu', 'Menü öffnen'));
+    if (open) { var f = $('#nav-panel a'); if (f) f.focus(); }
   });
-  $$('#nav-links a').forEach(function (a) { a.addEventListener('click', closeNav); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && html.classList.contains('nav-open')) { closeNav(); burger.focus(); } });
+  $$('#nav-panel a').forEach(function (a) { a.addEventListener('click', closeNav); });
+  document.addEventListener('click', function (e) { if (nav.classList.contains('nav-open') && !nav.contains(e.target)) closeNav(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && nav.classList.contains('nav-open')) { closeNav(); burger.focus(); } });
+  var links = $('.nav-links'), ind = $('.nav-indicator');
+  if (fine) $$('.nav-links a').forEach(function (a) {
+    a.addEventListener('mouseenter', function () { links.style.setProperty('--ix', a.offsetLeft + 'px'); links.style.setProperty('--iw', a.offsetWidth + 'px'); links.classList.add('is-tracking'); });
+  });
+  if (links) links.addEventListener('mouseleave', function () { links.classList.remove('is-tracking'); });
 
   /* ---------- scroll engine: one rAF, sets --k / --p on pinned sections ---------- */
   var hero = $('#top'), problem = $('#problem'), loesung = $('#loesung'), fuer = $('#fuer-wen'), ablauf = $('#ablauf'), kontakt = $('#kontakt');
@@ -50,6 +57,7 @@
   var cards = $$('#fuer-wen .tcard');
   var railLinks = $$('.rail a'), railIds = railLinks.map(function (a) { return a.getAttribute('data-ch'); });
   var mbar = $('#mbar'), bubble = $('.wa-bubble');
+  var sq = $('.s-q'), sqText = sq ? sq.getAttribute('data-q') : '', sqN = -1, phoneNew = $('#phone-new');
 
   function update() {
     ticking = false;
@@ -58,6 +66,7 @@
     var k = reduce ? 0 : prog(hero);
     hero.style.setProperty('--k', k.toFixed(4));
     if (window.PC3D && PC3D.setProgress) PC3D.setProgress(k);
+    if (sq) { var n = Math.round(clamp((k - .7) / .12, 0, 1) * sqText.length); if (n !== sqN) { sqN = n; sq.textContent = sqText.slice(0, n); } }
     if (reduce) return chrome(y);
     // 01
     problem.style.setProperty('--p', prog(problem).toFixed(4));
@@ -67,7 +76,7 @@
     oldBits.forEach(function (o, i) { var a = i * 2.4, d = br * (260 + i * 30);
       o.style.transform = 'translate(' + (Math.cos(a) * d).toFixed(1) + 'px,' + (Math.sin(a) * d).toFixed(1) + 'px) rotate(' + ((i % 2 ? 1 : -1) * br * (25 + i * 9)).toFixed(1) + 'deg)';
       o.style.opacity = 1 - br; });
-    newScr.classList.toggle('on', p2 > .28);
+    newScr.classList.toggle('on', p2 > .28); phoneNew.classList.toggle('is-new', p2 > .28);
     nbs.forEach(function (n, i) { n.classList.toggle('on', p2 > .3 + i * .045); });
     acts.forEach(function (a, i) { a.classList.toggle('done', p2 > .58 + i * .09); });
     // 03 cards fly over the pinned word
@@ -150,7 +159,7 @@
     } else $$('.rv').forEach(function (el) { el.classList.add('in'); });
   }
   if (reduce) { // final states for the story sections
-    if (newScr) { newScr.classList.add('on'); nbs.forEach(function (n) { n.classList.add('on'); }); acts.forEach(function (a) { a.classList.add('done'); }); }
+    if (newScr) { newScr.classList.add('on'); phoneNew.classList.add('is-new'); nbs.forEach(function (n) { n.classList.add('on'); }); acts.forEach(function (a) { a.classList.add('done'); }); }
     oldBits.forEach(function (o) { o.style.opacity = 0; });
     problem.style.setProperty('--p', 1); loesung.style.setProperty('--p', 1);
     $$('.stop').forEach(function (s) { s.classList.add('on'); });
@@ -244,7 +253,7 @@
   var EN = {
     'meta.title': 'Web design Freiberg, Saxony | Armsin Digital Media',
     'meta.description': 'Web design from Freiberg (Saxony): websites, online booking and automation for hair salons, cafés, trades and practices. Free demo until 01.01.2027, then from €100 at a fixed price.',
-    'skip': 'Skip to content', 'nav.home': 'Armsin Digital Media: go to homepage', 'nav.main': 'Main navigation', 'nav.menu': 'Open menu',
+    'skip': 'Skip to content', 'nav.home': 'Armsin Digital Media: go to homepage', 'nav.main': 'Main navigation', 'nav.menu': 'Open menu', 'nav.close': 'Close menu', 'portal.k': 'How your customers search', 'beweis.all': 'All projects',
     'nav.leistungen': 'Services', 'nav.preise': 'Pricing', 'nav.ablauf': 'Process', 'nav.projekte': 'Projects', 'nav.about': 'About me', 'nav.blog': 'Blog',
     'cta.demo': 'Free demo', 'cta.demoShort': 'Request demo', 'cta.wa': 'WhatsApp', 'chip': 'Demo slots open until 01.01.2027', 'rail': 'Chapters',
     'hero.tags': 'Websites · Booking · Automation · Photos', 'hero.h1a': 'Digital', 'hero.h1b': 'solutions', 'hero.h1c': 'from Germany.',
