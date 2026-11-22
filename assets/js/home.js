@@ -22,6 +22,9 @@
   $$('[data-wa-num]').forEach(function (e) { e.textContent = WA_DISPLAY; });
   $$('[data-cal]').forEach(function (a) { a.href = CAL_URL; });
 
+  /* in-page jumps: render all sections first, so the browser knows the real distances */
+  document.addEventListener('click', function (e) { var a = e.target.closest && e.target.closest('a[href^="#"]'); if (a && html.classList.contains('cv')) { html.classList.remove('cv'); offCache = {}; } }, true);
+
   /* ---------- nav (mobile panel) ---------- */
   var burger = $('#burger'), nav = $('#nav');
   function closeNav() { html.classList.remove('nav-open'); burger.setAttribute('aria-expanded', 'false'); }
@@ -39,7 +42,7 @@
   function measure() {
     vh = innerHeight; vw = innerWidth;
     pins.concat([kontakt]).forEach(function (s) { var t = 0, e = s; while (e) { t += e.offsetTop; e = e.offsetParent; } M[s.id] = { top: t, h: s.offsetHeight }; });
-    buildRoute();
+    if (R || routeReady) buildRoute();
   }
   function prog(s) { var m = M[s.id]; return m ? clamp((scrollY - m.top) / Math.max(1, m.h - vh), 0, 1) : 0; }
 
@@ -97,9 +100,12 @@
   function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
   addEventListener('scroll', onScroll, { passive: true });
   addEventListener('resize', function () { offCache = {}; measure(); update(); });
+  // page height changes (fonts, images, sections rendering in) -> measure again
+  if ('ResizeObserver' in window) { var lastH = 0, roT = 0; new ResizeObserver(function () { var h = document.body.scrollHeight; if (h === lastH) return; lastH = h;
+    cancelAnimationFrame(roT); roT = requestAnimationFrame(function () { offCache = {}; measure(); update(); }); }).observe(document.body); }
 
   /* ---------- 05 route: dotted path, the PC hops from stop to stop ---------- */
-  var R = null;
+  var R = null, routeReady = false;
   function buildRoute() {
     var box = $('#route'); if (!box || reduce) return;
     var W = box.clientWidth, H = box.clientHeight, desk = vw >= 900;
@@ -213,8 +219,9 @@
 
   /* ---------- boot screen, then power on the PC ---------- */
   function power() { if (window.PC3D && PC3D.power) PC3D.power(); }
+  function later(fn) { if ('requestIdleCallback' in window) requestIdleCallback(fn, { timeout: 1500 }); else setTimeout(fn, 300); }
   document.addEventListener('DOMContentLoaded', function () {
-    measure(); update();
+    requestAnimationFrame(function () { measure(); update(); later(function () { routeReady = true; buildRoute(); update(); }); });
     var ready = window.PC3D ? PC3D.ready : Promise.resolve(false);
     if (!html.classList.contains('booting')) { ready.then(power); return; }
     var bar = $('#boot-bar'), pct = $('#boot-pct'), bm = $('#boot-msg'), boot = $('#boot'), t0 = performance.now(), target = .35, cur = 0, done = false;
@@ -231,7 +238,7 @@
     (function tick() { cur += (target - cur) * .12; bar.style.transform = 'scaleX(' + cur.toFixed(3) + ')'; pct.textContent = Math.round(cur * 100) + ' %';
       if (cur < .995) requestAnimationFrame(tick); })();
   });
-  addEventListener('load', function () { offCache = {}; measure(); update(); });
+  addEventListener('load', function () { requestAnimationFrame(function () { offCache = {}; measure(); update(); }); });
 
   /* ---------- DE / EN (same storage key as the other pages) ---------- */
   var EN = {

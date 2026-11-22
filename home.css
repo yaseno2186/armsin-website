@@ -383,6 +383,9 @@ h1 .g{color:var(--grey)}
 .ok-msg{font-weight:700;color:var(--ok);margin-top:12px}
 .ok-msg:empty{display:none}
 
+/* below-the-fold sections render only when they come near the viewport */
+.cv .preise,.cv .beweis,.cv .ueber,.cv .faq,.cv .kontakt,.cv .foot{content-visibility:auto;contain-intrinsic-size:auto 1100px}
+
 /* ---------- footer ---------- */
 .foot{background:#080908;border-top:1.5px solid var(--line);padding:56px 0 120px}
 .foot-in{display:grid;gap:28px}
