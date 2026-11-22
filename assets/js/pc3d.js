@@ -11,8 +11,7 @@
   function fail(why) { if (window.console && why) console.info('PC3D fallback:', why); var h = document.documentElement; h.classList.remove('pc-live'); h.classList.add('pc-fallback'); resolveReady(false); }
   if (!canvas) return fail('no canvas');
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var gl = canvas.getContext('webgl', { alpha: true, antialias: true, premultipliedAlpha: true, powerPreference: 'high-performance' });
-  if (!gl) return fail('no webgl');
+  var gl = null; // created only after the page has loaded (see boot3d)
 
   /* ---------- tiny mat4 helpers (column-major) ---------- */
   function persp(fovy, asp, n, f) { var t = 1 / Math.tan(fovy / 2), nf = 1 / (n - f);
@@ -66,11 +65,15 @@
   var VS_SH = 'attribute vec2 aQ;uniform mat4 uMVP;uniform float uS;varying vec2 vQ;void main(){vQ=aQ*.5+.5;gl_Position=uMVP*vec4(aQ*uS*.5,.002,1.);}';
   var FS_SH = 'precision mediump float;varying vec2 vQ;uniform sampler2D uT;uniform float uA;void main(){float a=texture2D(uT,vec2(vQ.x,1.-vQ.y)).a*uA;gl_FragColor=vec4(0.,0.,0.,a);}';
 
-  function prog(vs, fs) {
-    function sh(t, s) { var o = gl.createShader(t); gl.shaderSource(o, s); gl.compileShader(o);
-      if (!gl.getShaderParameter(o, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(o)); return o; }
-    var p = gl.createProgram(); gl.attachShader(p, sh(gl.VERTEX_SHADER, vs)); gl.attachShader(p, sh(gl.FRAGMENT_SHADER, fs));
-    gl.linkProgram(p); if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
+  // compile + link without asking for the result yet (lets the driver work in parallel)
+  function progBegin(vs, fs) {
+    function sh(t, src) { var o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; }
+    var v = sh(gl.VERTEX_SHADER, vs), f = sh(gl.FRAGMENT_SHADER, fs), p = gl.createProgram();
+    gl.attachShader(p, v); gl.attachShader(p, f); gl.linkProgram(p); return { p: p, v: v, f: f };
+  }
+  function progEnd(o) {
+    var p = o.p;
+    if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error((gl.getShaderInfoLog(o.v) || '') + (gl.getShaderInfoLog(o.f) || '') + gl.getProgramInfoLog(p));
     var u = {}, n = gl.getProgramParameter(p, gl.ACTIVE_UNIFORMS);
     for (var i = 0; i < n; i++) { var a = gl.getActiveUniform(p, i); u[a.name] = gl.getUniformLocation(p, a.name); }
     return { p: p, u: u, a: { P: gl.getAttribLocation(p, 'aP'), N: gl.getAttribLocation(p, 'aN'), U: gl.getAttribLocation(p, 'aU'), Q: gl.getAttribLocation(p, 'aQ') } };
@@ -78,29 +81,54 @@
   function tex(img) { var t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img); gl.generateMipmap(gl.TEXTURE_2D);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR); return t; }
-  function loadImg(src) { return new Promise(function (ok, no) { var i = new Image(); i.onload = function () { ok(i); }; i.onerror = no; i.src = src; }); }
+  function loadImg(src) { var i = new Image(); i.src = src; return (i.decode ? i.decode() : new Promise(function (ok, no) { i.onload = ok; i.onerror = no; })).then(function () { return i; }); }
 
-  var base = canvas.getAttribute('data-base') || 'assets/home/';
-  Promise.all([fetch(base + 'pc.bin').then(function (r) { if (!r.ok) throw new Error('bin ' + r.status); return r.arrayBuffer(); }),
-    loadImg(base + 'pc-bake.webp'), loadImg(base + 'pc-shadow.webp')]).then(function (res) { start(res[0], res[1], res[2]); })
-    .catch(function (e) { fail(e && e.message); });
+  /* Start only after load + idle, so the 3D never competes with the first paint.
+     Software WebGL (no GPU) gets the still picture instead. */
+  function boot3d() {
+    gl = canvas.getContext('webgl', { alpha: true, antialias: true, premultipliedAlpha: true, powerPreference: 'high-performance' });
+    if (!gl) return fail('no webgl');
+    var dbg = gl.getExtension('WEBGL_debug_renderer_info');
+    var rnd = dbg ? String(gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL)) : '';
+    if (/swiftshader|llvmpipe|softpipe|software|basic render/i.test(rnd)) return fail('software renderer');
+    var base = canvas.getAttribute('data-base') || 'assets/home/';
+    Promise.all([fetch(base + 'pc.bin').then(function (r) { if (!r.ok) throw new Error('bin ' + r.status); return r.arrayBuffer(); }),
+      loadImg(base + 'pc-bake.webp'), loadImg(base + 'pc-shadow.webp')]).then(function (res) { start(res[0], res[1], res[2]); })
+      .catch(function (e) { fail(e && e.message); });
+  }
+  function idle(fn) { if ('requestIdleCallback' in window) requestIdleCallback(fn, { timeout: 1200 }); else setTimeout(fn, 200); }
+  function later() { setTimeout(function () { idle(boot3d); }, 1200); }
+  if (document.readyState === 'complete') later(); else addEventListener('load', later);
 
+
+  // setup is split over several frames so no single task blocks the page for long
   function start(buf, bakeImg, shImg) {
-    var S;
-    try {
-      var hl = new DataView(buf).getUint32(0, true), head = JSON.parse(new TextDecoder().decode(new Uint8Array(buf, 4, hl))), bin = buf.slice(4 + hl);
-      var P = { body: prog(VS, FS_BODY), screen: prog(VS, FS_SCREEN), sh: prog(VS_SH, FS_SH) };
-      var meshes = {};
-      head.meshes.forEach(function (m) {
-        var vb = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, vb); gl.bufferData(gl.ARRAY_BUFFER, new Uint8Array(bin, m.vo, m.nv * head.stride), gl.STATIC_DRAW);
-        var ib = gl.createBuffer(); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ib); gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(bin, m.io, m.ni), gl.STATIC_DRAW);
-        meshes[m.name] = { vb: vb, ib: ib, n: m.ni };
-      });
-      var quad = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, quad); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
-      S = { head: head, P: P, m: meshes, quad: quad, tBake: tex(bakeImg), tSh: tex(shImg) };
-    } catch (e) { return fail(e.message); }
-    canvas.addEventListener('webglcontextlost', function (e) { e.preventDefault(); running = false; fail('context lost'); });
-    run(S);
+    var S = {}, ext = gl.getExtension('KHR_parallel_shader_compile'), pend;
+    var steps = [
+      function () { pend = { body: progBegin(VS, FS_BODY), screen: progBegin(VS, FS_SCREEN), sh: progBegin(VS_SH, FS_SH) }; },
+      function () { // wait for the parallel compile to finish
+        if (ext) for (var k in pend) if (!gl.getProgramParameter(pend[k].p, ext.COMPLETION_STATUS_KHR)) return false;
+        S.P = { body: progEnd(pend.body), screen: progEnd(pend.screen), sh: progEnd(pend.sh) };
+      },
+      function () {
+        var hl = new DataView(buf).getUint32(0, true), head = JSON.parse(new TextDecoder().decode(new Uint8Array(buf, 4, hl))), bin = buf.slice(4 + hl);
+        S.head = head; S.m = {};
+        head.meshes.forEach(function (m) {
+          var vb = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, vb); gl.bufferData(gl.ARRAY_BUFFER, new Uint8Array(bin, m.vo, m.nv * head.stride), gl.STATIC_DRAW);
+          var ib = gl.createBuffer(); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ib); gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(bin, m.io, m.ni), gl.STATIC_DRAW);
+          S.m[m.name] = { vb: vb, ib: ib, n: m.ni };
+        });
+        S.quad = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, S.quad); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+      },
+      function () { S.tBake = tex(bakeImg); },
+      function () { S.tSh = tex(shImg); }
+    ];
+    var i = 0;
+    (function next() {
+      try { if (steps[i]() !== false) i++; } catch (e) { return fail(e.message); }
+      if (i < steps.length) requestAnimationFrame(next);
+      else { canvas.addEventListener('webglcontextlost', function (e) { e.preventDefault(); running = false; fail('context lost'); }); run(S); }
+    })();
   }
 
   /* ---------- state driven from outside ---------- */

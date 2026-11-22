@@ -119,7 +119,8 @@
     var done = $('.done', svg), L = done.getTotalLength(); done.style.strokeDasharray = L; done.style.strokeDashoffset = L;
     var segEls = $$('.seg', svg), segL = segEls.map(function (s) { return s.getTotalLength(); });
     $$('.stop', box).forEach(function (s, i) { s.style.left = P[i][0] + 'px'; s.style.top = (P[i][1] + 18) + 'px'; });
-    R = { box: box, done: done, L: L, segEls: segEls, segL: segL, desk: desk, hop: $('.hopper', box), stops: $$('.stop', box) };
+    var hop = $('.hopper', box);
+    R = { box: box, done: done, L: L, segEls: segEls, segL: segL, desk: desk, hop: hop, hopW: hop.offsetWidth || (desk ? 110 : 78), stops: $$('.stop', box) };
   }
   function drawRoute(p) {
     if (!R) return;
@@ -128,7 +129,7 @@
     var pt = R.segEls[i].getPointAtLength(R.segL[i] * e);
     var before = R.segL.slice(0, i).reduce(function (a, b) { return a + b; }, 0) + R.segL[i] * e;
     R.done.style.strokeDashoffset = Math.max(0, R.L - before);
-    var w = R.hop.offsetWidth, air = Math.sin(Math.PI * hopF) * (R.desk ? 90 : 56);
+    var w = R.hopW, air = Math.sin(Math.PI * hopF) * (R.desk ? 90 : 56);
     var sq = hopF > 0 && hopF < .08 ? .86 : hopF >= .08 && hopF < .95 ? 1.06 : 1;   // squash on take-off, stretch in the air
     R.hop.style.transform = 'translate(' + (pt.x - w / 2).toFixed(1) + 'px,' + (pt.y - w * .86 - air).toFixed(1) + 'px) scale(' + (2 - sq).toFixed(3) + ',' + sq.toFixed(3) + ')';
     R.stops.forEach(function (st, k) { st.classList.toggle('on', s >= k - .001 && (k > 0 || p > .06)); });
@@ -223,7 +224,7 @@
       if (done) return; done = true; target = 1;
       setTimeout(function () { bm.textContent = t('boot.3', 'Bereit'); }, 120);
       setTimeout(function () { boot.classList.add('out'); power(); }, 420);
-      setTimeout(function () { html.classList.remove('booting'); measure(); update(); }, 1150);
+      setTimeout(function () { html.classList.remove('booting'); }, 1150);
     }
     Promise.race([ready, new Promise(function (r) { setTimeout(r, 2600); })]).then(function () {
       var wait = Math.max(0, 900 - (performance.now() - t0)); setTimeout(finish, wait); });

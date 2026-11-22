@@ -30,9 +30,9 @@
 <link rel="icon" type="image/png" sizes="48x48" href="assets/logo/favicon-48.png">
 <link rel="icon" type="image/png" sizes="192x192" href="assets/logo/favicon-192.png">
 <link rel="apple-touch-icon" href="assets/logo/armsin-icon.png">
-<link rel="preload" href="assets/fonts/anton-400.woff" as="font" type="font/woff" crossorigin>
-<link rel="preload" href="assets/fonts/inter-var.woff" as="font" type="font/woff" crossorigin>
-<link rel="stylesheet" href="home.css?v=1">
+<link rel="preload" href="assets/fonts/anton-400-sub.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/inter-var-sub.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="home.css?v=5">
 <script>
 /* first visit in this tab: show the boot screen; later visits skip it */
 (function(d){try{var s=sessionStorage.getItem('armsin-boot');var r=matchMedia('(prefers-reduced-motion: reduce)').matches;if(!s&&!r)d.documentElement.classList.add('booting');sessionStorage.setItem('armsin-boot','1')}catch(e){}d.documentElement.classList.add('js')})(document);
@@ -140,7 +140,7 @@
 </header>
 
 <nav class="rail" aria-label="Kapitel" data-i18n-aria="rail">
-  <a href="#top" data-ch="top"><span>00</span></a><a href="#problem" data-ch="problem"><span>01</span></a><a href="#loesung" data-ch="loesung"><span>02</span></a><a href="#fuer-wen" data-ch="fuer-wen"><span>03</span></a><a href="#leistungen" data-ch="leistungen"><span>04</span></a><a href="#ablauf" data-ch="ablauf"><span>05</span></a><a href="#beweis" data-ch="beweis"><span>06</span></a><a href="#ueber" data-ch="ueber"><span>07</span></a><a href="#faq" data-ch="faq"><span>08</span></a><a href="#kontakt" data-ch="kontakt"><span>09</span></a>
+  <a href="#top" data-ch="top" aria-label="00 Start"><span>00</span></a><a href="#problem" data-ch="problem" aria-label="01 Das Problem"><span>01</span></a><a href="#loesung" data-ch="loesung" aria-label="02 Die Lösung"><span>02</span></a><a href="#fuer-wen" data-ch="fuer-wen" aria-label="03 Für wen"><span>03</span></a><a href="#leistungen" data-ch="leistungen" aria-label="04 Leistungen &amp; Preise"><span>04</span></a><a href="#ablauf" data-ch="ablauf" aria-label="05 Ablauf"><span>05</span></a><a href="#beweis" data-ch="beweis" aria-label="06 Echte Arbeit"><span>06</span></a><a href="#ueber" data-ch="ueber" aria-label="07 Über mich"><span>07</span></a><a href="#faq" data-ch="faq" aria-label="08 Fragen"><span>08</span></a><a href="#kontakt" data-ch="kontakt" aria-label="09 Kontakt"><span>09</span></a>
 </nav>
 
 <main id="main">
@@ -537,7 +537,7 @@
 </svg>
 
 <noscript><style>.boot{display:none!important}.pc-poster{opacity:1!important}</style></noscript>
-<script src="assets/js/home.js?v=1" defer></script>
-<script src="assets/js/pc3d.js?v=1" defer></script>
+<script src="assets/js/home.js?v=3" defer></script>
+<script src="assets/js/pc3d.js?v=4" defer></script>
 </body>
 </html>
