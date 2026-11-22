@@ -159,7 +159,7 @@ function initContactForm() {
     var subject = 'Anfrage über die Website von ' + name;
     var body = message + '\n\nVon: ' + name + ' (' + email + ')';
 
-    window.location.href = 'mailto:yaseno2186ss@gmail.com'
+    window.location.href = 'mailto:yass.almardoud@armsin.de'
       + '?subject=' + encodeURIComponent(subject)
       + '&body=' + encodeURIComponent(body);
   });
