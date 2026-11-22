@@ -153,7 +153,7 @@
     // where the PC sits in the viewport (in css px): desktop right, mobile top-right
     function frame() {
       var w = W / dpr, hh = H / dpr, m = w < 900;
-      if (m) { var s = Math.min(w * .5, hh * .3); return { cx: w - s * .42, cy: 140 + s * .5, s: s }; }
+      if (m) { var t = w >= 600, s = Math.min(w * (t ? .38 : .5), hh * (t ? .26 : .3)); return { cx: w - s * .42, cy: 140 + s * .5, s: s }; }
       var s2 = Math.min(w * .5, hh * .98); return { cx: w * .74, cy: hh * .52, s: s2 };
     }
     var raf = 0;
