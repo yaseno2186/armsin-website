@@ -4928,7 +4928,8 @@ html[data-theme="light"] .nav-toggle span { background: rgba(19, 36, 27, 0.75); 
   .nav-ico.nav-call{background:#B9552A;border-color:#B9552A;color:#fff}
   .nav-logo{position:relative;z-index:2}
   .nav-toggle{position:absolute!important;inset:0;width:auto!important;height:auto!important;margin:0!important;border-radius:999px;z-index:1;background:transparent!important}
-  .nav-toggle span{display:none!important}
+  .nav-toggle{display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+  .nav-toggle span{display:block!important;width:18px;height:1.5px;background:rgba(239,236,230,.75)!important}
   .floating-nav.nav-open{border-color:#5a5f5b}
 }
 
