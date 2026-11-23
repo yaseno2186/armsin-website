@@ -159,7 +159,7 @@ function initContactForm() {
     var subject = 'Anfrage über die Website von ' + name;
     var body = message + '\n\nVon: ' + name + ' (' + email + ')';
 
-    window.location.href = 'mailto:yaseno2186ss@gmail.com'
+    window.location.href = 'mailto:yass.almardoud@armsin.de'
       + '?subject=' + encodeURIComponent(subject)
       + '&body=' + encodeURIComponent(body);
   });
@@ -211,6 +211,11 @@ function swapThemeAssets(theme) {
 
 function initThemeSwitch() {
   var root = document.documentElement;
+  // light theme retired 11/2026: always dark, forget any saved choice
+  root.removeAttribute('data-theme');
+  try { localStorage.removeItem(THEME_KEY); } catch (e) {}
+  swapThemeAssets('dark');
+  return;
   var buttons = document.querySelectorAll('.theme-btn');
   var current = function () { return root.getAttribute('data-theme') === 'light' ? 'light' : 'dark'; };
 

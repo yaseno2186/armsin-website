@@ -1,0 +1,7 @@
+Instrument Serif Italic
+Copyright 2022 The Instrument Serif Project Authors (https://github.com/Instrument/instrument-serif)
+
+License: This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://scripts.sil.org/OFL
+https://scripts.sil.org/OFL
+
+Subset for armsin.de (Latin + punctuation) with fontTools.

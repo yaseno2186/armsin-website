@@ -1,5 +1,5 @@
 <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
-  <path d="M24 6 C34 5 42 12 41 22 C40 32 34 42 23 41 C13 40 6 32 7 22 C8 13 15 7 24 6 Z" fill="#39D97A" opacity="0.12"/>
+  <path d="M24 6 C34 5 42 12 41 22 C40 32 34 42 23 41 C13 40 6 32 7 22 C8 13 15 7 24 6 Z" fill="#E07444" opacity="0.12"/>
 
   <g stroke="#D6E8DD" stroke-width="2.3" stroke-linecap="round">
     <line x1="22" y1="11" x2="22" y2="7"/>
@@ -14,7 +14,7 @@
   <circle cx="22" cy="22" r="11" fill="none" stroke="#D6E8DD" stroke-width="2.3"/>
   <circle cx="22" cy="22" r="4" fill="none" stroke="#D6E8DD" stroke-width="2"/>
 
-  <circle cx="35" cy="35" r="7" fill="#0A0E0C" stroke="#39D97A" stroke-width="2"/>
-  <path d="M32 32.5 A4.5 4.5 0 1 1 31.5 38" fill="none" stroke="#39D97A" stroke-width="1.6" stroke-linecap="round"/>
-  <polygon points="30,37.5 31.5,38 31,36" fill="#39D97A"/>
+  <circle cx="35" cy="35" r="7" fill="#0A0E0C" stroke="#E07444" stroke-width="2"/>
+  <path d="M32 32.5 A4.5 4.5 0 1 1 31.5 38" fill="none" stroke="#E07444" stroke-width="1.6" stroke-linecap="round"/>
+  <polygon points="30,37.5 31.5,38 31,36" fill="#E07444"/>
 </svg>
