@@ -171,6 +171,34 @@
   function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
   addEventListener('scroll', onScroll, { passive: true });
 
+  /* desktop: mouse-wheel steps glide with soft inertia. Touchpads (small deltas), keyboard,
+     scrollbar, ctrl+zoom and form fields keep the browser's own scrolling. If the browser
+     shifts the page itself (sections rendering in, scroll anchoring), the glide follows. */
+  if (fine && !reduce) {
+    var ty = 0, cy = 0, setY = 0, gliding = false, gT = 0;
+    var maxY = function () { return document.documentElement.scrollHeight - innerHeight; };
+    function glide(now) {
+      if (!gliding) return;
+      var shift = scrollY - setY; if (Math.abs(shift) > 1) { cy += shift; ty += shift; }   // follow external shifts
+      var dt = Math.min(48, now - gT); gT = now;
+      cy += (ty - cy) * (1 - Math.exp(-dt / 105));
+      if (Math.abs(ty - cy) < .6) { cy = ty; gliding = false; }
+      window.scrollTo({ top: cy, behavior: 'instant' }); setY = scrollY;
+      if (gliding) requestAnimationFrame(glide);
+    }
+    addEventListener('wheel', function (e) {
+      if (e.ctrlKey || e.defaultPrevented || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      if (e.target.closest && e.target.closest('textarea, select, input, .nav-menu')) return;
+      var d = e.deltaY * (e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? innerHeight : 1);
+      if (!gliding && Math.abs(d) < 50) return;            // touchpad: already smooth
+      e.preventDefault();
+      if (!gliding) { ty = cy = setY = scrollY; gT = performance.now(); gliding = true; requestAnimationFrame(glide); }
+      ty = clamp(ty + d, 0, maxY());
+    }, { passive: false });
+    ['keydown', 'mousedown', 'touchstart'].forEach(function (ev) { addEventListener(ev, function () { gliding = false; }, { passive: true }); });
+    document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('a[href^="#"]')) gliding = false; }, true);
+  }
+
 
   addEventListener('resize', function () { offCache = {}; placePoster(); measure(); snap = true; update(); });
   // page height changes (fonts, images, sections rendering in) -> measure again
