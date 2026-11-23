@@ -166,7 +166,7 @@ h1 span{display:block}
 h1 .um{padding-top:.1em}
 h1 .g{color:var(--grey)}
 .hero-sub{font-size:var(--t-lead);color:var(--dim);margin-top:18px;max-width:27em;line-height:1.5}
-.hero-chip{margin-top:18px}
+.hero-chip{margin-top:18px;align-self:flex-start}
 .hero-btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
 .hero-btns .btn{flex:1 1 150px}
 .mini{position:absolute;width:118px;aspect-ratio:1.38;background:var(--card);border:1.5px solid var(--line2);border-radius:10px;overflow:hidden;box-shadow:6px 8px 0 rgba(0,0,0,.45)}
@@ -457,6 +457,19 @@ h1 .g{color:var(--grey)}
     .tear::after{animation:tear linear both;animation-timeline:view();animation-range:entry 0% cover 50%}
     @keyframes tear{from{transform:scaleY(0)}to{transform:scaleY(1)}}
   }
+}
+
+/* ---------- phones + tablets: calm first screen (PC centred, one button) ---------- */
+.hero-wa{display:none}
+@media (max-width:899px){
+  .hero .mini,.hero .trust,.hero .tags,.hero-chip,.hero-btns .btn-ghost{display:none}
+  .hero-copy{padding-top:var(--pc-bottom,330px);text-align:center}
+  h1{font-size:clamp(2.3rem,.9rem + 7vw,4rem);max-width:none}
+  .hero-sub{margin:14px auto 0;max-width:22em}
+  .hero-btns{justify-content:center;margin-top:22px}
+  .hero-btns .btn-p{flex:0 0 auto;padding:0 34px}
+  .hero-wa{display:inline-block;margin-top:14px;padding:6px 4px;font-weight:600;font-size:.95rem;color:var(--dim);text-decoration:underline;text-underline-offset:4px}
+  .hero-wa:hover{color:var(--text)}
 }
 
 /* ---------- tablet ---------- */

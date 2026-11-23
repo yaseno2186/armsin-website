@@ -18,12 +18,13 @@
 
   /* ---------- where the PC sits (css px); the 3D renderer uses the same numbers ---------- */
   window.armsinPcFrame = function (w, hh) {
-    if (w < 900) { var t = w >= 600, s = Math.min(w * (t ? .38 : .5), hh * (t ? .26 : .3)); return { cx: w - s * .42, cy: 140 + s * .5, s: s }; }
+    if (w < 900) { var t = w >= 600, s = Math.min(w * (t ? .46 : .74), hh * (t ? .3 : .34)); return { cx: w / 2, cy: 80 + s * .5, s: s }; }
     var s2 = Math.min(w * .5, hh * .98); return { cx: w * .74, cy: hh * .52, s: s2 };
   };
-  var pcBox = $('.pc'), poster = $('.pc-poster');
+  var pcBox = $('.pc'), poster = $('.pc-poster'), hero = document.getElementById('top');
   function placePoster() { if (!pcBox || !poster) return; var r = pcBox.getBoundingClientRect(), f = window.armsinPcFrame(r.width, r.height);
-    poster.style.left = (f.cx - f.s / 2).toFixed(1) + 'px'; poster.style.top = (f.cy - f.s / 2).toFixed(1) + 'px'; poster.style.width = f.s.toFixed(1) + 'px'; }
+    poster.style.left = (f.cx - f.s / 2).toFixed(1) + 'px'; poster.style.top = (f.cy - f.s / 2).toFixed(1) + 'px'; poster.style.width = f.s.toFixed(1) + 'px';
+    hero.style.setProperty('--pc-bottom', (f.cy - f.s / 2 + f.s * .88).toFixed(0) + 'px'); }
   placePoster();
 
   /* ---------- contact links ---------- */
@@ -53,7 +54,7 @@
   if (links) links.addEventListener('mouseleave', function () { links.classList.remove('is-tracking'); });
 
   /* ---------- scroll engine: one rAF, sets --k / --p on pinned sections ---------- */
-  var hero = $('#top'), problem = $('#problem'), loesung = $('#loesung'), fuer = $('#fuer-wen'), ablauf = $('#ablauf'), kontakt = $('#kontakt');
+  var problem = $('#problem'), loesung = $('#loesung'), fuer = $('#fuer-wen'), ablauf = $('#ablauf'), kontakt = $('#kontakt');
   var pins = [hero, problem, loesung, fuer, ablauf];
   var M = {}, vh = innerHeight, vw = innerWidth, lastY = scrollY, barOn = false, ticking = false;
   function measure() {
@@ -263,7 +264,7 @@
   var EN = {
     'meta.title': 'Web design Freiberg, Saxony | Armsin Digital Media',
     'meta.description': 'Web design from Freiberg (Saxony): websites, online booking and automation for hair salons, cafés, trades and practices. Free demo until 01.01.2027, then from €100 at a fixed price.',
-    'skip': 'Skip to content', 'nav.home': 'Armsin Digital Media: go to homepage', 'nav.main': 'Main navigation', 'nav.menu': 'Open menu', 'nav.close': 'Close menu', 'portal.k': 'How your customers search', 'beweis.all': 'All projects',
+    'skip': 'Skip to content', 'nav.home': 'Armsin Digital Media: go to homepage', 'nav.main': 'Main navigation', 'nav.menu': 'Open menu', 'nav.close': 'Close menu', 'portal.k': 'How your customers search', 'hero.wa': 'or message me on WhatsApp', 'beweis.all': 'All projects',
     'nav.leistungen': 'Services', 'nav.preise': 'Pricing', 'nav.ablauf': 'Process', 'nav.projekte': 'Projects', 'nav.about': 'About me', 'nav.blog': 'Blog',
     'cta.demo': 'Free demo', 'cta.demoShort': 'Request demo', 'cta.wa': 'WhatsApp', 'chip': 'Demo slots open until 01.01.2027', 'rail': 'Chapters',
     'hero.tags': 'Websites · Booking · Automation · Photos', 'hero.h1a': 'Digital', 'hero.h1b': 'solutions', 'hero.h1c': 'from Germany.',
