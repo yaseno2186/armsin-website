@@ -66,7 +66,36 @@
     vh = innerHeight; vw = innerWidth;
     pins.concat([kontakt]).forEach(function (s) { var t = 0, e = s; while (e) { t += e.offsetTop; e = e.offsetParent; } M[s.id] = { top: t, h: s.offsetHeight }; });
     if (R || routeReady) buildRoute();
+    buildBeats();
   }
+  /* phones: snap points on the story beats so one swipe moves one step (scroll-snap with
+     snap-stop). Only inside the story zones; prices, proof, FAQ and contact scroll freely. */
+  var BEATS = { top: [0, 1], problem: [0, .75, 1], loesung: [0, .45, 1], 'fuer-wen': [0, .22, .41, .6, .79, 1], ablauf: [0, .33, .59, .84, 1] };
+  var snapOK = !reduce && 'CSS' in window && CSS.supports('scroll-snap-type', 'y mandatory');
+  var zones = [], snapPause = 0;
+  function buildBeats() {
+    $$('.beat').forEach(function (b) { b.remove(); });
+    zones = [];
+    if (!snapOK || vw >= 900) { html.classList.remove('snap'); return; }
+    Object.keys(BEATS).forEach(function (id) {
+      var s = document.getElementById(id), m = M[id]; if (!s || !m) return;
+      var travel = Math.max(0, m.h - vh);
+      BEATS[id].forEach(function (p) { var d = document.createElement('i'); d.className = 'beat'; d.setAttribute('aria-hidden', 'true'); d.style.top = Math.round(p * travel) + 'px'; s.appendChild(d); });
+    });
+    // exit points: the first free section after each zone, so a swipe can leave the zone
+    ['leistungen', 'beweis'].forEach(function (id) { var s = document.getElementById(id); if (!s) return; var d = document.createElement('i'); d.className = 'beat'; d.setAttribute('aria-hidden', 'true'); d.style.top = '0px'; s.appendChild(d); });
+    // zone 1: hero .. end of the trade cards; zone 2: the route
+    if (M.top && M['fuer-wen']) zones.push([M.top.top - 1, M['fuer-wen'].top + M['fuer-wen'].h - vh + 2]);
+    if (M.ablauf) zones.push([M.ablauf.top - 2, M.ablauf.top + M.ablauf.h - vh + 2]);
+  }
+  function snapCheck(y) {
+    if (!zones.length || !document.querySelector('.beat')) { html.classList.remove('snap'); return; }
+    var on = performance.now() > snapPause && zones.some(function (z) { return y >= z[0] && y <= z[1]; });
+    html.classList.toggle('snap', on);
+  }
+  // in-page jumps must land where they point: no snapping while they travel
+  document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('a[href^="#"]')) { snapPause = performance.now() + 1600; html.classList.remove('snap'); } }, true);
+
   function prog(s) { var m = M[s.id]; return m ? clamp((scrollY - m.top) / Math.max(1, m.h - vh), 0, 1) : 0; }
 
   var oldBits = $$('#loesung .old .ob'), newScr = $('#loesung .new'), nbs = $$('#loesung .new .nb'), acts = $$('#loesung .act');
@@ -78,7 +107,7 @@
   // Smoothing: every scroll animation follows the scroll position with a short, soft delay
   // (critically damped, time-based), so wheel steps and finger flicks glide instead of snap.
   var SM = { k: 0, p1: 0, p2: 0, p3: 0, p5: 0 }, snap = true, lastT = 0;
-  var TAU = fine ? 75 : 110; // ms
+  var TAU = fine ? 45 : 90; // ms
   function update(now) {
     ticking = false;
     var y = scrollY;
@@ -121,6 +150,7 @@
   }
   var hdr = $('.site-header'), navY = scrollY;
   function chrome(y) {
+    snapCheck(y);
     // phones: hide the nav on scroll down, show it on scroll up (never at the top or with the menu open)
     if (vw < 900 && !nav.classList.contains('nav-open') && y > 90) { if (Math.abs(y - navY) > 8) { hdr.classList.toggle('nav-hide', y > navY); navY = y; } }
     else { hdr.classList.remove('nav-hide'); navY = y; }
@@ -139,31 +169,7 @@
   function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
   addEventListener('scroll', onScroll, { passive: true });
 
-  /* desktop: mouse-wheel steps glide with soft inertia. Touchpads (small deltas), keyboard,
-     scrollbar, ctrl+zoom and scrollable fields keep the browser's own scrolling. */
-  if (fine && !reduce) {
-    var ty = 0, cy = 0, gliding = false, gT = 0;
-    var maxY = function () { return document.documentElement.scrollHeight - innerHeight; };
-    function glide(now) {
-      if (!gliding) return;
-      var dt = Math.min(64, now - gT); gT = now;
-      cy += (ty - cy) * (1 - Math.exp(-dt / 140));
-      if (Math.abs(ty - cy) < .5) { cy = ty; gliding = false; }
-      window.scrollTo({ top: cy, behavior: 'instant' });
-      if (gliding) requestAnimationFrame(glide);
-    }
-    addEventListener('wheel', function (e) {
-      if (e.ctrlKey || e.defaultPrevented || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
-      if (e.target.closest && e.target.closest('textarea, select, input, .nav-menu')) return;
-      var d = e.deltaY * (e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? innerHeight : 1);
-      if (!gliding && Math.abs(d) < 50) return;            // touchpad: already smooth
-      e.preventDefault();
-      if (!gliding) { ty = cy = scrollY; gT = performance.now(); gliding = true; requestAnimationFrame(glide); }
-      ty = clamp(ty + d * 1.1, 0, maxY());
-    }, { passive: false });
-    ['keydown', 'mousedown', 'touchstart'].forEach(function (ev) { addEventListener(ev, function () { gliding = false; }, { passive: true }); });
-    document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('a[href^="#"]')) gliding = false; }, true);
-  }
+
   addEventListener('resize', function () { offCache = {}; placePoster(); measure(); snap = true; update(); });
   // page height changes (fonts, images, sections rendering in) -> measure again
   if ('ResizeObserver' in window) { var lastH = 0, roT = 0; new ResizeObserver(function () { var h = document.body.scrollHeight; if (h === lastH) return; lastH = h;
