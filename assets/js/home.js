@@ -70,7 +70,7 @@
   }
   /* phones: snap points on the story beats so one swipe moves one step (scroll-snap with
      snap-stop). Only inside the story zones; prices, proof, FAQ and contact scroll freely. */
-  var BEATS = { top: [1], problem: [0, .75, 1], loesung: [0, .45, 1], 'fuer-wen': [0, .22, .41, .6, .79, 1], ablauf: [0, .33, .59, .84, 1] };
+  var BEATS = { top: [0, 1], problem: [0, .75, 1], loesung: [0, .45, 1], 'fuer-wen': [0, .22, .41, .6, .79, 1], ablauf: [0, .33, .59, .84, 1] };
   var snapOK = !reduce && 'CSS' in window && CSS.supports('scroll-snap-type', 'y mandatory');
   var zones = [], snapPause = 0;
   function buildBeats() {
@@ -86,8 +86,8 @@
     // upward exit above the route: the end of the price section
     var ab = document.getElementById('ablauf'); if (ab) { var e = document.createElement('i'); e.className = 'beat'; e.setAttribute('aria-hidden', 'true'); e.style.top = (-vh) + 'px'; ab.appendChild(e); }
     ['leistungen', 'beweis'].forEach(function (id) { var s = document.getElementById(id); if (!s) return; var d = document.createElement('i'); d.className = 'beat'; d.setAttribute('aria-hidden', 'true'); d.style.top = '0px'; s.appendChild(d); });
-    // zone 1: chapter 01 .. end of the trade cards (the hero push scrolls freely); zone 2: the route
-    if (M.problem && M['fuer-wen']) zones.push([M.problem.top - 2, M['fuer-wen'].top + M['fuer-wen'].h - vh + 2]);
+    // zone 1: hero .. end of the trade cards; zone 2: the route
+    if (M.top && M['fuer-wen']) zones.push([M.top.top - 1, M['fuer-wen'].top + M['fuer-wen'].h - vh + 2]);
     if (M.ablauf) zones.push([M.ablauf.top - 2, M.ablauf.top + M.ablauf.h - vh + 2]);
   }
   function snapCheck(y) {
