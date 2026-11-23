@@ -581,3 +581,7 @@ h1 .g{color:var(--grey)}
   .site-header.nav-hide{transform:translateY(-110px)}
 }
 @media (max-width:899px) and (prefers-reduced-motion:reduce){ .site-header{transition:none} }
+
+/* phones: story beats (snap points) - see buildBeats() in home.js */
+.beat{position:absolute;left:0;width:1px;height:1px;pointer-events:none;scroll-snap-align:start;scroll-snap-stop:always}
+html.snap{scroll-snap-type:y mandatory;scroll-padding-top:0}
