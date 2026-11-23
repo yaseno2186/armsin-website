@@ -459,6 +459,19 @@ h1 .g{color:var(--grey)}
   }
 }
 
+
+/* phones: logo + call + booking; the whole bar opens the menu (tap or swipe down) */
+.nav-quick{display:none}
+@media (max-width:899px){
+  .nav-quick{display:flex;gap:8px;margin-left:auto;position:relative;z-index:2;pointer-events:auto}
+  .nav-ico{width:44px;height:44px;border-radius:50%;display:grid;place-content:center;border:1.5px solid #3A3F3B;color:#EFECE6;background:rgba(239,236,230,.04)}
+  .nav-ico.nav-call{background:#B9552A;border-color:#B9552A;color:#fff}
+  .nav-logo{position:relative;z-index:2}
+  .nav-toggle{position:absolute!important;inset:0;width:auto!important;height:auto!important;margin:0!important;border-radius:999px;z-index:1;background:transparent!important}
+  .nav-toggle span{display:none!important}
+  .floating-nav.nav-open{border-color:#5a5f5b}
+}
+
 /* ---------- phones + tablets: calm first screen (PC centred, one button) ---------- */
 .hero-wa{display:none}
 @media (max-width:899px){

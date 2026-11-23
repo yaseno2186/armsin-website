@@ -14,6 +14,8 @@ var I18N_EN = {
   'nav.projekte': 'Projects',
   'nav.about': 'About me',
   'nav.demo': 'Free demo',
+  'nav.call': 'Call: +49 176 62625699',
+  'nav.book': 'Book a call',
   'nav.studio': 'Studio',
   'nav.blog': 'Blog',
   'nav.cta': 'Request a free check',
