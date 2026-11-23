@@ -119,7 +119,11 @@
     drawRoute(SM.p5);
     chrome(y);
   }
+  var hdr = $('.site-header'), navY = scrollY;
   function chrome(y) {
+    // phones: hide the nav on scroll down, show it on scroll up (never at the top or with the menu open)
+    if (vw < 900 && !nav.classList.contains('nav-open') && y > 90) { if (Math.abs(y - navY) > 8) { hdr.classList.toggle('nav-hide', y > navY); navY = y; } }
+    else { hdr.classList.remove('nav-hide'); navY = y; }
     // chapter rail
     var a = 0; railIds.forEach(function (id, i) { var el = document.getElementById(id); if (el && y + vh * .45 >= offTop(el)) a = i; });
     railLinks.forEach(function (l, i) { l.classList.toggle('on', i === a); if (i === a) l.setAttribute('aria-current', 'true'); else l.removeAttribute('aria-current'); });

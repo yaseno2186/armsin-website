@@ -1012,6 +1012,21 @@ function initNeedsCheck() {
 
 markFooterReveal();
 initNavToggle();
+
+// Phones: the nav slides away while scrolling down and comes back on scroll up.
+(function initNavHide() {
+  var hdr = document.querySelector('.site-header'), nav = document.querySelector('.floating-nav');
+  if (!hdr || !nav) return;
+  var lastY = window.scrollY, ticking = false;
+  function check() {
+    ticking = false;
+    var y = window.scrollY;
+    if (window.innerWidth <= 700 && !nav.classList.contains('nav-open') && y > 90) {
+      if (Math.abs(y - lastY) > 8) { hdr.classList.toggle('nav-hide', y > lastY); lastY = y; }
+    } else { hdr.classList.remove('nav-hide'); lastY = y; }
+  }
+  window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(check); } }, { passive: true });
+})();
 initNavIndicator();
 initScrollReveal();
 initBookingFade();
