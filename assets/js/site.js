@@ -37,6 +37,14 @@ function initNavToggle() {
   window.addEventListener('resize', function () {
     if (window.innerWidth > 700) close();
   });
+
+  // phones: swipe down on the bar opens the menu, swipe up closes it
+  var y0 = null;
+  nav.addEventListener('touchstart', function (e) { y0 = e.touches[0].clientY; }, { passive: true });
+  nav.addEventListener('touchend', function (e) { if (y0 === null) return; var dy = e.changedTouches[0].clientY - y0; y0 = null;
+    var open = nav.classList.contains('nav-open');
+    if (dy > 24 && !open) { nav.classList.add('nav-open'); toggle.setAttribute('aria-expanded', 'true'); }
+    else if (dy < -24 && open) close(); }, { passive: true });
 }
 
 // Sliding pill highlight that glides to whichever nav link is hovered or
@@ -1004,6 +1012,21 @@ function initNeedsCheck() {
 
 markFooterReveal();
 initNavToggle();
+
+// Phones: the nav slides away while scrolling down and comes back on scroll up.
+(function initNavHide() {
+  var hdr = document.querySelector('.site-header'), nav = document.querySelector('.floating-nav');
+  if (!hdr || !nav) return;
+  var lastY = window.scrollY, ticking = false;
+  function check() {
+    ticking = false;
+    var y = window.scrollY;
+    if (window.innerWidth <= 700 && !nav.classList.contains('nav-open') && y > 90) {
+      if (Math.abs(y - lastY) > 8) { hdr.classList.toggle('nav-hide', y > lastY); lastY = y; }
+    } else { hdr.classList.remove('nav-hide'); lastY = y; }
+  }
+  window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(check); } }, { passive: true });
+})();
 initNavIndicator();
 initScrollReveal();
 initBookingFade();

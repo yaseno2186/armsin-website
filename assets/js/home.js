@@ -47,6 +47,11 @@
   $$('#nav-panel a').forEach(function (a) { a.addEventListener('click', closeNav); });
   document.addEventListener('click', function (e) { if (nav.classList.contains('nav-open') && !nav.contains(e.target)) closeNav(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && nav.classList.contains('nav-open')) { closeNav(); burger.focus(); } });
+  var swY = null;
+  nav.addEventListener('touchstart', function (e) { swY = e.touches[0].clientY; }, { passive: true });
+  nav.addEventListener('touchend', function (e) { if (swY === null) return; var dy = e.changedTouches[0].clientY - swY; swY = null;
+    var open = nav.classList.contains('nav-open');
+    if ((dy > 24 && !open) || (dy < -24 && open)) burger.click(); }, { passive: true });
   var links = $('.nav-links'), ind = $('.nav-indicator');
   if (fine) $$('.nav-links a').forEach(function (a) {
     a.addEventListener('mouseenter', function () { links.style.setProperty('--ix', a.offsetLeft + 'px'); links.style.setProperty('--iw', a.offsetWidth + 'px'); links.classList.add('is-tracking'); });
@@ -70,19 +75,29 @@
   var mbar = $('#mbar'), bubble = $('.wa-bubble');
   var sq = $('.s-q'), sqText = sq ? sq.getAttribute('data-q') : '', sqN = -1, phoneNew = $('#phone-new');
 
-  function update() {
+  // Smoothing: every scroll animation follows the scroll position with a short, soft delay
+  // (critically damped, time-based), so wheel steps and finger flicks glide instead of snap.
+  var SM = { k: 0, p1: 0, p2: 0, p3: 0, p5: 0 }, snap = true, lastT = 0;
+  var TAU = fine ? 75 : 110; // ms
+  function update(now) {
     ticking = false;
     var y = scrollY;
+    now = now || performance.now();
+    var dt = lastT ? Math.min(64, now - lastT) : 16; lastT = now;
+    var a = (reduce || snap) ? 1 : 1 - Math.exp(-dt / TAU); snap = false;
+    var T = { k: reduce ? 0 : prog(hero), p1: prog(problem), p2: prog(loesung), p3: prog(fuer), p5: prog(ablauf) }, moving = false;
+    for (var key in T) { SM[key] += (T[key] - SM[key]) * a; if (Math.abs(T[key] - SM[key]) > .0004) moving = true; else SM[key] = T[key]; }
+    if (moving) { ticking = true; requestAnimationFrame(update); }
     // 00 hero push
-    var k = reduce ? 0 : prog(hero);
+    var k = SM.k;
     hero.style.setProperty('--k', k.toFixed(4));
     if (window.PC3D && PC3D.setProgress) PC3D.setProgress(k);
     if (sq) { var n = Math.round(clamp((k - .7) / .12, 0, 1) * sqText.length); if (n !== sqN) { sqN = n; sq.textContent = sqText.slice(0, n); } }
     if (reduce) return chrome(y);
     // 01
-    problem.style.setProperty('--p', prog(problem).toFixed(4));
+    problem.style.setProperty('--p', SM.p1.toFixed(4));
     // 02 old site breaks apart, clean one builds, actions tick green
-    var p2 = prog(loesung); loesung.style.setProperty('--p', p2.toFixed(4));
+    var p2 = SM.p2; loesung.style.setProperty('--p', p2.toFixed(4));
     var br = ease(clamp((p2 - .12) / .26, 0, 1));
     oldBits.forEach(function (o, i) { var a = i * 2.4, d = br * (260 + i * 30);
       o.style.transform = 'translate(' + (Math.cos(a) * d).toFixed(1) + 'px,' + (Math.sin(a) * d).toFixed(1) + 'px) rotate(' + ((i % 2 ? 1 : -1) * br * (25 + i * 9)).toFixed(1) + 'deg)';
@@ -91,7 +106,7 @@
     nbs.forEach(function (n, i) { n.classList.toggle('on', p2 > .3 + i * .045); });
     acts.forEach(function (a, i) { a.classList.toggle('done', p2 > .58 + i * .09); });
     // 03 cards fly over the pinned word
-    var p3 = prog(fuer); fuer.style.setProperty('--p', p3.toFixed(4));
+    var p3 = SM.p3; fuer.style.setProperty('--p', p3.toFixed(4));
     var mob = vw < 900;
     cards.forEach(function (c, i) {
       var q = clamp((p3 - .04 - i * .19) / .36, 0, 1), u = 1 - 2 * q, yy = Math.sign(u) * Math.pow(Math.abs(u), 2.2) * vh * .82;
@@ -101,10 +116,14 @@
       c.style.visibility = q <= 0 || q >= 1 ? 'hidden' : 'visible';
     });
     // 05 route
-    drawRoute(prog(ablauf));
+    drawRoute(SM.p5);
     chrome(y);
   }
+  var hdr = $('.site-header'), navY = scrollY;
   function chrome(y) {
+    // phones: hide the nav on scroll down, show it on scroll up (never at the top or with the menu open)
+    if (vw < 900 && !nav.classList.contains('nav-open') && y > 90) { if (Math.abs(y - navY) > 8) { hdr.classList.toggle('nav-hide', y > navY); navY = y; } }
+    else { hdr.classList.remove('nav-hide'); navY = y; }
     // chapter rail
     var a = 0; railIds.forEach(function (id, i) { var el = document.getElementById(id); if (el && y + vh * .45 >= offTop(el)) a = i; });
     railLinks.forEach(function (l, i) { l.classList.toggle('on', i === a); if (i === a) l.setAttribute('aria-current', 'true'); else l.removeAttribute('aria-current'); });
@@ -119,7 +138,33 @@
   function offTop(el) { if (offCache[el.id] == null) { var t = 0, e = el; while (e) { t += e.offsetTop; e = e.offsetParent; } offCache[el.id] = t; } return offCache[el.id]; }
   function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
   addEventListener('scroll', onScroll, { passive: true });
-  addEventListener('resize', function () { offCache = {}; placePoster(); measure(); update(); });
+
+  /* desktop: mouse-wheel steps glide with soft inertia. Touchpads (small deltas), keyboard,
+     scrollbar, ctrl+zoom and scrollable fields keep the browser's own scrolling. */
+  if (fine && !reduce) {
+    var ty = 0, cy = 0, gliding = false, gT = 0;
+    var maxY = function () { return document.documentElement.scrollHeight - innerHeight; };
+    function glide(now) {
+      if (!gliding) return;
+      var dt = Math.min(64, now - gT); gT = now;
+      cy += (ty - cy) * (1 - Math.exp(-dt / 140));
+      if (Math.abs(ty - cy) < .5) { cy = ty; gliding = false; }
+      window.scrollTo({ top: cy, behavior: 'instant' });
+      if (gliding) requestAnimationFrame(glide);
+    }
+    addEventListener('wheel', function (e) {
+      if (e.ctrlKey || e.defaultPrevented || Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      if (e.target.closest && e.target.closest('textarea, select, input, .nav-menu')) return;
+      var d = e.deltaY * (e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? innerHeight : 1);
+      if (!gliding && Math.abs(d) < 50) return;            // touchpad: already smooth
+      e.preventDefault();
+      if (!gliding) { ty = cy = scrollY; gT = performance.now(); gliding = true; requestAnimationFrame(glide); }
+      ty = clamp(ty + d * 1.1, 0, maxY());
+    }, { passive: false });
+    ['keydown', 'mousedown', 'touchstart'].forEach(function (ev) { addEventListener(ev, function () { gliding = false; }, { passive: true }); });
+    document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('a[href^="#"]')) gliding = false; }, true);
+  }
+  addEventListener('resize', function () { offCache = {}; placePoster(); measure(); snap = true; update(); });
   // page height changes (fonts, images, sections rendering in) -> measure again
   if ('ResizeObserver' in window) { var lastH = 0, roT = 0; new ResizeObserver(function () { var h = document.body.scrollHeight; if (h === lastH) return; lastH = h;
     cancelAnimationFrame(roT); roT = requestAnimationFrame(function () { offCache = {}; measure(); update(); }); }).observe(document.body); }
@@ -264,7 +309,7 @@
   var EN = {
     'meta.title': 'Web design Freiberg, Saxony | Armsin Digital Media',
     'meta.description': 'Web design from Freiberg (Saxony): websites, online booking and automation for hair salons, cafés, trades and practices. Free demo until 01.01.2027, then from €100 at a fixed price.',
-    'skip': 'Skip to content', 'nav.home': 'Armsin Digital Media: go to homepage', 'nav.main': 'Main navigation', 'nav.menu': 'Open menu', 'nav.close': 'Close menu', 'portal.k': 'How your customers search', 'hero.wa': 'or message me on WhatsApp', 'beweis.all': 'All projects',
+    'skip': 'Skip to content', 'nav.home': 'Armsin Digital Media: go to homepage', 'nav.main': 'Main navigation', 'nav.menu': 'Open menu', 'nav.close': 'Close menu', 'nav.call': 'Call: +49 176 62625699', 'nav.book': 'Book a call', 'portal.k': 'How your customers search', 'hero.wa': 'or message me on WhatsApp', 'beweis.all': 'All projects',
     'nav.leistungen': 'Services', 'nav.preise': 'Pricing', 'nav.ablauf': 'Process', 'nav.projekte': 'Projects', 'nav.about': 'About me', 'nav.blog': 'Blog',
     'cta.demo': 'Free demo', 'cta.demoShort': 'Request demo', 'cta.wa': 'WhatsApp', 'chip': 'Demo slots open until 01.01.2027', 'rail': 'Chapters',
     'hero.tags': 'Websites · Booking · Automation · Photos', 'hero.h1a': 'Digital', 'hero.h1b': 'solutions', 'hero.h1c': 'from Germany.',
