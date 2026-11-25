@@ -1,0 +1,7 @@
+Anton Regular
+Copyright 2020 The Anton Project Authors (https://github.com/googlefonts/AntonFont.git)
+
+License: This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://scripts.sil.org/OFL
+https://scripts.sil.org/OFL
+
+Subset for armsin.de (Latin + punctuation) with fontTools.

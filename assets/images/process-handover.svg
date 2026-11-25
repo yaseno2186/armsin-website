@@ -4,7 +4,7 @@
   <rect x="166" y="78" width="14" height="30" fill="#1D3B2C"/>
   <rect x="188" y="78" width="14" height="22" fill="#1D3B2C"/>
 
-  <circle cx="176" cy="150" r="34" fill="#39D97A"/>
+  <circle cx="176" cy="150" r="34" fill="#E07444"/>
   <path d="M188 134 A20 20 0 1 1 164 136" fill="none" stroke="#06120B" stroke-width="7" stroke-linecap="round"/>
   <polygon points="162,120 180,124 168,138" fill="#06120B"/>
 </svg>
