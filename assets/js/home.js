@@ -266,29 +266,42 @@
   // the PC looks at the pointer
   if (fine) addEventListener('pointermove', function (e) { if (window.PC3D && PC3D.look) PC3D.look(e.clientX / vw * 2 - 1, -(e.clientY / vh * 2 - 1)); }, { passive: true });
 
-  /* ---------- calculator (Armsin-Preisliste, Nov. 2026) ---------- */
-  var calc = $('#preis-check'), sumEl = $('#calc-sum'), shown = [100, 299], anim = 0;
+  /* ---------- calculator (Armsin-Preisliste v2, 25.11.2026) ----------
+     One-off = package + extras + AI photos (12 € per started 10 images).
+     Pilot clients: 30 % off the one-off total. Maintenance is monthly and shown apart. */
+  var calc = $('#preis-check'), sumEl = $('#calc-sum'), subEl = $('#calc-sub'), shown = 690, anim = 0;
+  var PILOT = 0.3, PHOTO10 = 12;
   var fmt = function (n) { return Math.round(n).toLocaleString('de-DE'); };
-  function range() {
-    var nb = $$('input[name=b]:checked', calc).length, ne = $$('input[name=e]:checked', calc).length, ph = +$('#calc-photos').value || 0;
-    var lo = 0, hi = 0;
-    if (ne > 0) { lo = 500 + 200 * (ne - 1); hi = 999 + 300 * (ne - 1); }        // basis features included
-    else if (nb > 0) { lo = 100 + 100 * (nb - 1); hi = 299 + 100 * (nb - 1); }
-    var f = Math.ceil(ph / 10) * 12; return [lo + f, hi + f];                    // 12 € per 10 images
+  function total() {
+    var p = $('input[name=p]:checked', calc), base = p ? +p.value : 0;
+    $$('input[name=e]:checked', calc).forEach(function (i) { base += +i.value; });
+    base += Math.ceil((+$('#calc-photos').value || 0) / 10) * PHOTO10;
+    var pilot = $('#calc-pilot').checked;
+    return { full: base, pay: pilot ? base * (1 - PILOT) : base, pilot: pilot, care: +$('#calc-care').value || 0 };
   }
-  function paint(r) { sumEl.textContent = r[0] ? fmt(r[0]) + ' – ' + fmt(r[1]) + ' €' : '0 €'; }
+  function sub(r) {
+    var parts = [];
+    if (r.pilot && r.full) parts.push(t('calc.instead', 'statt') + ' ' + fmt(r.full) + ' €');
+    if (r.care) parts.push('+ ' + r.care + ' € ' + t('calc.perMonth', 'pro Monat Wartung'));
+    subEl.textContent = parts.join(' · ');
+  }
+  function paint(n) { sumEl.textContent = fmt(n) + ' €'; }
   function recalc() {
-    var to = range(), from = shown.slice(), t0 = performance.now();
-    cancelAnimationFrame(anim);
+    var r = total(), to = r.pay, from = shown, t0 = performance.now();
+    sub(r); cancelAnimationFrame(anim);
     if (reduce) { shown = to; return paint(to); }
     (function step(now) { var q = clamp((now - t0) / 450, 0, 1), e = 1 - Math.pow(1 - q, 3);
-      shown = [from[0] + (to[0] - from[0]) * e, from[1] + (to[1] - from[1]) * e]; paint(shown); if (q < 1) anim = requestAnimationFrame(step); })(t0);
+      shown = from + (to - from) * e; paint(shown); if (q < 1) anim = requestAnimationFrame(step); })(t0);
   }
   calc.addEventListener('change', recalc);
   function calcSummary() {
-    var picked = $$('input:checked', calc).map(function (i) { return i.parentNode.querySelector('span:last-child').textContent.trim(); });
+    var r = total(), picked = [];
+    var p = $('input[name=p]:checked', calc); if (p) picked.push(p.dataset.name);
+    $$('input[name=e]:checked', calc).forEach(function (i) { picked.push(i.dataset.name); });
     var ph = +$('#calc-photos').value; if (ph) picked.push(ph + ' Fotos mit KI verbessern');
-    return 'Bedarfs-Check: ' + (picked.join(', ') || 'noch nichts gewählt') + '. Richtwert: ' + sumEl.textContent + '.';
+    if (r.care) picked.push('Wartung ' + r.care + ' €/Monat');
+    if (r.pilot) picked.push('Pilotkunde (30 % Rabatt)');
+    return 'Bedarfs-Check: ' + (picked.join(', ') || 'noch nichts gewählt') + '. Richtwert einmalig: ' + fmt(r.pay) + ' €' + (r.care ? ', dazu ' + r.care + ' € pro Monat' : '') + '.';
   }
 
   /* ---------- contact form: prefill, validate, send via mailto ---------- */
@@ -343,13 +356,59 @@
 
   /* ---------- DE / EN (same storage key as the other pages) ---------- */
   var EN = {
+    'calc.perMonth': 'per month maintenance',
+    'calc.instead': 'instead of',
+    'calc.pilot': 'Pilot client: 30 % off (first 5 clients)',
+    'calc.care3': 'Shop/booking · €119/month',
+    'calc.care2': 'Plus · €69/month',
+    'calc.care1': 'Basic · €39/month',
+    'calc.care': 'Maintenance',
+    'calc.p3': 'Website Plus',
+    'calc.p2': 'Website Standard',
+    'calc.p1': 'Website Start',
+    'offers.3p': 'your next invoice when you bring a new client, once they have paid.',
+    'offers.3h': 'Referral: 10 % off',
+    'offers.2p': 'when you buy a website, minimum maintenance term 3 months.',
+    'offers.2h': 'Maintenance: first month free',
+    'offers.1p': 'website packages for the first 5 clients, in return for a reference: testimonial, logo or case study.',
+    'offers.1h': 'Pilot clients: 30 % off',
+    'offers.h': 'Offers for the first clients',
+    'hosting.p': 'in your name, with a provider of your choice, usually about €5–15 a month. I can set it all up for you.',
+    'hosting.k': 'Hosting & domain:',
+    'hour': 'per hour',
+    'month': 'per month',
+    'p8.l3': 'Hardware and licences not included',
+    'p8.l2': 'Billed in 15-minute steps',
+    'p8.l1': 'Set-up, troubleshooting, small extensions',
+    'p8.h': 'IT service',
+    'p8.k': 'Service',
+    'p7.l3': 'Shop/booking €119: also checks of those flows',
+    'p7.l2': 'Plus €69: also small changes (15 min/month)',
+    'p7.l1': 'Basic €39: updates, backups, security check',
+    'p7.h': 'Maintenance',
+    'p7.k': 'Support',
+    'p6.l3': 'Tool licence fees not included',
+    'p6.l2': 'Larger systems: fixed price after a call',
+    'p6.l1': 'One workflow set up, e.g. appointment reminders',
+    'p6.h': 'Automation',
+    'p6.k': 'System',
+    'p5.l3': 'Specification first for €490, credited to the app',
+    'p5.l2': 'Push notifications, payments',
+    'p5.l1': 'Customer account, bookings or orders',
+    'p5.h': 'Your own app',
+    'p5.k': 'App',
+    'extras.p': 'online booking €290 · reservations €290 · online ordering €990 · animations €150, each one-off. You supply texts and photos; hosting and domain are not included.',
+    'extras.k': 'Extras for any website:',
+    'p4.t': 'With booking',
+    'pg.more': 'App, automation and support',
+    'pg.web': 'Websites',
     'meta.title': 'Web design Freiberg, Saxony | Armsin Digital Media',
-    'meta.description': 'Web design from Freiberg (Saxony): websites, online booking and automation for hair salons, cafés, trades and practices. Free demo until 01.01.2027, then from €100 at a fixed price.',
+    'meta.description': 'Web design from Freiberg (Saxony): websites, online booking and automation for hair salons, cafés, trades and practices. Free demo until 01.01.2027, websites from €490 at a fixed price.',
     'skip': 'Skip to content', 'nav.home': 'Armsin Digital Media: go to homepage', 'nav.main': 'Main navigation', 'nav.menu': 'Open menu', 'nav.close': 'Close menu', 'nav.call': 'Call: +49 176 62625699', 'nav.book': 'Book a call', 'portal.k': 'How your customers search', 'hero.wa': 'or message me on WhatsApp', 'beweis.all': 'All projects',
     'nav.leistungen': 'Services', 'nav.preise': 'Pricing', 'nav.ablauf': 'Process', 'nav.projekte': 'Projects', 'nav.about': 'About me', 'nav.blog': 'Blog',
     'cta.demo': 'Free demo', 'cta.demoShort': 'Request demo', 'cta.wa': 'WhatsApp', 'chip': 'Demo slots open until 01.01.2027', 'rail': 'Chapters',
     'hero.tags': 'Websites · Booking · Automation · Photos', 'hero.h1a': 'Digital', 'hero.h1b': 'solutions', 'hero.h1c': 'from Germany.',
-    'hero.sub': 'For hair salons, cafés, trades and practices in Saxony. The free demo first, then from €100 at a fixed price.',
+    'hero.sub': 'For hair salons, cafés, trades and practices in Saxony. The free demo first, then websites from €490 at a fixed price.',
     'trust.aria': 'Facts', 'trust.1': 'Fixed price before we start', 'trust.2': 'Reply within 24 h', 'trust.3': 'You get all logins', 'trust.4': 'From Freiberg, Saxony',
     'problem.label': '01 · The problem', 'problem.h2a': 'Your customers google you.', 'problem.h2b': 'What do they find?',
     'problem.lead': 'An outdated website costs enquiries. Quietly, every day, and usually nobody notices.',
@@ -364,20 +423,19 @@
     'fuer.c3.h': 'Trades', 'fuer.c3.p': 'Requests with photos of the damage, straight to your phone.', 'fuer.c3.a': 'Demo for trades',
     'fuer.c4.h': 'Practice', 'fuer.c4.p': 'Services, opening hours and directions, without a phone queue.', 'fuer.c4.a': 'Demo for practices',
     'fuer.more': 'Your business is not listed?', 'fuer.moreA': 'Write to me anyway',
-    'preise.label': '04 · Services & pricing', 'preise.h2': 'What does it cost?', 'preise.lead': 'Guide prices up front, so you know where you stand. The first call and the demo are free.',
-    'p1.k': 'Website', 'p1.t': 'Starter', 'p1.h': 'Simple website', 'p1.l1': 'Offer, opening hours and contact', 'p1.l2': 'Photos, menu or references', 'p1.l3': 'Contact or enquiry form',
-    'p2.k': 'Website+', 'p2.t': 'With booking', 'p2.h': 'Website with booking & extras', 'p2.l1': 'Online appointments or reservations', 'p2.l2': 'Online ordering, animations', 'p2.l3': 'Everything from “Simple website” included',
-    'p3.k': 'App', 'p3.h': 'Your own app', 'p3.l1': 'Customer account, bookings, orders', 'p3.l2': 'Push notifications, payments', 'p3.l3': 'Also for your team internally',
-    'p4.k': 'System', 'p4.h': 'Systems & automation', 'p4.price': 'by scope', 'p4.l1': 'Appointment reminders, e-mails, workflows', 'p4.l2': 'A short call first, then the fixed price', 'p4.l3': 'Runs in the background, no extra work',
-    'once': 'one-off', 'from': 'from', 'fotos.k': 'Photography:', 'fotos.p': 'improve existing photos with AI, €12 per 10 images (cheaper together with a website). New photos on site by arrangement.',
-    'preise.note': 'Guide prices; the written fixed-price offer is binding.',
-    'calc.k': 'Needs check · 30 seconds', 'calc.h': 'What does your business need?', 'calc.base': 'Basics', 'calc.extra': 'Extras',
-    'calc.b1': 'Offer, opening hours & contact', 'calc.b2': 'Photos, menu or references', 'calc.b3': 'Contact or enquiry form',
+    'preise.label': '04 · Services & pricing', 'preise.h2': 'What does it cost?', 'preise.lead': 'Guide prices up front, so you know where you stand. The first call and the demo preview are free.',
+    'p1.k': 'Website', 'p1.t': 'Starter', 'p1.h': 'Website Start', 'p1.l1': '1 page: offer, opening hours, contact', 'p1.l2': 'Up to 6 photos and a contact form', 'p1.l3': 'Built for phones, 1 round of revisions',
+    'p2.k': 'Website', 'p2.t': 'Recommended', 'p2.h': 'Website Standard', 'p2.l1': 'Up to 3 pages, gallery or menu', 'p2.l2': 'Enquiry form and Google Maps', 'p2.l3': 'Basic SEO, 2 rounds of revisions',
+    'p3.k': 'Website', 'p3.h': 'Website Plus', 'p3.l1': 'Up to 5 pages, gallery, enquiry form', 'p3.l2': 'Extended SEO and Google profile tips', 'p3.l3': 'Cookie banner, 30-minute walkthrough',
+    'p4.k': 'Website+', 'p4.h': 'Website with booking', 'p4.price': 'by scope', 'p4.l1': 'Website Standard plus one extra', 'p4.l2': 'Online appointments or reservations', 'p4.l3': 'Set-up, testing and walkthrough',
+    'once': 'one-off', 'from': 'from', 'fotos.k': 'Photography:', 'fotos.p': 'improve existing photos with AI, €12 per 10 images (cheaper together with a website). New photos on site from €290, depending on scope.',
+    'preise.note': 'All prices are final: under § 19 UStG (small business) no VAT is charged. Guide prices; the written fixed-price offer is binding.',
+    'calc.k': 'Needs check · 30 seconds', 'calc.h': 'What does your business need?', 'calc.base': 'Package', 'calc.extra': 'Extras',
     'calc.e1': 'Online booking', 'calc.e2': 'Reservations', 'calc.e3': 'Online ordering', 'calc.e4': 'Animations',
-    'calc.photos': 'Improve existing photos with AI', 'calc.none': 'none', 'calc.result': 'Guide price', 'calc.cta': 'Request a demo with this result',
-    'calc.note': 'App or automation? I name the price after a short call.',
+    'calc.photos': 'Improve existing photos with AI', 'calc.none': 'none', 'calc.result': 'One-off', 'calc.cta': 'Request a demo with this result',
+    'calc.note': 'An app from €4,900 or automation from €390? I name the fixed price after a short call.',
     'ablauf.label': '05 · Process', 'ablauf.h2a': 'From the first call to the', 'ablauf.h2b': 'finished site.',
-    's1.h': 'Short call', 's1.p': '15–20 minutes, free', 's2.h': 'Free demo', 's2.p': 'You see your site before you pay', 's3.h': 'Fixed price & build', 's3.p': 'Written offer, then progress updates', 's4.h': 'Handover', 's4.p': 'Domain, hosting, logins: all yours',
+    's1.h': 'Short call', 's1.p': '15–20 minutes, free', 's2.h': 'Free demo', 's2.p': 'You see your homepage before you pay', 's3.h': 'Fixed price & build', 's3.p': 'Written offer, then progress updates', 's4.h': 'Handover', 's4.p': 'Domain, hosting, logins: all yours',
     'ablauf.cta': 'Book step 1 now', 'ablauf.more': 'Process in detail',
     'beweis.label': '06 · Real work', 'beweis.h2': 'No invented clients.', 'beweis.yK': 'Client project · beta demo · Dresden', 'beweis.yH': 'Youroma, perfumery',
     'beweis.yP': 'Beta demo for a small perfumery with fragrances from the Gulf states, presented calmly. Shown with the owner’s permission.', 'beweis.yA': 'View project',
@@ -389,7 +447,7 @@
     'ueber.p': 'I founded Armsin Digital Media in Freiberg in 2026. Before that I worked as a backend developer. Today I build websites and automations for businesses, explain everything clearly and work at a fixed price.',
     'ueber.place': 'Freiberg, Saxony · for all of Germany', 'ueber.cta': 'Talk to Yass', 'ueber.more': 'More about me',
     'faq.label': '08 · Questions', 'faq.h2': 'Quick answers.',
-    'faq.q1': 'What does the demo website cost?', 'faq.a1': 'Nothing. Until 01.01.2027 I build you a demo website, free and without obligation.',
+    'faq.q1': 'What does the demo website cost?', 'faq.a1': 'Nothing. Until 01.01.2027, after our first call, I build you a preview of your homepage, free and without obligation.',
     'faq.q2': 'Do I have to buy anything afterwards?', 'faq.a2': 'No. If you like the demo, you get a written fixed-price offer. If not, that’s the end of it.',
     'faq.q3': 'How long until my website is online?', 'faq.a3': 'We set the schedule in the offer. It depends mostly on how quickly texts, photos and opening hours are ready. I help you with that.',
     'faq.q4': 'Can I change texts myself later?', 'faq.a4': 'Yes. I show you how. Or you send me a short message and I change it.',
@@ -422,6 +480,7 @@
     phEls.forEach(function (e) { e.placeholder = t(e.getAttribute('data-i18n-ph'), e._de); });
     $$('.lang-btn').forEach(function (b) { var on = b.dataset.lang === l; b.classList.toggle('is-active', on); b.setAttribute('aria-pressed', String(on)); });
     $$('[data-wa]').forEach(function (a) { a.href = waHref(l === 'en' ? 'Hello Yass, I am interested in a free demo website for my business.' : WA_TEXT); });
+    sub(total());  // calculator's "instead of / per month" line in the new language
   }
   $$('.lang-btn').forEach(function (b) { b.addEventListener('click', function () { try { localStorage.setItem('armsin-lang', b.dataset.lang); } catch (e) {} applyLang(b.dataset.lang); }); });
   var saved = 'de'; try { saved = localStorage.getItem('armsin-lang') || 'de'; } catch (e) {}
