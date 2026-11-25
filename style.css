@@ -4939,3 +4939,12 @@ html[data-theme="light"] .nav-toggle span { background: rgba(19, 36, 27, 0.75); 
   .site-header.nav-hide{transform:translateY(-110px)}
 }
 @media (max-width:700px) and (prefers-reduced-motion:reduce){ .site-header{transition:none} }
+
+/* Blog author byline (11/2026): "Von Yass Almardoud" in post headers and cards */
+.blog-author a {
+  color: var(--text);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+.blog-author a:hover { color: var(--accent); }
