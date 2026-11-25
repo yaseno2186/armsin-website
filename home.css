@@ -586,3 +586,19 @@ h1 .g{color:var(--grey)}
 /* phones: story beats (snap points) - see buildBeats() in home.js */
 .beat{position:absolute;left:0;width:1px;height:1px;pointer-events:none;scroll-snap-align:start;scroll-snap-stop:always}
 html.snap{scroll-snap-type:y mandatory;scroll-padding-top:0}
+
+/* ---------- price list v2 (11/2026): groups, offers box, calculator with packages ---------- */
+.pgroup{margin:34px 0 14px}
+.opt-t{flex:1;min-width:0}
+.opt-p{font-family:var(--f-mono);font-size:.85rem;color:var(--dim);white-space:nowrap}
+.opt input[type=radio]+.bx{border-radius:50%}
+.opt-pilot{margin-top:6px}
+.calc-sub{margin-top:6px;font-size:.88rem;color:var(--dim);min-height:1.3em}
+.offers{margin-top:22px;padding:20px;border:1.5px solid var(--act-hi);border-radius:18px;background:var(--card)}
+.offers h3{font-family:var(--f-head);font-weight:400;text-transform:uppercase;font-size:1.5rem;line-height:1.05;margin:0 0 14px}
+.offers ul{list-style:none;display:grid;gap:14px;margin:0;padding:0}
+.offers li{display:grid;gap:4px;font-size:.93rem;color:var(--dim)}
+.offers b{color:var(--text)}
+@media (min-width:900px){.offers ul{grid-template-columns:repeat(3,1fr);gap:22px}}
+.photos select{min-width:0;max-width:62%;text-overflow:ellipsis}
+.calc-l .photos{margin-bottom:18px}
